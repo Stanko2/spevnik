@@ -1,20 +1,17 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div id="app" class="dark">
+    <router-view/>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
+import Component from 'vue-class-component'
+import Vue from 'vue'
+import Navbar from './components/Nav.vue'
 
-@Component({
-  components: {
-    HelloWorld
-  }
-})
-export default class App extends Vue {}
+@Component({ components: { Navbar } })
+export default class App extends Vue {
+}
 </script>
 
 <style>
@@ -24,6 +21,31 @@ export default class App extends Vue {}
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.75s ease-out;
+}
+
+.slide-enter-to {
+  position: absolute;
+  transform: translate(0,0);
+}
+
+.slide-enter-from {
+  position: absolute;
+  transform: translate(-100%,0);
+}
+
+.slide-leave-to {
+  position: absolute;
+  transform: translate(100%,0);
+}
+
+.slide-leave-from {
+  position: absolute;
+  transform: translate(0,0);
+}
+
 </style>
