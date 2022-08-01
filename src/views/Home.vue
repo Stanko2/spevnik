@@ -4,7 +4,7 @@
       Invalid ID
     </div>
     <div v-else>
-      <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16">
+      <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap">
         <h1 class="text-2xl text-left">
           <span v-if="!editingId" @click="startEditing">{{ id }}</span>
           <input v-else type="number" min="1" :max="data.length" v-model="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}

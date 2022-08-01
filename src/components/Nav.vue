@@ -2,8 +2,13 @@
     <div class="fixed bottom-0 w-screen bg-gray-500 flex justify-between h-14 z-50 items-center">
         <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)">&lt;</button>
         <button class="btn" @click="showSearchView = true">
-          <span class="material-symbols-rounded" style="transform: translate(0, 25%)">
+          <span class="material-symbols-rounded block">
             search
+          </span>
+        </button>
+        <button class="btn" @click="openSettings">
+          <span class="material-symbols-rounded block">
+            settings
           </span>
         </button>
         <button class="btn" @click="selectSong(1)">&gt;</button>
@@ -51,6 +56,12 @@ export default class Navbar extends Vue {
     @Watch('$route.params.id')
     showSong (): void {
       this.songId = parseInt(this.$route.params.id)
+    }
+
+    openSettings ():void{
+      this.$router.push({
+        name: 'Settings'
+      })
     }
 }
 </script>

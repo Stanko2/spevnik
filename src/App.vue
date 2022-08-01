@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="dark">
+  <div id="app" class="dark select-none">
     <router-view/>
   </div>
 </template>

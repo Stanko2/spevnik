@@ -18,6 +18,11 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     redirect: '/1'
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
   }
 ]
 
