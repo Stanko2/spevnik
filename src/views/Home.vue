@@ -12,7 +12,19 @@
         <p class="opacity-60 text-left text-sm">{{ song.author }}</p>
       </div>
       <transition name="slide">
-        <text-renderer v-if="songShown" :text="song.text" class="viewport transition-all"  v-hammer:swipe.horizontal="e =>onSwipe(e)"></text-renderer>
+        <div class="viewport transition-all duration-75" :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }">
+          <text-renderer
+            style="touch-action: pan-y !important;"
+
+            v-if="songShown"
+            :text="song.text"
+            v-hammer:pan.horizontal="e=> onPan(e)"
+            v-hammer:swipe.horizontal="e =>onSwipe(e)"
+            :guitarMode="$store.state.guitarMode"
+            :fontSize="$store.state.fontSize"
+            :columns="$store.state.columnCount"
+          ></text-renderer>
+        </div>
       </transition>
       <Navbar :songs="data"></Navbar>
     </div>
@@ -28,14 +40,7 @@ import Vue from 'vue'
 import { Watch } from 'vue-property-decorator'
 import TextRenderer from '@/components/Textrenderer'
 import Navbar from '@/components/Nav.vue'
-
-export interface Song{
-  text: string
-  name: string
-  youtube?: string
-  author: string
-  id: number
-}
+import { Song } from '@/store'
 
 @Component({ components: { TextRenderer, Navbar } })
 export default class SongView extends Vue {
@@ -49,9 +54,14 @@ export default class SongView extends Vue {
 
   songShown = true
   editingId = false
+  scrollX = 0
+
+  get opacity (): number {
+    return 1 - Math.abs(this.scrollX) / screen.availWidth
+  }
 
   async mounted (): Promise<void> {
-    const res = await fetch('Songs.json')
+    const res = await fetch('/Songs.json')
     this.data = (await res.json()).songs as Song[]
     this.data.forEach((s, i) => {
       s.id = i + 1
@@ -78,22 +88,31 @@ export default class SongView extends Vue {
   }
 
   selectSong (id: number): void {
-    console.log('show' + id)
-
     this.editingId = false
     // if (this.id === id) return
     this.id = id
     this.$router.push({
-      path: `/${this.id}`
+      path: `/song/${this.id}`
     })
   }
 
   onSwipe (e:PointerEvent):void {
+    this.scrollX = 0
+    clearTimeout(this.scrollTimeout)
     if (e.type === 'swipeleft') {
       this.selectSong(this.id + 1)
     } else if (e.type === 'swiperight') {
       this.selectSong(this.id - 1)
     }
+  }
+
+  scrollTimeout: number | undefined
+  onPan (e:any):void {
+    this.scrollX = e.deltaX
+    clearTimeout(this.scrollTimeout)
+    this.scrollTimeout = setTimeout(() => {
+      this.scrollX = 0
+    }, 50)
   }
 }
 </script>
@@ -109,7 +128,7 @@ export default class SongView extends Vue {
   font-style: italic;
 }
 .viewport{
-  height: calc(100vh - 89px);
+  height: calc(100vh - 7.5rem);
   overflow-y: scroll;
   position: absolute;
   right: 0;

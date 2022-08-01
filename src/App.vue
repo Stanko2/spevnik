@@ -1,6 +1,13 @@
 <template>
-  <div id="app" class="dark select-none">
-    <router-view/>
+  <div id="app" class="select-none" :class="{'dark': dark}">
+    <transition
+      enter-active-class="duration-0 transition-all ease-in-out transform-gpu"
+      leave-active-class="duration-300 transition-all ease-in-out transform-gpu"
+      enter-class="translate-x-full opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      >
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -11,6 +18,17 @@ import Navbar from './components/Nav.vue'
 
 @Component({ components: { Navbar } })
 export default class App extends Vue {
+  dark = false
+
+  mounted ():void {
+    this.$store.commit('initialize')
+    this.dark = this.$store.state.darkTheme
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'setDarkTheme') {
+        this.dark = state.darkTheme
+      }
+    })
+  }
 }
 </script>
 

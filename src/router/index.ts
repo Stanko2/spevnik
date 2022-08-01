@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/:id',
+    path: '/song/:id',
     name: 'Home',
     component: Home
   },
@@ -17,7 +17,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/',
-    redirect: '/1'
+    redirect: '/song/1'
   },
   {
     path: '/settings',

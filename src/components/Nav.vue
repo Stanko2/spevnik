@@ -1,17 +1,17 @@
 <template>
     <div class="fixed bottom-0 w-screen bg-gray-500 flex justify-between h-14 z-50 items-center">
-        <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)">&lt;</button>
-        <button class="btn" @click="showSearchView = true">
+        <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)" v-shortkey="['arrowleft']" @shortkey="selectSong(-1)">&lt;</button>
+        <button class="btn" @click="showSearchView = true" v-shortkey="['h']" @shortkey="showSearchView = true">
           <span class="material-symbols-rounded block">
             search
           </span>
         </button>
-        <button class="btn" @click="openSettings">
+        <button class="btn" @click="openSettings" v-shortkey="['n']" @shortkey="openSettings">
           <span class="material-symbols-rounded block">
             settings
           </span>
         </button>
-        <button class="btn" @click="selectSong(1)">&gt;</button>
+        <button class="btn" @click="selectSong(1)" v-shortkey="['arrowright']" @shortkey="selectSong(1)">&gt;</button>
         <transition name="search"
           enter-active-class="duration-300 transition-all ease-in-out"
           leave-active-class="duration-300 transition-all ease-in-out"
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Song } from '@/views/Home.vue'
+import { Song } from '@/store'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
@@ -40,7 +40,7 @@ export default class Navbar extends Vue {
 
     selectSong (dir: number): void {
       this.$router.push({
-        path: `/${this.songId + dir}`
+        path: `/song/${this.songId + dir}`
       })
     }
 
@@ -48,7 +48,7 @@ export default class Navbar extends Vue {
       this.showSearchView = false
       if (id) {
         this.$router.push({
-          path: `/${id}`
+          path: `/song/${id}`
         })
       }
     }

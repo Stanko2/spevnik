@@ -11,7 +11,7 @@
                 leave-to-class="translate-y-full"
             >
                 <div class="w-full h-10" v-if="showBar">
-                    <input type="text" class="outline-none rounded-md w-full p-2 text-lg dark:bg-gray-500 dark:text-gray-100" ref="search" v-model="searchQuery">
+                    <input type="search" class="outline-none rounded-md w-full p-2 text-lg dark:bg-gray-500 dark:text-gray-100" ref="search" v-model="searchQuery">
                     <button class="absolute top-0 right-0 h-10 w-10 m-0.5 transform-gpu hover:rotate-12 hover:bg-gray-400 transition-all rounded-full" @click="close()">
                         <span class="material-symbols-rounded block">
                         close
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { Song } from '@/views/Home.vue'
+import { Song } from '@/store'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
