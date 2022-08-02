@@ -11,6 +11,16 @@
             settings
           </span>
         </button>
+        <button class="btn" @click="openEditor(false)" v-shortkey="['e']" @shortkey="openEditor(false)" v-if="$store.state.isAdmin">
+          <span class="material-symbols-rounded block">
+            edit
+          </span>
+        </button>
+        <button class="btn" @click="openEditor(true)" v-shortkey="['q']" @shortkey="openEditor(true)" v-if="$store.state.isAdmin && $store.state.songs.length > 0">
+          <span class="material-symbols-rounded block">
+            add
+          </span>
+        </button>
         <button class="btn" @click="selectSong(1)" v-shortkey="['arrowright']" @shortkey="selectSong(1)">&gt;</button>
         <transition name="search"
           enter-active-class="duration-300 transition-all ease-in-out"
@@ -62,6 +72,17 @@ export default class Navbar extends Vue {
       this.$router.push({
         name: 'Settings'
       })
+    }
+
+    openEditor (newSong:boolean):void {
+      if (newSong) {
+        this.$router.push({
+          name: 'Editor',
+          params: {
+            id: '-1'
+          }
+        })
+      } else { this.$router.push({ path: `/edit/${this.$route.params.id}` }) }
     }
 }
 </script>

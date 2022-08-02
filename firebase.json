@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "spevnik",
     "public": "dist",
     "ignore": [
       "firebase.json",

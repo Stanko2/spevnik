@@ -1,10 +1,13 @@
 <template>
     <div class="h-screen w-screen dark:bg-gray-800">
-        <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap">
+        <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close">arrow_back</span>
                 Nastavenia
             </h1>
+            <div v-if="$store.state.credential" class="opacity-70">
+                Prihlásený ako {{ $store.state.credential.displayName }}
+            </div>
         </div>
         <div class="container m-auto">
             <div class="dark:text-gray-200 p-4 text-lg">
@@ -53,6 +56,30 @@
                     </div>
                 </label>
             </div>
+            <div class="dark:text-gray-200 p-4 text-lg" v-if="!$store.state.isMobile && isOnline">
+                <div class="flex justify-between items-center w-full">
+                    <span class="dark:text-gray-200">Admin Mode</span>
+                    <button class="bg-gray-400 dark:bg-gray-600 outline-none rounded-md p-2" @click="login" v-if="!$store.state.credential">Prihlásiť sa</button>
+                    <div v-else class="opacity-70">
+                        <span class="material-symbols-rounded"
+                        :class="{'text-green-400': $store.state.isAdmin, 'text-red-400': !$store.state.isAdmin }">
+                            {{ $store.state.isAdmin ? 'done' : 'close' }}
+                        </span>
+                        {{ $store.state.isAdmin ? 'Admin' : 'Používateľ' }}
+                    </div>
+                </div>
+            </div>
+            <div class="dark:text-gray-200 p-4 text-lg">
+                <div class="flex justify-between items-center w-full">
+                    <span class="dark:text-gray-200">Offline verzia</span>
+                    <button
+                        :class="{'bg-green-400': !availOffline, 'bg-red-400': availOffline}"
+                        class="p-2 rounded-md text-gray-700"
+                        @click="toggleOffline">
+                        {{ availOffline ? 'Vymazať' : 'Stiahnuť' }}
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -68,6 +95,14 @@ export default class Settings extends Vue {
     fontSize = 12
     msg = navigator.userAgent
     columns = 1
+    get availOffline (): boolean {
+      return this.$store.state.songs.length > 0
+    }
+
+    get isOnline (): boolean {
+      return navigator.onLine
+    }
+
     mounted ():void {
       this.guitarMode = this.$store.state.guitarMode
       this.darkMode = this.$store.state.darkTheme
@@ -96,8 +131,16 @@ export default class Settings extends Vue {
     }
 
     close ():void {
-      this.$store.commit('save', false)
+      this.$store.commit('save', this.availOffline)
       this.$router.back()
+    }
+
+    login ():void {
+      this.$store.commit('login')
+    }
+
+    toggleOffline ():void {
+      this.$store.commit('toggleOffline')
     }
 }
 </script>

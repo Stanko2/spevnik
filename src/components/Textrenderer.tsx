@@ -19,7 +19,6 @@ export default class TextRenderer extends Vue {
       const lineHeight = this.fontSize * 1.625
       const lineCount = Math.floor(viewportHeight / lineHeight)
       const columnsToRender = Math.min(this.columns, Math.ceil(lines.length / lineCount))
-      console.log(columnsToRender)
       setTimeout(() => {
         this.touchAction = 'pan-y !important'
       }, 20)

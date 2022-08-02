@@ -911,6 +911,9 @@ module.exports = {
     prefix: '',
     important: false,
     separator: ':'
-  }
+  },
 
+  purge: [
+    './src/**/*.{ts,tsx,js,jsx,html,vue}'
+  ]
 }

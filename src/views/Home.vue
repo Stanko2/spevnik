@@ -4,12 +4,22 @@
       Invalid ID
     </div>
     <div v-else>
-      <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap">
-        <h1 class="text-2xl text-left">
-          <span v-if="!editingId" @click="startEditing">{{ id }}</span>
-          <input v-else type="number" min="1" :max="data.length" v-model="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
-        </h1>
-        <p class="opacity-60 text-left text-sm">{{ song.author }}</p>
+      <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
+        <div>
+          <h1 class="text-xl text-left">
+            <span v-if="!editingId" @click="startEditing">{{ id }}</span>
+            <input v-else type="number" v-model="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
+          </h1>
+          <p class="opacity-60 text-left text-sm">{{ song.author }}</p>
+        </div>
+        <div class="flex absolute right-0 bg-gray-300 dark:bg-gray-600">
+          <div class="p-2 text-3xl cursor-pointer m-1 transition-all text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
+            <span class="material-symbols-rounded block">favorite</span>
+          </div>
+          <a class="p-2 rounded-xl cursor-pointer m-1 h-12 w-12" :href="'https://youtu.be/'+song.youtube" v-if="song.youtube" target="_blank">
+            <img src="@/assets/youtube.svg" alt="youtube" class="w-full h-full block">
+          </a>
+        </div>
       </div>
       <transition name="slide">
         <div class="viewport transition-all duration-75" :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }">
@@ -26,7 +36,7 @@
           ></text-renderer>
         </div>
       </transition>
-      <Navbar :songs="data"></Navbar>
+      <Navbar :songs="$store.state.songs"></Navbar>
     </div>
     </div>
 </template>
@@ -41,11 +51,11 @@ import { Watch } from 'vue-property-decorator'
 import TextRenderer from '@/components/Textrenderer'
 import Navbar from '@/components/Nav.vue'
 import { Song } from '@/store'
+import { getSong } from '@/store/firebase'
 
 @Component({ components: { TextRenderer, Navbar } })
 export default class SongView extends Vue {
   id = -1
-  data: Song[] = []
   song: Song | null = null
 
   $refs!: {
@@ -55,28 +65,38 @@ export default class SongView extends Vue {
   songShown = true
   editingId = false
   scrollX = 0
+  liked = false
 
   get opacity (): number {
     return 1 - Math.abs(this.scrollX) / screen.availWidth
   }
 
   async mounted (): Promise<void> {
-    const res = await fetch('/Songs.json')
-    this.data = (await res.json()).songs as Song[]
-    this.data.forEach((s, i) => {
-      s.id = i + 1
-    })
     this.showSong()
   }
 
   @Watch('$route.params.id')
-  showSong (): void {
+  async showSong (): Promise<void> {
     this.songShown = false
-    this.$nextTick().then(() => {
-      this.id = parseInt(this.$route.params.id)
-      this.song = this.data.find(e => e.id === this.id) || null
-      this.songShown = true
-    })
+    await this.$nextTick()
+    const lastId = this.id
+    this.id = parseInt(this.$route.params.id)
+    this.song = await this.loadSong(this.id)
+    this.songShown = true
+    this.liked = this.$store.state.liked.has(this.id)
+    if (this.song == null) {
+      this.$router.push({ path: `/song/${lastId}` })
+    }
+  }
+
+  async loadSong (id: number): Promise<Song | null> {
+    if (this.$store.state.songs.length > 0 && id <= this.$store.state.songs.length) {
+      return this.$store.state.songs[id - 1]
+    } else if (navigator.onLine) {
+      return await getSong(id)
+    } else {
+      throw new Error('No songs loaded')
+    }
   }
 
   startEditing (): void {
@@ -89,10 +109,8 @@ export default class SongView extends Vue {
 
   selectSong (id: number): void {
     this.editingId = false
-    // if (this.id === id) return
-    this.id = id
     this.$router.push({
-      path: `/song/${this.id}`
+      path: `/song/${id}`
     })
   }
 
@@ -108,11 +126,17 @@ export default class SongView extends Vue {
 
   scrollTimeout: number | undefined
   onPan (e:any):void {
+    if (!this.$store.state.isMobile) return
     this.scrollX = e.deltaX
     clearTimeout(this.scrollTimeout)
     this.scrollTimeout = setTimeout(() => {
       this.scrollX = 0
     }, 50)
+  }
+
+  toggleLiked ():void {
+    this.liked = !this.liked
+    this.$store.commit('toggleLike', this.id)
   }
 }
 </script>

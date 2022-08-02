@@ -66,4 +66,7 @@ export default class App extends Vue {
   transform: translate(0,0);
 }
 
+::-webkit-scrollbar{
+  display: none;
+}
 </style>

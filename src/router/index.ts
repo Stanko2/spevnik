@@ -23,6 +23,11 @@ const routes: Array<RouteConfig> = [
     path: '/settings',
     name: 'Settings',
     component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
+  },
+  {
+    path: '/edit/:id',
+    name: 'Editor',
+    component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
   }
 ]
 
