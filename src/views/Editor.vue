@@ -93,7 +93,7 @@ export default class Editor extends Vue {
         youtube: this.youtube
       }
       if (id === -1) {
-        song.id = this.$store.state.songs.length
+        song.id = this.$store.state.songs.length + 1
         createSong(song).then(() => {
           this.$router.back()
           this.$store.commit('createSong', song)

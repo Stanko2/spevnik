@@ -21,6 +21,11 @@
             add
           </span>
         </button>
+        <button class="btn" @click="openMenu" v-shortkey="['m']" @shortkey="openMenu">
+          <span class="material-symbols-rounded block">
+            menu
+          </span>
+        </button>
         <button class="btn" @click="selectSong(1)" v-shortkey="['arrowright']" @shortkey="selectSong(1)">&gt;</button>
         <transition name="search"
           enter-active-class="duration-300 transition-all ease-in-out"
@@ -30,7 +35,24 @@
           enter-to-class="opacity-100"
           leave-to-class="opacity-0"
           >
-          <search-view v-if="showSearchView" @close="onSearchClose" :songs="songs"/>
+          <search-view v-if="showSearchView" @close="onSearchClose" :songs="songs" @more="onSearchMore"/>
+        </transition>
+        <transition
+          enter-active-class="duration-300 transition-all ease-in-out transform-gpu"
+          leave-active-class="duration-300 transition-all ease-in-out transform-gpu"
+          enter-class="translate-x-full"
+          leave-class="translate-x-0"
+          enter-to-class="translate-x-0"
+          leave-to-class="translate-x-full"
+        >
+          <div v-if="showMenu" class="fixed right-3 dark:bg-gray-700 top-3 bottom-3 rounded-lg shadow-xl dark:text-gray-200 xl:w-1/3 left-3 xl:left-auto bg-gray-200">
+            <button class="absolute top-0 right-0 m-2 rounded-full transition-all bg-gray-300 hover:bg-gray-400 dark:bg-gray-500 dark:hover:bg-gray-400 p-2" @click="showMenu = false">
+              <span class="material-symbols-rounded block">
+                close
+              </span>
+            </button>
+            <SummaryView :SearchQuery="searchQuery"></SummaryView>
+          </div>
         </transition>
     </div>
 </template>
@@ -41,13 +63,15 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 import SearchView from './SearchView.vue'
+import SummaryView from '@/components/SummaryView.vue'
 
-@Component({ components: { SearchView } })
+@Component({ components: { SearchView, SummaryView } })
 export default class Navbar extends Vue {
     @Prop() songs!: Song[]
     songId = parseInt(this.$route.params.id)
     showSearchView = false
-
+    showMenu = false
+    searchQuery = ''
     selectSong (dir: number): void {
       this.$router.push({
         path: `/song/${this.songId + dir}`
@@ -63,15 +87,29 @@ export default class Navbar extends Vue {
       }
     }
 
+    onSearchMore (q:string): void {
+      this.showSearchView = false
+      this.showMenu = true
+      this.searchQuery = q
+    }
+
     @Watch('$route.params.id')
     showSong (): void {
       this.songId = parseInt(this.$route.params.id)
+      if (this.$store.state.isMobile) {
+        this.showMenu = false
+      }
     }
 
     openSettings ():void{
       this.$router.push({
         name: 'Settings'
       })
+    }
+
+    openMenu ():void{
+      this.showMenu = true
+      this.searchQuery = ''
     }
 
     openEditor (newSong:boolean):void {

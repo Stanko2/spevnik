@@ -67,6 +67,6 @@ export default class App extends Vue {
 }
 
 ::-webkit-scrollbar{
-  display: none;
+  width: 0;
 }
 </style>
