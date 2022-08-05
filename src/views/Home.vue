@@ -89,6 +89,13 @@ export default class SongView extends Vue {
     }
   }
 
+  beforeMount ():void {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault()
+      this.$store.commit('setInstallEvent', e)
+    })
+  }
+
   async loadSong (id: number): Promise<Song | null> {
     if (this.$store.state.songs.length > 0 && id <= this.$store.state.songs.length) {
       return this.$store.state.songs[id - 1]

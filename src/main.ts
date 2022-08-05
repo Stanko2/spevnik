@@ -4,6 +4,7 @@ import router from './router'
 import { VueHammer } from 'vue2-hammer'
 import './assets/tailwind.css'
 import store from './store'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 Vue.use(VueHammer)

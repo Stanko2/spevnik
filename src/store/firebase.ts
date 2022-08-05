@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth'
 import { get, getDatabase, ref, set } from 'firebase/database'
-import { Song } from '.'
+import store, { Song } from '.'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDY690VtfSWU1EURhyW8wcEYskqe-oBGSQ',
@@ -66,6 +66,12 @@ export async function importToDB ():Promise<void> {
 }
 
 export async function cacheAllSongs ():Promise<Song[]> {
+  const lastUpdate = parseInt(localStorage.getItem('lastDBUpdate') || '0')
+  console.log(lastUpdate)
+  if (lastUpdate > Date.now() - 1000 * 60 * 60 * 12) {
+    return store.state.songs
+  }
+  localStorage.setItem('lastDBUpdate', Date.now().toString())
   const songs = await get(ref(db, 'songs/'))
   const data = songs.val()
   data.splice(0, 1)

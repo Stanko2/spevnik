@@ -70,13 +70,17 @@
                 </div>
             </div>
             <div class="dark:text-gray-200 p-4 text-lg">
-                <div class="flex justify-between items-center w-full">
-                    <span class="dark:text-gray-200">Offline verzia</span>
-                    <button
-                        :class="{'bg-green-400': !availOffline, 'bg-red-400': availOffline}"
-                        class="p-2 rounded-md text-gray-700"
-                        @click="toggleOffline">
-                        {{ availOffline ? 'Vymazať' : 'Stiahnuť' }}
+                <div class="flex justify-between items-center w-full" >
+                    <span class="dark:text-gray-200">Offline režim</span>
+                    <button v-if="!availOffline"
+                        class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
+                        @click="$store.commit('enableOffline')">
+                        Zapnúť
+                    </button>
+                    <button v-else-if="isOnline"
+                        class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
+                        @click="$store.commit('updateOfflineCache')">
+                        Aktualizovať
                     </button>
                 </div>
             </div>
@@ -137,10 +141,6 @@ export default class Settings extends Vue {
 
     login ():void {
       this.$store.commit('login')
-    }
-
-    toggleOffline ():void {
-      this.$store.commit('toggleOffline')
     }
 }
 </script>

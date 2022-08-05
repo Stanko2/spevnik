@@ -28,7 +28,8 @@
             </div>
         </transition>
         <div class="fixed bottom-6 top-32 overflow-y-auto right-6 xl:left-2/3 left-6 content">
-            <Summary class="left-3 right-3" :nodes="nodes"></Summary>
+            <Summary class="left-3 right-3" :nodes="nodes" v-if="$store.state.songs.length > 0"></Summary>
+            <div v-else class="text-red-400">Pre zobrazenie obsahu zapni offline režim v nastaveniach</div>
         </div>
     </div>
 </template>

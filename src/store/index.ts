@@ -1,3 +1,4 @@
+import { BeforeInstallPromptEvent } from '@/shims-tsx'
 import { User } from 'firebase/auth'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -24,6 +25,7 @@ interface IState {
   credential: User | undefined
   isAdmin: boolean
   liked: Set<number>
+  installEvent: BeforeInstallPromptEvent | undefined
 }
 
 function isMobile ():boolean {
@@ -40,7 +42,8 @@ export default new Vuex.Store<IState>({
     isMobile: false,
     credential: undefined,
     isAdmin: false,
-    liked: new Set<number>()
+    liked: new Set<number>(),
+    installEvent: undefined
   },
   getters: {
   },
@@ -80,41 +83,58 @@ export default new Vuex.Store<IState>({
     setColumns (state, columnCount: number) {
       if (!state.isMobile) { state.columnCount = columnCount }
     },
+    setInstallEvent (state, installEvent: BeforeInstallPromptEvent) {
+      state.installEvent = installEvent
+    },
     login (state) {
       login().then((data) => {
         state.credential = data.user
         state.isAdmin = data.admin
       })
     },
-    toggleOffline (state) {
-      if (state.songs.length > 0) {
-        localStorage.removeItem('songs')
-        state.songs = []
-      } else {
-        cacheAllSongs().then(songs => {
-          state.songs = songs
+    enableOffline (state) {
+      if (state.installEvent) {
+        state.installEvent.prompt()
+        state.installEvent.userChoice.then((choice) => {
+          if (choice.outcome === 'accepted') {
+            cacheAllSongs().then(songs => {
+              state.songs = songs
+              console.log('cached songs')
+            })
+          }
         })
       }
+      if (state.songs.length === 0) {
+      }
     },
-    toggleLike (state, id: number) {
+    updateOfflineCache (state) {
+      cacheAllSongs().then(songs => {
+        state.songs = songs
+      })
+    },
+    toggleLike (state: IState, id: number) {
       if (state.liked.has(id)) {
         state.liked.delete(id)
       } else {
         state.liked.add(id)
       }
+      const data = Object.assign({}, {
+        darkTheme: state.darkTheme,
+        guitarMode: state.guitarMode,
+        columnCount: state.columnCount,
+        fontSize: state.fontSize,
+        liked: [...state.liked]
+      })
+      localStorage.setItem('preferences', JSON.stringify(data))
     },
-    updateSong (state, song) {
+    updateSong (state: IState, song: Song) {
       const index = state.songs.findIndex(s => s.id === song.id)
       if (index > -1) {
         state.songs[index] = song
       }
     },
-    createSong (state, song: Song) {
+    createSong (state: IState, song: Song) {
       state.songs.push(song)
     }
-  },
-  actions: {
-  },
-  modules: {
   }
 })
