@@ -93,19 +93,16 @@ export default new Vuex.Store<IState>({
       })
     },
     enableOffline (state) {
-      if (state.installEvent) {
-        state.installEvent.prompt()
-        state.installEvent.userChoice.then((choice) => {
-          if (choice.outcome === 'accepted') {
-            cacheAllSongs().then(songs => {
-              state.songs = songs
-              console.log('cached songs')
-            })
-          }
-        })
-      }
-      if (state.songs.length === 0) {
-      }
+      cacheAllSongs().then(songs => {
+        state.songs = songs
+        console.log('cached songs')
+        if (state.installEvent) {
+          state.installEvent.prompt()
+          state.installEvent.userChoice.then((choice) => {
+            console.log(choice)
+          })
+        }
+      })
     },
     updateOfflineCache (state) {
       cacheAllSongs().then(songs => {
