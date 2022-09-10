@@ -1,7 +1,7 @@
 <template>
     <div class="fixed bottom-14 right-0 dark:bg-gray-700 dark: dark:text-gray-100 p-2 rounded-t-md flex items-center shadow-md z-20 bg-gray-300 text-gray-900">
         <button @click="changeScale" class="p-1 font-bold hover:bg-gray-500 rounded-md mx-1 transition-all w-8">{{currentScale}}</button>
-        <span>Stupnica</span>
+        <span>{{ scale[currentScale][currentTranspose]}}</span>
         <button class="flex items-center justify-center p-1 hover:bg-gray-500 rounded-md mx-1 transition-all" @click="transpose(-1)"><span class="material-symbols-rounded block">expand_more</span></button>
         <button class="flex items-center justify-center p-1 hover:bg-gray-500 rounded-md mx-1 transition-all" @click="transpose(1)"><span class="material-symbols-rounded block">expand_less</span></button>
     </div>
@@ -22,11 +22,15 @@ export default class Transposer extends Vue {
     }
 
     transpose (dir: number): void {
-      this.currentTranspose += dir
+      this.currentTranspose = this.mod(this.currentTranspose + dir, this.scale['#'].length)
       this.$store.commit('transpose', {
         scale: this.currentScale,
         transpose: this.currentTranspose
       })
+    }
+
+    mod (a:number, b:number): number {
+      return ((a % b) + b) % b
     }
 
     changeScale (): void {

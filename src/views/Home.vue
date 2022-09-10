@@ -16,7 +16,7 @@
           <div class="p-2 text-3xl cursor-pointer m-1 transition-all text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
             <span class="material-symbols-rounded block">favorite</span>
           </div>
-          <a class="p-2 rounded-xl cursor-pointer m-1 h-12 w-12" :href="'https://youtu.be/'+song.youtube" v-if="song.youtube" target="_blank">
+          <a class="p-2 rounded-xl cursor-pointer m-1 h-12 w-12" :href="'https://youtu.be/'+(song.youtube || 'dQw4w9WgXcQ')" target="_blank">
             <img src="@/assets/youtube.svg" alt="youtube" class="w-full h-full block">
           </a>
         </div>
