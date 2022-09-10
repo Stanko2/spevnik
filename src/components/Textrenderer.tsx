@@ -53,11 +53,14 @@ export default class TextRenderer extends Vue {
     }
 
     transpose (accord: string): string {
+      const initialScale = this.scale[(accord.length > 1 && accord[1] === '#') ? '#' : 'b']
       const scale = this.scale[(this.$store.state as IState).scale]
       const t = this.$store.state.transpose
-      const a = accord[accord.length - 1] === 'm' ? accord.substring(0, accord.length - 1) : accord
-      const index = scale.findIndex(e => e === a)
-      return scale[this.mod(index + t, scale.length)]
+      let a = accord[0]
+      if (accord[1] === '#' || accord[1] === 'b') { a += accord[1] }
+      const index = initialScale.findIndex(e => e === a)
+      const scaledAccord = scale[this.mod(index + t, scale.length)]
+      return scaledAccord + accord.substring(scaledAccord.length, accord.length)
     }
 
     mod (a:number, b:number): number {
