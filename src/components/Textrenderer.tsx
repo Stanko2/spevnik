@@ -53,14 +53,14 @@ export default class TextRenderer extends Vue {
     }
 
     transpose (accord: string): string {
-      const initialScale = this.scale[(accord.length > 1 && accord[1] === '#') ? '#' : 'b']
+      const initialScale = this.scale[(accord.length >= 1 && accord[1] === '#') ? '#' : 'b']
       const scale = this.scale[(this.$store.state as IState).scale]
       const t = this.$store.state.transpose
       let a = accord[0]
       if (accord[1] === '#' || accord[1] === 'b') { a += accord[1] }
       const index = initialScale.findIndex(e => e === a)
       const scaledAccord = scale[this.mod(index + t, scale.length)]
-      return scaledAccord + accord.substring(scaledAccord.length, accord.length)
+      return scaledAccord + accord.substring(a.length, accord.length)
     }
 
     mod (a:number, b:number): number {
@@ -95,7 +95,9 @@ export default class TextRenderer extends Vue {
         segments = segments.filter(s => s.type !== 'accord')
       }
       for (const segment of segments) {
-        if (segment.type === 'accord') { segment.text = this.transpose(segment.text) }
+        if (segment.type === 'accord') {
+          segment.text = segment.text.split(' ').map(s => this.transpose(s)).join(' ')
+        }
       }
       return segments
     }
