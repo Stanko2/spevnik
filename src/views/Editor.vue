@@ -37,7 +37,7 @@
             </div>
             <div class="dark:text-gray-300 text-2xl">
                 <h2>Text</h2>
-                <p class="text-sm italic text-left opacity-50">[D] - akordy, {B} - bold</p>
+                <p class="text-sm italic text-left opacity-50">[D] - akordy, {B} - bold, // capo 1 - gitarové poznámky (na celý riadok)</p>
                 <textarea rows="30" class="bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-full text-sm"  v-model="text" @change="resizeTextArea"></textarea>
             </div>
             <div>

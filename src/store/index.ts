@@ -1,7 +1,7 @@
 import { BeforeInstallPromptEvent } from '@/shims-tsx'
 import { User } from 'firebase/auth'
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 import { cacheAllSongs, createSong, login } from './firebase'
 
 export interface Song{
@@ -15,7 +15,7 @@ export interface Song{
 
 Vue.use(Vuex)
 
-interface IState {
+export interface IState {
   darkTheme: boolean
   guitarMode: boolean
   columnCount: number
@@ -26,6 +26,8 @@ interface IState {
   isAdmin: boolean
   liked: Set<number>
   installEvent: BeforeInstallPromptEvent | undefined
+  transpose: number
+  scale: 'b' | '#'
 }
 
 function isMobile ():boolean {
@@ -43,7 +45,9 @@ export default new Vuex.Store<IState>({
     credential: undefined,
     isAdmin: false,
     liked: new Set<number>(),
-    installEvent: undefined
+    installEvent: undefined,
+    scale: '#',
+    transpose: 0
   },
   getters: {
   },
@@ -132,6 +136,18 @@ export default new Vuex.Store<IState>({
     },
     createSong (state: IState, song: Song) {
       state.songs.push(song)
+    },
+    transpose (state, payload) {
+      state.scale = payload.scale
+      state.transpose = payload.transpose
+    }
+  },
+  actions: {
+    startOfflineMode (ctx) {
+      if (ctx.state.songs.length === 0) {
+        ctx.commit('enableOffline')
+        ctx.commit('save', true)
+      }
     }
   }
 })

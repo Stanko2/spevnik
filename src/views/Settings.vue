@@ -74,7 +74,7 @@
                     <span class="dark:text-gray-200">Offline režim</span>
                     <button v-if="!availOffline"
                         class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
-                        @click="$store.commit('enableOffline')">
+                        @click="$store.dispatch('startOfflineMode')">
                         Zapnúť
                     </button>
                     <button v-else-if="isOnline"

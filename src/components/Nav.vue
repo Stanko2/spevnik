@@ -45,7 +45,7 @@
           enter-to-class="translate-x-0"
           leave-to-class="translate-x-full"
         >
-          <div v-if="showMenu" class="fixed right-3 dark:bg-gray-700 top-3 bottom-3 rounded-lg shadow-xl dark:text-gray-200 xl:w-1/3 left-3 xl:left-auto bg-gray-200">
+          <div v-if="showMenu" class="fixed right-3 dark:bg-gray-700 top-3 bottom-3 rounded-lg shadow-xl dark:text-gray-200 xl:w-1/3 left-3 xl:left-auto bg-gray-200 z-50">
             <button class="absolute top-0 right-0 m-2 rounded-full transition-all bg-gray-300 hover:bg-gray-400 dark:bg-gray-500 dark:hover:bg-gray-400 p-2" @click="showMenu = false">
               <span class="material-symbols-rounded block">
                 close
@@ -54,6 +54,7 @@
             <SummaryView :SearchQuery="searchQuery"></SummaryView>
           </div>
         </transition>
+        <Transposer v-if="$store.state.guitarMode" />
     </div>
 </template>
 
@@ -64,8 +65,9 @@ import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 import SearchView from './SearchView.vue'
 import SummaryView from '@/components/SummaryView.vue'
+import Transposer from '@/components/Transpose.vue'
 
-@Component({ components: { SearchView, SummaryView } })
+@Component({ components: { SearchView, SummaryView, Transposer } })
 export default class Navbar extends Vue {
     @Prop() songs!: Song[]
     songId = parseInt(this.$route.params.id)

@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-y-scroll min-h-full">
+    <div class="overflow-y-scroll min-h-full z-50">
         <h1 class="text-2xl mt-5">Obsah</h1>
         <div class="flex justify-items-stretch h-10 z-30 m-3 mb-0">
             <input type="search" class="dark:bg-gray-500 bg-gray-300 p-2 rounded-l-md outline-none flex-grow" v-model="SearchQuery">

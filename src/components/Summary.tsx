@@ -35,7 +35,7 @@ export default class Summary extends Vue {
           <span class="material-symbols-rounded mr-2">{node.expanded ? 'folder_open' : 'folder'}</span>{node.name}
         </div>
         <div class="ml-4 rounded-md">
-          <tranistion
+          <transition
             name="accordion"
             enter-active-class="transition-all ease-in-out duration-300"
             leave-active-class="transition-all ease-in-out duration-300"
@@ -45,7 +45,7 @@ export default class Summary extends Vue {
             leave-class="h-0"
           >
             <div>{node.expanded ? node.children.map((child) => this.renderNode(child)) : null}</div>
-          </tranistion>
+          </transition>
         </div>
       </div>
     }

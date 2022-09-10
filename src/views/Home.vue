@@ -158,6 +158,9 @@ export default class SongView extends Vue {
   font-weight: bold;
   font-style: italic;
 }
+.note {
+  @apply font-mono font-light
+}
 .viewport{
   height: calc(100vh - 7.5rem);
   overflow-y: scroll;

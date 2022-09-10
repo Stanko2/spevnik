@@ -22,6 +22,7 @@ export default class App extends Vue {
 
   mounted ():void {
     this.$store.commit('initialize')
+    this.$store.dispatch('startOfflineMode')
     this.dark = this.$store.state.darkTheme
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'setDarkTheme') {
