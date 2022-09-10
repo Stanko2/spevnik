@@ -34,6 +34,7 @@ export default class TextRenderer extends Vue {
           <div class="m-3" style={{ 'column-count': columnsToRender, 'touch-action': 'pan-y !important' }}>
             {lines.map((line, index) => {
               const segments = this.getsegments(line)
+              if (segments.length === 1 && segments[0].text === '') return <br />
               return <p key={index} style={{ fontSize: this.fontSize + 'px' }} class="dark:text-gray-200">
                 {segments.map((segment, index) => {
                   return <span key={index} class={segment.type}>{segment.text}</span>
