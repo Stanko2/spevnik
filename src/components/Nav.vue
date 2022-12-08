@@ -11,6 +11,11 @@
             settings
           </span>
         </button>
+        <button class="btn" @click="random" v-shortkey="['r']" @shortkey="random">
+          <span class="material-symbols-rounded block transform-gpu translate-y-px">
+            cycle
+          </span>
+        </button>
         <button class="btn" @click="openEditor(false)" v-shortkey="['e']" @shortkey="openEditor(false)" v-if="$store.state.isAdmin">
           <span class="material-symbols-rounded block">
             edit
@@ -101,6 +106,14 @@ export default class Navbar extends Vue {
       if (this.$store.state.isMobile) {
         this.showMenu = false
       }
+    }
+
+    random (): void {
+      const max = this.$store.state.songs.length
+      const id = Math.round(Math.random() * max)
+      this.$router.push({
+        path: `/song/${id}`
+      })
     }
 
     openSettings ():void{
