@@ -99,7 +99,6 @@ export default new Vuex.Store<IState>({
     enableOffline (state) {
       cacheAllSongs().then(songs => {
         state.songs = songs
-        console.log('cached songs')
         if (state.installEvent) {
           state.installEvent.prompt()
           state.installEvent.userChoice.then((choice) => {
@@ -112,6 +111,10 @@ export default new Vuex.Store<IState>({
       cacheAllSongs().then(songs => {
         state.songs = songs
       })
+    },
+    resetTranspose (state) {
+      state.transpose = 0
+      state.scale = '#'
     },
     toggleLike (state: IState, id: number) {
       if (state.liked.has(id)) {

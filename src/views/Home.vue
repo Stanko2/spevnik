@@ -78,6 +78,7 @@ export default class SongView extends Vue {
   @Watch('$route.params.id')
   async showSong (): Promise<void> {
     this.songShown = false
+    this.$store.commit('resetTranspose')
     await this.$nextTick()
     const lastId = this.id
     this.id = parseInt(this.$route.params.id)
