@@ -1,11 +1,11 @@
 import chordList from './chordList'
 
 export interface ChordLayout {
-    frets: number[];
-    fingers: number[];
-    baseFret: number;
-    barres: number[];
-    capo?: boolean;
+  frets: number[];
+  fingers: number[];
+  baseFret: number;
+  barres: number[];
+  capo?: boolean;
 }
 
 export interface Chord {
@@ -25,6 +25,9 @@ export interface ChordArray {
     standard: string[];
   };
   keys: string[];
+  keyAliases: {
+    [key: string]: string;
+  };
   suffixes: {
     [key: string]: string[];
   }
@@ -42,13 +45,17 @@ export interface ChordObject {
 
 function getChord (chord: string): ChordObject {
   // find the longest mathcing key in keys array
-  const key = chords.keys.reduce((acc, key) => {
+  let key = chords.keys.reduce((acc, key) => {
     if (chord.startsWith(key) && key.length > acc.length) {
       return key
     }
     return acc
   }, '')
-  if (!key) return { requested: chord, found: null }
+
+  if (!key) {
+    if (chords.keyAliases[chord]) key = chords.keyAliases[chord]
+    else return { requested: chord, found: null }
+  }
 
   const rawSuffix = chord.slice(key.length)
   let realSuffix = rawSuffix
@@ -88,7 +95,17 @@ export const chords: ChordArray = {
   tunings: {
     standard: ['E2', 'A2', 'D3', 'G3', 'H3', 'E4']
   },
-  keys: ['C', 'C#', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'B', 'H'],
+  keys: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B', 'H'],
+  keyAliases: {
+    Cb: 'H',
+    Db: 'C#',
+    Eb: 'D#',
+    Fb: 'E',
+    Gb: 'F#',
+    Ab: 'G#',
+    Bb: 'A#',
+    Hb: 'B'
+  },
   suffixes: {
     major: ['maj', 'M', ''],
     minor: ['m', 'min', 'mi'],

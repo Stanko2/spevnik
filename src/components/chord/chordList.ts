@@ -5488,1331 +5488,6 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Eb',
-    suffix: 'major',
-    positions: [
-      {
-        frets: [-1, 1, 3, 3, 3, 1],
-        fingers: [0, 1, 2, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [-1, -1, 1, 3, 4, 3],
-        fingers: [0, 0, 1, 2, 4, 3],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 4, 3, 1, 2, 1],
-        fingers: [0, 4, 3, 1, 2, 1],
-        barres: [1],
-        baseFret: 3
-      },
-      {
-        frets: [-1, -1, 1, 1, 1, 4],
-        fingers: [0, 0, 1, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 8
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'minor',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 4, 2],
-        fingers: [0, 0, 1, 3, 4, 2],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, -1, 4, 3, 4, 2],
-        fingers: [0, 0, 3, 2, 4, 1],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [1, 1, 3, 3, 2, 1],
-        fingers: [1, 1, 3, 4, 2, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [1, 3, 3, 1, 1, 1],
-        fingers: [1, 3, 4, 1, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'dim',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, -1, 2],
-        fingers: [0, 0, 1, 2, 0, 3],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 3, 1, -1, 1, 2],
-        fingers: [0, 4, 1, 0, 2, 3],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 2, 3, 2, -1],
-        fingers: [0, 1, 2, 4, 3, 0],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [3, 1, -1, 3, 2, -1],
-        fingers: [3, 1, 0, 4, 2, 0],
-        baseFret: 9,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'dim7',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 1, 2],
-        fingers: [0, 0, 1, 3, 2, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 2, 3, 1, 3, 1],
-        fingers: [0, 2, 3, 1, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 5
-      },
-      {
-        frets: [-1, -1, 1, 2, 1, 2],
-        fingers: [0, 0, 1, 3, 2, 4],
-        baseFret: 7,
-        barres: []
-      },
-      {
-        frets: [2, -1, 1, 2, 1, -1],
-        fingers: [2, 0, 1, 3, 1, 0],
-        barres: [1],
-        baseFret: 10
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'sus2',
-    positions: [
-      {
-        frets: [1, 1, 1, 3, 4, 1],
-        fingers: [1, 1, 1, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [1, 1, 3, 3, 1, 1],
-        fingers: [1, 1, 3, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [4, 1, 1, 3, 4, -1],
-        fingers: [3, 1, 1, 2, 4, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 8
-      },
-      {
-        frets: [1, 3, 3, -1, 1, 3],
-        fingers: [1, 2, 3, 0, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'sus4',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 4, 4],
-        fingers: [0, 0, 1, 2, 3, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [1, 1, 3, 3, 4, 1],
-        fingers: [1, 1, 2, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [-1, -1, 1, 1, 2, -1],
-        fingers: [0, 0, 1, 1, 2, 0],
-        barres: [1],
-        baseFret: 8
-      },
-      {
-        frets: [1, 3, 3, 3, 1, 1],
-        fingers: [1, 2, 3, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'sus2sus4',
-    positions: [
-      {
-        frets: [-1, 1, 1, 3, 1, 1],
-        fingers: [0, 1, 1, 3, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [-1, 4, 1, 1, 2, 2],
-        fingers: [0, 4, 1, 1, 2, 2],
-        barres: [1, 2],
-        baseFret: 3
-      },
-      {
-        frets: [1, 1, 3, 3, 1, 3],
-        fingers: [1, 1, 2, 3, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '7sus4',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 2, 4],
-        fingers: [0, 0, 1, 3, 2, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 3, 3, 3, 1, 1],
-        fingers: [0, 2, 3, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [1, 1, 3, 1, 4, 1],
-        fingers: [1, 1, 3, 1, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [1, 3, 1, 3, 1, 1],
-        fingers: [1, 3, 1, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'alt',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 4, 3],
-        fingers: [0, 0, 1, 2, 4, 3],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 3, 2, 0, 1, 2],
-        fingers: [0, 4, 2, 0, 1, 3],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 2, 0, 3, -1],
-        fingers: [0, 1, 2, 0, 3, 0],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [2, 1, -1, 3, 1, 2],
-        fingers: [2, 1, 0, 4, 1, 3],
-        barres: [1],
-        capo: true,
-        baseFret: 10
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'aug',
-    positions: [
-      {
-        frets: [-1, -1, 3, 2, 2, 1],
-        fingers: [0, 0, 4, 2, 3, 1],
-        baseFret: 3,
-        barres: []
-      },
-      {
-        frets: [-1, 3, 2, 1, 1, -1],
-        fingers: [0, 3, 2, 1, 1, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [4, 3, 2, 1, 1, -1],
-        fingers: [4, 3, 2, 1, 1, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 8
-      },
-      {
-        frets: [1, -1, 3, 2, 2, -1],
-        fingers: [1, 0, 4, 2, 3, 0],
-        baseFret: 11,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '5',
-    positions: [
-      {
-        frets: [1, 3, -1, -1, -1, -1],
-        fingers: [1, 3, 0, 0, 0, 0],
-        baseFret: 11,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 3, -1, -1, -1],
-        fingers: [0, 1, 3, 0, 0, 0],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [1, 3, 3, -1, -1, -1],
-        fingers: [1, 3, 4, 0, 0, 0],
-        baseFret: 11,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '6',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 1, 3],
-        fingers: [0, 0, 1, 3, 1, 4],
-        barres: [1],
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 2, 2, 1, -1],
-        fingers: [0, 4, 2, 3, 1, 0],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 3, 3, 3, 3],
-        fingers: [0, 1, 3, 3, 3, 3],
-        barres: [3],
-        baseFret: 6
-      },
-      {
-        frets: [2, -1, 1, 3, 2, -1],
-        fingers: [2, 0, 1, 4, 3, 0],
-        baseFret: 10,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '69',
-    positions: [
-      {
-        frets: [-1, -1, 1, 0, 1, 1],
-        fingers: [0, 0, 2, 0, 3, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 3, 3, 3, 4, 3],
-        fingers: [0, 1, 1, 1, 2, 1],
-        barres: [3],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 2, 1, 1, 2, 2],
-        fingers: [0, 2, 1, 1, 3, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 5
-      },
-      {
-        frets: [2, 1, 1, 1, 2, 2],
-        fingers: [2, 1, 1, 1, 3, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 10
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '7',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 2, 3],
-        fingers: [0, 0, 1, 3, 2, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 3, 1, 3, 1],
-        fingers: [0, 1, 3, 1, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [-1, -1, 1, 1, 1, 2],
-        fingers: [0, 0, 1, 1, 1, 2],
-        barres: [1],
-        capo: true,
-        baseFret: 8
-      },
-      {
-        frets: [1, 3, 1, 2, 1, 1],
-        fingers: [1, 3, 1, 2, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '7b5',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 2, 3],
-        fingers: [0, 0, 1, 2, 3, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, -1, 2, 3, 1, 2],
-        fingers: [0, 0, 2, 4, 1, 3],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 2, 1, 3, 1],
-        fingers: [0, 1, 2, 1, 3, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [2, -1, 2, 3, 1, -1],
-        fingers: [2, 0, 3, 4, 1, 0],
-        baseFret: 10,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'aug7',
-    positions: [
-      {
-        frets: [-1, -1, 1, 4, 2, 3],
-        fingers: [0, 0, 1, 4, 2, 3],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 4, 1, 3, 2],
-        fingers: [0, 1, 4, 1, 3, 2],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [3, 2, 3, 0, 0, 1],
-        fingers: [3, 2, 4, 0, 0, 1],
-        baseFret: 9,
-        barres: []
-      },
-      {
-        frets: [1, -1, 1, 2, 2, -1],
-        fingers: [1, 0, 2, 3, 4, 0],
-        baseFret: 11,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '9',
-    positions: [
-      {
-        frets: [-1, -1, 1, 0, 2, 1],
-        fingers: [0, 0, 1, 0, 3, 2],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 2, 1, 2, 2, 2],
-        fingers: [0, 2, 1, 3, 3, 4],
-        barres: [2],
-        baseFret: 5
-      },
-      {
-        frets: [2, 1, 2, 1, -1, -1],
-        fingers: [3, 1, 4, 2, 0, 0],
-        baseFret: 10,
-        barres: []
-      },
-      {
-        frets: [1, 3, 1, 2, 1, 3],
-        fingers: [1, 3, 1, 2, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '9b5',
-    positions: [
-      {
-        frets: [-1, 2, 1, 2, 2, 1],
-        fingers: [0, 2, 1, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 5
-      },
-      {
-        frets: [-1, 1, 2, 0, 1, 4],
-        fingers: [0, 1, 3, 0, 2, 4],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [2, 1, 2, 1, 1, 2],
-        fingers: [1, 2, 0, 3, 0, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 10
-      },
-      {
-        frets: [1, 2, 1, 2, -1, 3],
-        fingers: [1, 2, 1, 3, 0, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'aug9',
-    positions: [
-      {
-        frets: [3, 4, 3, 4, 4, 3],
-        fingers: [1, 2, 1, 3, 4, 1],
-        barres: [3],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 2, 1, 2, 2, 3],
-        fingers: [0, 2, 1, 3, 3, 4],
-        barres: [2],
-        baseFret: 5
-      },
-      {
-        frets: [3, 2, -1, 2, 0, 1],
-        fingers: [4, 2, 0, 3, 0, 1],
-        baseFret: 9,
-        barres: []
-      },
-      {
-        frets: [2, 1, 2, 1, 3, -1],
-        fingers: [2, 1, 3, 1, 4, 0],
-        barres: [1],
-        baseFret: 10
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '7b9',
-    positions: [
-      {
-        frets: [-1, -1, 1, 0, 2, 0],
-        fingers: [0, 0, 2, 0, 4, 0],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 2, 1, 2, 1, 2],
-        fingers: [0, 2, 1, 3, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 5
-      },
-      {
-        frets: [-1, 1, 3, 1, 3, 0],
-        fingers: [0, 1, 3, 1, 4, 0],
-        barres: [1],
-        baseFret: 6
-      },
-      {
-        frets: [3, 2, 3, 1, -1, -1],
-        fingers: [3, 2, 4, 1, 0, 0],
-        baseFret: 9,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '7#9',
-    positions: [
-      {
-        frets: [-1, -1, 1, 0, 2, 2],
-        fingers: [0, 0, 2, 0, 3, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 2, 1, 2, 3, -1],
-        fingers: [0, 2, 1, 3, 4, 0],
-        baseFret: 5,
-        barres: []
-      },
-      {
-        frets: [-1, 2, 1, 1, 1, 2],
-        fingers: [0, 2, 1, 1, 1, 3],
-        barres: [1],
-        capo: true,
-        baseFret: 8
-      },
-      {
-        frets: [2, 1, 2, 2, -1, -1],
-        fingers: [2, 1, 3, 4, 0, 0],
-        baseFret: 10,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '11',
-    positions: [
-      {
-        frets: [1, 1, 1, 1, 2, 3],
-        fingers: [1, 1, 1, 1, 2, 3],
-        barres: [1],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 2, 3, 1, 1],
-        fingers: [0, 3, 2, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [0, 1, 1, 1, 3, 1],
-        fingers: [0, 1, 1, 1, 3, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [1, 1, 1, 2, 1, 1],
-        fingers: [1, 1, 1, 2, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '9#11',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 2, 3],
-        fingers: [0, 0, 1, 2, 3, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 2, 1, 2, 2, 1],
-        fingers: [0, 2, 1, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 5
-      },
-      {
-        frets: [-1, 1, 2, 1, 3, -1],
-        fingers: [0, 1, 2, 1, 3, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [2, 1, 2, 1, 1, 2],
-        fingers: [2, 1, 3, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 10
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: '13',
-    positions: [
-      {
-        frets: [-1, 2, 1, 2, 4, 4],
-        fingers: [0, 2, 1, 3, 4, 4],
-        barres: [4],
-        baseFret: 5
-      },
-      {
-        frets: [1, 1, 1, 1, 3, 3],
-        fingers: [1, 1, 1, 1, 3, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [3, 2, 2, 0, 1, 1],
-        fingers: [4, 2, 3, 0, 1, 1],
-        barres: [1],
-        baseFret: 9
-      },
-      {
-        frets: [1, 1, 1, 2, 3, 3],
-        fingers: [1, 1, 1, 2, 3, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'maj7',
-    positions: [
-      {
-        frets: [-1, 1, 1, 3, 3, 3],
-        fingers: [0, 1, 1, 3, 3, 3],
-        barres: [1, 3],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 4, 3, 1, 1, 1],
-        fingers: [0, 4, 3, 1, 1, 1],
-        barres: [1],
-        baseFret: 3
-      },
-      {
-        frets: [1, 1, 3, 2, 3, 1],
-        fingers: [1, 1, 3, 2, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [-1, -1, 1, 1, 1, 3],
-        fingers: [0, 0, 1, 1, 1, 4],
-        barres: [1],
-        baseFret: 8
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'maj7b5',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 3, 3],
-        fingers: [0, 0, 1, 2, 3, 4],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 2, 2, 3, 1],
-        fingers: [0, 1, 2, 2, 4, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [2, 1, 3, 3, 1, 1],
-        fingers: [2, 1, 3, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 10
-      },
-      {
-        frets: [1, 2, 2, 2, -1, 1],
-        fingers: [1, 2, 2, 2, 0, 1],
-        barres: [1, 2],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'maj7#5',
-    positions: [
-      {
-        frets: [1, 4, 3, 2, 1, 1],
-        fingers: [1, 4, 3, 2, 1, 1],
-        barres: [1],
-        baseFret: 3
-      },
-      {
-        frets: [-1, 2, 1, 3, -1, 3],
-        fingers: [0, 2, 1, 3, 0, 4],
-        baseFret: 5,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 4, 2, 3, -1],
-        fingers: [0, 1, 4, 2, 3, 0],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [1, -1, 2, 2, 2, 1],
-        fingers: [1, 0, 2, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'maj9',
-    positions: [
-      {
-        frets: [-1, 4, 1, 1, 1, 1],
-        fingers: [0, 4, 1, 1, 1, 1],
-        barres: [1],
-        baseFret: 3
-      },
-      {
-        frets: [-1, 2, 1, 3, 2, -1],
-        fingers: [0, 2, 1, 4, 3, 0],
-        baseFret: 5,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 1, 1, 1, 3],
-        fingers: [0, 1, 1, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 8
-      },
-      {
-        frets: [-1, -1, 2, 2, 1, 3],
-        fingers: [0, 0, 2, 3, 1, 4],
-        baseFret: 11,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'maj11',
-    positions: [
-      {
-        frets: [-1, -1, 1, 1, 3, 3],
-        fingers: [0, 0, 1, 1, 3, 4],
-        barres: [1],
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 2, 4, 1, 1],
-        fingers: [0, 3, 2, 4, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [1, 1, 1, 2, 3, 1],
-        fingers: [1, 1, 1, 2, 3, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [1, 1, 2, 2, 1, 1],
-        fingers: [1, 1, 2, 3, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'maj13',
-    positions: [
-      {
-        frets: [-1, 3, 1, 0, 3, -1],
-        fingers: [0, 3, 1, 0, 4, 0],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 4, 3, 3, 1, 1],
-        fingers: [0, 4, 2, 3, 1, 1],
-        barres: [1],
-        baseFret: 3
-      },
-      {
-        frets: [-1, 1, 1, 2, 3, 3],
-        fingers: [0, 1, 1, 2, 3, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [2, 1, 1, 1, 2, 1],
-        fingers: [2, 1, 1, 1, 3, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 10
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'm6',
-    positions: [
-      {
-        frets: [-1, 1, 1, 3, 1, 2],
-        fingers: [0, 1, 1, 3, 1, 2],
-        barres: [1],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 1, 2, 1, 3],
-        fingers: [0, 3, 1, 2, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [-1, -1, 2, 2, 1, 2],
-        fingers: [0, 0, 2, 3, 1, 4],
-        baseFret: 7,
-        barres: []
-      },
-      {
-        frets: [1, 3, 3, 1, 3, 1],
-        fingers: [1, 2, 3, 1, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'm7',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 2, 2],
-        fingers: [0, 0, 1, 4, 2, 3],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [1, 1, 3, 1, 2, 1],
-        fingers: [1, 1, 3, 1, 2, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [-1, -1, 2, 2, 1, 3],
-        fingers: [0, 0, 2, 3, 1, 4],
-        baseFret: 7,
-        barres: []
-      },
-      {
-        frets: [1, 3, 1, 1, 1, 1],
-        fingers: [1, 4, 1, 1, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'm7b5',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 2, 2],
-        fingers: [0, 0, 1, 2, 2, 2],
-        barres: [2],
-        baseFret: 1
-      },
-      {
-        frets: [-1, 1, 2, 1, 2, -1],
-        fingers: [0, 1, 3, 2, 4, 0],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [-1, -1, 1, 2, 1, 3],
-        fingers: [0, 0, 1, 2, 1, 4],
-        barres: [1],
-        baseFret: 7
-      },
-      {
-        frets: [2, -1, 2, 2, 1, -1],
-        fingers: [2, 0, 3, 4, 1, 0],
-        baseFret: 10,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'm9',
-    positions: [
-      {
-        frets: [-1, 3, 1, 3, 3, 3],
-        fingers: [0, 2, 1, 3, 4, 4],
-        barres: [3],
-        baseFret: 4
-      },
-      {
-        frets: [-1, -1, 2, 4, 1, 3],
-        fingers: [0, 0, 2, 4, 1, 3],
-        baseFret: 7,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 3, 2, 3, 3],
-        fingers: [0, 1, 3, 2, 4, 4],
-        barres: [3],
-        baseFret: 9
-      },
-      {
-        frets: [1, 3, 1, 1, 1, 3],
-        fingers: [1, 3, 1, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'm69',
-    positions: [
-      {
-        frets: [2, -1, 1, 3, 1, 1],
-        fingers: [2, 0, 1, 3, 1, 1],
-        barres: [1],
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 1, 2, 3, -1],
-        fingers: [0, 3, 1, 2, 4, 0],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [3, 1, 2, 2, 1, 1],
-        fingers: [4, 1, 2, 3, 0, 0],
-        barres: [1],
-        capo: true,
-        baseFret: 9
-      },
-      {
-        frets: [-1, -1, 3, 1, 3, 3],
-        fingers: [0, 0, 2, 1, 3, 4],
-        baseFret: 11,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'm11',
-    positions: [
-      {
-        frets: [-1, -1, 1, 1, 2, 2],
-        fingers: [0, 0, 1, 1, 3, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 1, 3, 3, 1],
-        fingers: [0, 2, 1, 3, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [3, 1, 3, 2, 1, 1],
-        fingers: [3, 1, 4, 2, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 9
-      },
-      {
-        frets: [1, 1, 1, 1, 1, 3],
-        fingers: [1, 1, 1, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'mmaj7',
-    positions: [
-      {
-        frets: [-1, -1, 1, 3, 3, 2],
-        fingers: [0, 0, 1, 3, 4, 2],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 4, 2, 1, 1, -1],
-        fingers: [0, 4, 3, 1, 2, 0],
-        baseFret: 3,
-        barres: []
-      },
-      {
-        frets: [-1, 1, 3, 2, 2, 1],
-        fingers: [0, 1, 4, 2, 3, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [1, 3, 2, 1, 1, 1],
-        fingers: [1, 3, 2, 1, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'mmaj7b5',
-    positions: [
-      {
-        frets: [-1, -1, 1, 2, 3, 2],
-        fingers: [0, 0, 1, 2, 4, 3],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [1, 2, 3, 3, 3, -1],
-        fingers: [1, 2, 3, 3, 3, 0],
-        barres: [3],
-        baseFret: 5
-      },
-      {
-        frets: [-1, 1, 2, 2, 2, -1],
-        fingers: [0, 1, 2, 3, 4, 0],
-        baseFret: 6,
-        barres: []
-      },
-      {
-        frets: [1, 2, 2, 1, -1, 1],
-        fingers: [1, 2, 2, 1, 0, 1],
-        barres: [1, 2],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'mmaj9',
-    positions: [
-      {
-        frets: [-1, 3, 1, 4, 3, -1],
-        fingers: [0, 2, 1, 4, 3, 0],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [1, 4, 3, 2, 1, 1],
-        fingers: [1, 4, 3, 2, 1, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [3, 1, 4, 2, -1, -1],
-        fingers: [3, 1, 4, 2, 0, 0],
-        baseFret: 9,
-        barres: []
-      },
-      {
-        frets: [1, 3, 2, 1, 1, 3],
-        fingers: [1, 3, 2, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'mmaj11',
-    positions: [
-      {
-        frets: [-1, 1, 1, 1, 3, 2],
-        fingers: [0, 1, 1, 1, 3, 2],
-        barres: [1],
-        capo: true,
-        baseFret: 1
-      },
-      {
-        frets: [-1, 3, 1, 4, 3, 1],
-        fingers: [0, 3, 1, 4, 3, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 4
-      },
-      {
-        frets: [1, 1, 1, 2, 2, 1],
-        fingers: [1, 1, 1, 2, 3, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 6
-      },
-      {
-        frets: [1, 1, 2, 1, 1, 3],
-        fingers: [1, 1, 2, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'add9',
-    positions: [
-      {
-        frets: [-1, 4, 3, 1, 4, 1],
-        fingers: [0, 3, 2, 1, 4, 1],
-        barres: [1],
-        capo: true,
-        baseFret: 3
-      },
-      {
-        frets: [-1, 2, 1, 0, 2, 2],
-        fingers: [0, 2, 1, 0, 3, 4],
-        baseFret: 5,
-        barres: []
-      },
-      {
-        frets: [2, 1, -1, 1, 2, -1],
-        fingers: [3, 1, 0, 2, 4, 0],
-        baseFret: 10,
-        barres: []
-      },
-      {
-        frets: [-1, -1, 3, 2, 1, 3],
-        fingers: [0, 0, 3, 2, 1, 4],
-        baseFret: 11,
-        barres: []
-      }
-    ]
-  },
-  {
-    key: 'Eb',
-    suffix: 'madd9',
-    positions: [
-      {
-        frets: [-1, -1, 4, 3, 4, 1],
-        fingers: [0, 0, 3, 2, 4, 1],
-        baseFret: 1,
-        barres: []
-      },
-      {
-        frets: [-1, 4, 2, 1, 4, -1],
-        fingers: [0, 3, 2, 1, 4, 0],
-        baseFret: 3,
-        barres: []
-      },
-      {
-        frets: [-1, 3, 1, -1, 3, 3],
-        fingers: [0, 2, 1, 0, 3, 4],
-        baseFret: 4,
-        barres: []
-      },
-      {
-        frets: [-1, -1, 3, 1, 1, 3],
-        fingers: [0, 0, 3, 1, 1, 4],
-        barres: [1],
-        capo: true,
-        baseFret: 11
-      }
-    ]
-  },
-  {
     key: 'E',
     suffix: 'major',
     positions: [
@@ -12813,7 +11488,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'major',
     positions: [
       {
@@ -12847,7 +11522,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'minor',
     positions: [
       {
@@ -12879,7 +11554,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'dim',
     positions: [
       {
@@ -12909,7 +11584,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'dim7',
     positions: [
       {
@@ -12941,7 +11616,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'sus2',
     positions: [
       {
@@ -12974,7 +11649,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'sus4',
     positions: [
       {
@@ -13008,7 +11683,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '7sus4',
     positions: [
       {
@@ -13042,7 +11717,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'alt',
     positions: [
       {
@@ -13073,7 +11748,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'aug',
     positions: [
       {
@@ -13106,7 +11781,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '5',
     positions: [
       {
@@ -13130,7 +11805,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '6',
     positions: [
       {
@@ -13162,7 +11837,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '69',
     positions: [
       {
@@ -13195,7 +11870,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '7',
     positions: [
       {
@@ -13229,7 +11904,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '7b5',
     positions: [
       {
@@ -13261,7 +11936,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'aug7',
     positions: [
       {
@@ -13292,7 +11967,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '9',
     positions: [
       {
@@ -13324,7 +11999,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '9b5',
     positions: [
       {
@@ -13357,7 +12032,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'aug9',
     positions: [
       {
@@ -13388,7 +12063,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '7b9',
     positions: [
       {
@@ -13420,7 +12095,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '7#9',
     positions: [
       {
@@ -13451,7 +12126,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '11',
     positions: [
       {
@@ -13485,7 +12160,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '9#11',
     positions: [
       {
@@ -13517,7 +12192,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: '13',
     positions: [
       {
@@ -13550,7 +12225,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'maj7',
     positions: [
       {
@@ -13583,7 +12258,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'maj7b5',
     positions: [
       {
@@ -13615,7 +12290,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'maj7#5',
     positions: [
       {
@@ -13646,7 +12321,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'maj9',
     positions: [
       {
@@ -13679,7 +12354,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'maj11',
     positions: [
       {
@@ -13712,7 +12387,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'maj13',
     positions: [
       {
@@ -13746,7 +12421,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'm6',
     positions: [
       {
@@ -13779,7 +12454,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'm7',
     positions: [
       {
@@ -13813,7 +12488,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'm7b5',
     positions: [
       {
@@ -13843,7 +12518,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'm9',
     positions: [
       {
@@ -13874,7 +12549,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'm69',
     positions: [
       {
@@ -13906,7 +12581,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'm11',
     positions: [
       {
@@ -13940,7 +12615,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'mmaj7',
     positions: [
       {
@@ -13974,7 +12649,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'mmaj7b5',
     positions: [
       {
@@ -14005,7 +12680,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'mmaj9',
     positions: [
       {
@@ -14037,7 +12712,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'mmaj11',
     positions: [
       {
@@ -14071,7 +12746,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'add9',
     positions: [
       {
@@ -14102,7 +12777,7 @@ const chords: Chord[] = [
     ]
   },
   {
-    key: 'Ab',
+    key: 'G#',
     suffix: 'madd9',
     positions: [
       {
