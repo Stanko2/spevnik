@@ -37,7 +37,7 @@
         </div>
       </transition>
     </div>
-      <Navbar :songs="$store.state.songs"></Navbar>
+    <Navbar :songs="$store.state.songs"></Navbar>
     </div>
 </template>
 

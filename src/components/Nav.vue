@@ -80,8 +80,9 @@ export default class Navbar extends Vue {
     showMenu = false
     searchQuery = ''
     selectSong (dir: number): void {
+      if (isNaN(this.songId)) this.songId = 0
       this.$router.push({
-        path: `/song/${this.songId + dir}`
+        path: `/song/${Math.max(this.songId + dir, 1)}`
       })
     }
 
