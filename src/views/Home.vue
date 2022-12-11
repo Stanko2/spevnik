@@ -36,8 +36,8 @@
           ></text-renderer>
         </div>
       </transition>
-      <Navbar :songs="$store.state.songs"></Navbar>
     </div>
+      <Navbar :songs="$store.state.songs"></Navbar>
     </div>
 </template>
 
@@ -82,11 +82,17 @@ export default class SongView extends Vue {
     await this.$nextTick()
     const lastId = this.id
     this.id = parseInt(this.$route.params.id)
+    if (isNaN(this.id)) {
+      this.song = null
+      return
+    }
     this.song = await this.loadSong(this.id)
     this.songShown = true
     this.liked = this.$store.state.liked.has(this.id)
     if (this.song == null) {
-      this.$router.push({ path: `/song/${lastId}` })
+      if (lastId !== this.id && !isNaN(lastId)) {
+        this.$router.push({ path: `/song/${lastId}` })
+      }
     }
   }
 
