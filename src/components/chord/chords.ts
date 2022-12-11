@@ -69,8 +69,6 @@ function getChord (chord: string): ChordObject {
     }
   }
 
-  console.log(key, realSuffix)
-
   const chordObj = chords.chords.find((chord) => chord.key === key && chord.suffix === realSuffix)
   if (!chordObj) return { requested: chord, found: null }
   return {
