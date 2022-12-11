@@ -22,10 +22,10 @@ const Dot = (
   fret === -1
     ? `
     <text
-      fontSize="0.7rem"
+      font-size="0.7rem"
       fill="#444"
-      fontFamily="Verdana"
-      textAnchor="middle"
+      font-family="Verdana"
+      text-anchor="middle"
       x='${getStringPosition(string)}'
       y="-2"
     >
@@ -35,7 +35,7 @@ const Dot = (
     : `
     <g>
       <circle
-        strokeWidth="0.25"
+        stroke-width="0.25"
         stroke="#444"
         fill='${fret === 0 ? 'transparent' : '#444'}'
         cx='${getStringPosition(string)}'
@@ -44,14 +44,14 @@ const Dot = (
       />
       ${!lite && finger > 0 ? `
         <text
-          fontSize="3pt"
-          fontFamily="Verdana"
-          textAnchor="middle"
+          font-size="3pt"
+          font-family="Verdana"
+          text-anchor="middle"
           fill="white"
           x='${getStringPosition(string)}'
           y='${positions.finger[fret]}'
         >
-          {finger}
+          ${finger}
         </text>
       ` : ''}
     </g>

@@ -1,5 +1,9 @@
 <template>
   <div class="dark:bg-gray-800 h-screen w-screen">
+    <ChordPopup
+      :chord="chord"
+      :lite="false"
+      />
     <div v-if="song === null">
       Invalid ID
     </div>
@@ -52,11 +56,13 @@ import TextRenderer from '@/components/Textrenderer'
 import Navbar from '@/components/Nav.vue'
 import { Song } from '@/store'
 import { getSong } from '@/store/firebase'
+import ChordPopup from '@/components/chord/ChordPopup.vue'
 
-@Component({ components: { TextRenderer, Navbar } })
+@Component({ components: { TextRenderer, Navbar, ChordPopup } })
 export default class SongView extends Vue {
   id = -1
   song: Song | null = null
+  chord: string | null = null
 
   $refs!: {
     Idinput: HTMLInputElement
@@ -73,6 +79,9 @@ export default class SongView extends Vue {
 
   async mounted (): Promise<void> {
     this.showSong()
+    window.setChord = (chord: string | null) => {
+      this.chord = chord
+    }
   }
 
   @Watch('$route.params.id')

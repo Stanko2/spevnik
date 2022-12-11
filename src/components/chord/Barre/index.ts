@@ -48,7 +48,7 @@ const Barre = (
             a 4,4 0 1,1 8,0
           '
             fill='#555'
-            fillOpacity='0.2'
+            fill-opacity='0.2'
             transform='rotate(-90)'
           />
         </g>
@@ -57,7 +57,7 @@ const Barre = (
           x='${fretXPosition[0]}'
           y='${fretYPosition[barre - 1]}'
           width='${(strings - 1) * 10}'
-          fillOpacity='0.2'
+          fill-opacity='0.2'
           height='8.25'
         />
         <g
@@ -71,7 +71,7 @@ const Barre = (
             a 4,4 0 1,1 8,0
             '
             fill='#555'
-            fillOpacity='0.2'
+            fill-opacity='0.2'
             transform='rotate(90)'
           />
         </g>
@@ -103,9 +103,9 @@ const Barre = (
               (fret) =>
                 `<text
             key='${fret.position}'
-            fontSize='3pt'
-            fontFamily='Verdana'
-            textAnchor='middle'
+            font-size='3pt'
+            font-family='Verdana'
+            text-anchor='middle'
             fill='white'
             x='${getStringPosition(strings - fret.position)}'
             y='${positions.finger[fret.value]}'

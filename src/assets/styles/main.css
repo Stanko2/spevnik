@@ -60,3 +60,8 @@
   * @import "utilities/background-patterns";
   * @import "utilities/skew-transforms";
   */
+
+  @font-face {
+    font-family: 'Verdana';
+    src: url('assets/Verdana.ttf');
+  }
