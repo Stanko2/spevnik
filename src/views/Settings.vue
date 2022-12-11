@@ -2,7 +2,7 @@
     <div class="h-screen w-screen dark:bg-gray-800">
         <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
-                    <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close">arrow_back</span>
+                    <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close" v-shortkey="['esc']" @shortkey="close">arrow_back</span>
                 Nastavenia
             </h1>
             <div v-if="$store.state.credential" class="opacity-70">

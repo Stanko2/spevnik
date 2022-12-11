@@ -1,9 +1,13 @@
 <template>
   <div class="dark:bg-gray-800 h-screen w-screen">
+    <ChordPopup
+      :chord="chord"
+      :lite="false"
+      />
     <div v-if="song === null">
       Invalid ID
     </div>
-    <div v-else>
+    <div v-else @click="handleTextClick">
       <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
         <div>
           <h1 class="text-xl text-left">
@@ -36,8 +40,8 @@
           ></text-renderer>
         </div>
       </transition>
-      <Navbar :songs="$store.state.songs"></Navbar>
     </div>
+    <Navbar :songs="$store.state.songs"></Navbar>
     </div>
 </template>
 
@@ -52,11 +56,13 @@ import TextRenderer from '@/components/Textrenderer'
 import Navbar from '@/components/Nav.vue'
 import { Song } from '@/store'
 import { getSong } from '@/store/firebase'
+import ChordPopup from '@/components/chord/ChordPopup.vue'
 
-@Component({ components: { TextRenderer, Navbar } })
+@Component({ components: { TextRenderer, Navbar, ChordPopup } })
 export default class SongView extends Vue {
   id = -1
   song: Song | null = null
+  chord: string | null = null
 
   $refs!: {
     Idinput: HTMLInputElement
@@ -73,6 +79,9 @@ export default class SongView extends Vue {
 
   async mounted (): Promise<void> {
     this.showSong()
+    window.setChord = (chord: string | null) => {
+      this.chord = chord
+    }
   }
 
   @Watch('$route.params.id')
@@ -82,11 +91,17 @@ export default class SongView extends Vue {
     await this.$nextTick()
     const lastId = this.id
     this.id = parseInt(this.$route.params.id)
+    if (isNaN(this.id)) {
+      this.song = null
+      return
+    }
     this.song = await this.loadSong(this.id)
     this.songShown = true
     this.liked = this.$store.state.liked.has(this.id)
     if (this.song == null) {
-      this.$router.push({ path: `/song/${lastId}` })
+      if (lastId !== this.id && !isNaN(lastId)) {
+        this.$router.push({ path: `/song/${lastId}` })
+      }
     }
   }
 
@@ -145,6 +160,15 @@ export default class SongView extends Vue {
   toggleLiked ():void {
     this.liked = !this.liked
     this.$store.commit('toggleLike', this.id)
+  }
+
+  handleTextClick (event: MouseEvent):void {
+    if (event.target instanceof HTMLElement && event.target.classList.contains('accord')) {
+      const chord = event.target.innerText
+      this.chord = chord
+    } else {
+      this.chord = null
+    }
   }
 }
 </script>

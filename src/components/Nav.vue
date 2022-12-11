@@ -51,7 +51,7 @@
           leave-to-class="translate-x-full"
         >
           <div v-if="showMenu" class="fixed right-3 dark:bg-gray-700 top-3 bottom-3 rounded-lg shadow-xl dark:text-gray-200 xl:w-1/3 left-3 xl:left-auto bg-gray-200 z-50">
-            <button class="absolute top-0 right-0 m-2 rounded-full transition-all bg-gray-300 hover:bg-gray-400 dark:bg-gray-500 dark:hover:bg-gray-400 p-2" @click="showMenu = false">
+            <button class="absolute top-0 right-0 m-2 rounded-full transition-all bg-gray-300 hover:bg-gray-400 dark:bg-gray-500 dark:hover:bg-gray-400 p-2" @click="showMenu = false" v-shortkey="['esc']" @shortkey="showMenu = false">
               <span class="material-symbols-rounded block">
                 close
               </span>
@@ -80,8 +80,9 @@ export default class Navbar extends Vue {
     showMenu = false
     searchQuery = ''
     selectSong (dir: number): void {
+      if (isNaN(this.songId)) this.songId = 0
       this.$router.push({
-        path: `/song/${this.songId + dir}`
+        path: `/song/${Math.max(this.songId + dir, 1)}`
       })
     }
 
