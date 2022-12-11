@@ -7,7 +7,7 @@
     <div v-if="song === null">
       Invalid ID
     </div>
-    <div v-else>
+    <div v-else @click="handleTextClick">
       <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
         <div>
           <h1 class="text-xl text-left">
@@ -160,6 +160,15 @@ export default class SongView extends Vue {
   toggleLiked ():void {
     this.liked = !this.liked
     this.$store.commit('toggleLike', this.id)
+  }
+
+  handleTextClick (event: MouseEvent):void {
+    if (event.target instanceof HTMLElement && event.target.classList.contains('accord')) {
+      const chord = event.target.innerText
+      this.chord = chord
+    } else {
+      this.chord = null
+    }
   }
 }
 </script>

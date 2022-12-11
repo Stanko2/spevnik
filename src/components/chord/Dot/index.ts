@@ -23,7 +23,7 @@ const Dot = (
     ? `
     <text
       font-size="0.7rem"
-      fill="#444"
+      fill="var(--line-color)"
       font-family="Verdana"
       text-anchor="middle"
       x='${getStringPosition(string)}'
@@ -35,9 +35,9 @@ const Dot = (
     : `
     <g>
       <circle
-        stroke-width="0.25"
-        stroke="#444"
-        fill='${fret === 0 ? 'transparent' : '#444'}'
+        stroke-width="0.5"
+        stroke="var(--line-color)"
+        fill='${fret === 0 ? 'transparent' : 'var(--line-color)'}'
         cx='${getStringPosition(string)}'
         cy='${positions.fret[fret]}'
         r='${fret === 0 ? radius.open : radius.fret}'

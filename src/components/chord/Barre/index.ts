@@ -47,13 +47,13 @@ const Barre = (
             m -4, 0
             a 4,4 0 1,1 8,0
           '
-            fill='#555'
+            fill='var(--line-color);'
             fill-opacity='0.2'
             transform='rotate(-90)'
           />
         </g>
         <rect
-          fill='#555'
+          fill='var(--line-color);'
           x='${fretXPosition[0]}'
           y='${fretYPosition[barre - 1]}'
           width='${(strings - 1) * 10}'
@@ -70,7 +70,7 @@ const Barre = (
             m -4, 0
             a 4,4 0 1,1 8,0
             '
-            fill='#555'
+            fill='var(--line-color);'
             fill-opacity='0.2'
             transform='rotate(90)'
           />
@@ -83,15 +83,15 @@ const Barre = (
           `<circle
           key='${fret.position}'
           strokeWidth='0.25'
-          stroke='#444'
-          fill='#444'
+          stroke='var(--line-color)'
+          fill='var(--line-color)'
           cx='${getStringPosition(strings - fret.position)}'
           cy='${positions.fret[fret.value]}'
           r='4'
         />`
       )}
       <rect
-        fill='#444'
+        fill='var(--line-color)'
         x='${fretXPosition[string1]}'
         y='${y}'
         width='${width}'

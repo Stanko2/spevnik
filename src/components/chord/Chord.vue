@@ -1,15 +1,10 @@
 <template>
-  <svg width="500px" preserveAspectRatio="xMinYMin meet" viewBox="0 -10 80 80" class="chord">
-    <g v-if="meta.requested !== (meta.key ?? '') + meta.suffix">
-      <text class="requested" x="40" y="-1"
-      >{{ meta.requested }}</text>
-      <text class="found" x="40" y="4">{{ meta.key }} {{ meta.suffix }}</text>
-    </g>
-    <g v-else>
-      <text class="requested" x="40" y="3">{{ meta.requested }}</text>
-    </g>
-    <g transform="translate(13, 13)" v-html="all"></g>
-  </svg>
+  <div class="w-full h-full flex flex-col items-center justify-center">
+    <div class="w-full h-full flex flex-row items-center justify-center">
+    <svg width="100%" preserveAspectRatio="xMinYMin meet" viewBox="-5 0 80 70" style="--line-color: rgba(31, 41, 55, var(--tw-bg-opacity));">
+      <g transform="translate(13, 13)" v-html="all"></g>
+    </svg>
+  </div></div>
 </template>
 
 <script lang="ts">
@@ -17,11 +12,10 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import Neck from '@/components/chord/Neck'
 import Barre from '@/components/chord/Barre'
 import Dot from '@/components/chord/Dot'
-import { ChordObject, ChordLayout } from '@/components/chord/chords'
+import { ChordLayout } from '@/components/chord/chords'
 
 @Component
 export default class ChordView extends Vue {
-  @Prop() meta!: {key: string, suffix: string, requested: string}
   @Prop() layout!: ChordLayout
   @Prop() lite!: boolean
 
@@ -57,24 +51,3 @@ export default class ChordView extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.chord {
-  font-family: 'Verdana', sans-serif;
-}
-
-.requested {
-  font-size: 7pt;
-  font-weight: bold;
-  text-anchor: middle;
-  fill: #999;
-}
-
-.found {
-  font-size: 2.5pt;
-  font-weight: bold;
-  text-anchor: middle;
-  fill: #999;
-  transform: translate(0, 5);
-}
-</style>
