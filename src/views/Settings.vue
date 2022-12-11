@@ -84,6 +84,10 @@
                     </button>
                 </div>
             </div>
+            <div class="fixed bottom-3">
+                <p class="opacity-60 dark:text-gray-200">Tento spevník bol vytvorený ako re-design pre <a class="text-blue-500" href="https://people.ksp.sk/~petor/spevnik/#">Ralbov Spevník</a>. Oproti nemu tu je pridaných celkom dosť ďalších pesničiek.</p>
+                <p class="opacity-60 dark:text-gray-200">Celý spevník je open source, takže ak vieš pridať nejaký feature, alebo niečo opraviť, tak si sprav <a class="text-blue-500" href="https://github.com/Stanko2/spevnik">pull request</a>, prípadne vieš aj submitnúť <a class="text-blue-500" href="https://github.com/Stanko2/spevnik/issues">issue</a> ak niečo nefunguje a ja sa na to pozriem</p>
+            </div>
         </div>
     </div>
 </template>
