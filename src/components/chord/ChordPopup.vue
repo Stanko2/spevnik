@@ -8,7 +8,7 @@
     </div>
     <div class="w-full h-full flex flex-col">
       <span class="font-bold p-1 absolute w-full align-center text-3xl">{{ chord }}</span>
-      <div class="w-full h-full pt-9">
+      <div class="w-full h-full pt-9 posFix">
         <div class="layouts flex flex-row flex-nowrap h-full" :style="`width: ${layoutCount * 100}%;`">
           <div class="layout w-full p-3" :class="{ open: openLayout === i }" v-for="(layout, i) in chordLayouts"
             :key="i" :style="`transform: translateX(-${openLayout * 100}%);`">
@@ -75,10 +75,18 @@ export default class ChordPopup extends Vue {
   color: rgba(31, 41, 55, var(--tw-bg-opacity));
 }
 
+.posFix {
+  transform: translateX(-6px);
+}
+
 @media (min-width: 768px) {
   .chord {
     width: 300px;
     height: 250px;
+  }
+
+  .posFix {
+    transform: translateX(-10px);
   }
 }
 </style>
