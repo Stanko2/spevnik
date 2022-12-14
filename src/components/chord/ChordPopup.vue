@@ -1,29 +1,38 @@
 <template>
-  <div class="chord flex flex-row rounded-tr-lg rounded-tl-lg overflow-hidden bg-gray-500" v-if="chordFound">
-    <div class="h-full flex flex-col items-center justify-center font-bold w-0 z-50 pt-5" @click="openLayout -= 1"
-      v-if="layoutCount > 1 && openLayout !== 0">
-      <span class="material-symbols-rounded" style="scale:3; transform: translateX(.35rem)">
-        chevron_left
-      </span>
-    </div>
-    <div class="w-full h-full flex flex-col">
-      <span class="font-bold p-1 absolute w-full align-center text-3xl">{{ chord }}</span>
-      <div class="w-full h-full pt-9 posFix">
-        <div class="layouts flex flex-row flex-nowrap h-full" :style="`width: ${layoutCount * 100}%;`">
-          <div class="layout w-full p-3" :class="{ open: openLayout === i }" v-for="(layout, i) in chordLayouts"
-            :key="i" :style="`transform: translateX(-${openLayout * 100}%);`">
-            <ChordView :chord="chordData" :layout="layout" :lite="lite"></ChordView>
+  <Transition
+    enter-active-class="duration-200"
+    leave-active-class="duration-200"
+    enter-class="transform-gpu translate-y-full translate-x-1/2 opacity-0"
+    leave-to-class="transform-gpu translate-y-full translate-x-1/2 opacity-0"
+    leave-class="transform-gpu translate-y-0 translate-x-1/2 opacity-1"
+    enter-to-class="transform-gpu translate-y-0 translate-x-1/2 opacity-1"
+  >
+    <div class="chord flex flex-row rounded-tr-lg rounded-tl-lg overflow-hidden bg-gray-500 shadow-2xl z-30" v-if="chordFound" @click="click">
+      <div class="h-full flex flex-col items-center justify-center font-bold w-0 z-50 pt-5" @click="openLayout -= 1"
+        v-if="layoutCount > 1 && openLayout !== 0">
+        <span class="material-symbols-rounded" style="scale:3; transform: translateX(.35rem)">
+          chevron_left
+        </span>
+      </div>
+      <div class="w-full h-full flex flex-col" @click="click">
+        <span class="font-bold p-1 absolute w-full align-center text-3xl">{{ chord }}</span>
+        <div class="w-full h-full pt-9 posFix">
+          <div class="layouts flex flex-row flex-nowrap h-full" :style="`width: ${layoutCount * 100}%;`">
+            <div class="layout w-full p-3 transition-all duration-200" :class="{ open: openLayout === i }" v-for="(layout, i) in chordLayouts"
+              :key="i" :style="`transform: translateX(-${openLayout * 100}%);`">
+              <ChordView :chord="chordData" :layout="layout" :lite="lite"></ChordView>
+            </div>
           </div>
         </div>
       </div>
+      <div class="h-full flex flex-col items-center justify-center font-bold w-0 z-50 pt-5" @click="openLayout += 1"
+        v-if="layoutCount > 1 && openLayout !== layoutCount - 1">
+        <span class="material-symbols-rounded" style="scale:3; transform: translateX(-.35rem)">
+          chevron_right
+        </span>
+      </div>
     </div>
-    <div class="h-full flex flex-col items-center justify-center font-bold w-0 z-50 pt-5" @click="openLayout += 1"
-      v-if="layoutCount > 1 && openLayout !== layoutCount - 1">
-      <span class="material-symbols-rounded" style="scale:3; transform: translateX(-.35rem)">
-        chevron_right
-      </span>
-    </div>
-  </div>
+  </Transition>
 </template>
 
 <script lang="ts">
@@ -58,6 +67,10 @@ export default class ChordPopup extends Vue {
         }
       }
     })
+  }
+
+  click (event: MouseEvent) {
+    event.stopImmediatePropagation()
   }
 }
 </script>

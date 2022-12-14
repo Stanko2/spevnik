@@ -37,13 +37,21 @@ export default class TextRenderer extends Vue {
               if (segments.length === 1 && segments[0].text === '') return <br />
               return <p key={index} style={{ fontSize: this.fontSize + 'px' }} class="dark:text-gray-200">
                 {segments.map((segment, index) => {
-                  return <span key={index} class={segment.type}>{segment.text}</span>
+                  return <span key={index} class={segment.type} onClick={this.onChordClick}>{segment.text}</span>
                 })}
               </p>
             })}
           </div>
         </div>
       )
+    }
+
+    onChordClick (event: MouseEvent):void {
+      event.preventDefault()
+      event.stopImmediatePropagation()
+      if (event.target instanceof HTMLElement && event.target.classList.contains('accord')) {
+        this.$store.commit('setChord', event.target.innerText)
+      }
     }
 
     computeColumns ():void{

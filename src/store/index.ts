@@ -31,6 +31,7 @@ export interface IState {
   scale: 'b' | '#'
   session: string | undefined
   currentSong: number
+  chord: string | undefined
 }
 
 function isMobile ():boolean {
@@ -52,7 +53,8 @@ export default new Vuex.Store<IState>({
     scale: '#',
     transpose: 0,
     currentSong: 0,
-    session: undefined
+    session: undefined,
+    chord: undefined
   },
   getters: {
   },
@@ -198,6 +200,9 @@ export default new Vuex.Store<IState>({
           state.session = session.name
         })
       }
+    },
+    setChord (state, chord) {
+      state.chord = chord
     }
   },
   actions: {

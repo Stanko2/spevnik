@@ -7,14 +7,20 @@
     <div v-if="song === null">
       Invalid ID
     </div>
-    <div v-else @click="handleTextClick">
+    <div v-else @click="$store.commit('setChord', null)">
       <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
         <div>
           <h1 class="text-xl text-left">
             <span v-if="!editingId" @click="startEditing">{{ id }}</span>
             <input v-else type="number" v-model="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
           </h1>
-          <p class="opacity-60 text-left text-sm">{{ song.author }}</p>
+          <p class="opacity-60 text-left text-sm">
+            <span class="text-blue-300" v-if="$store.state.session">
+              <span class="material-symbols-rounded text-sm">cast</span>
+              {{ $store.state.session }}
+            </span>
+            | {{ song.author }}
+          </p>
         </div>
         <div class="flex absolute right-0 bg-gray-300 dark:bg-gray-600">
           <div class="p-2 text-3xl cursor-pointer m-1 transition-all text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
@@ -76,11 +82,13 @@ export default class SongView extends Vue {
     return 1 - Math.abs(this.scrollX) / screen.availWidth
   }
 
-  async mounted (): Promise<void> {
+  mounted ():void {
     this.showSong()
-    window.setChord = (chord: string | null) => {
-      this.chord = chord
-    }
+    this.$store.subscribe((mut) => {
+      if (mut.type === 'setChord') {
+        this.chord = mut.payload
+      }
+    })
   }
 
   @Watch('$store.state.currentSong')
@@ -157,15 +165,6 @@ export default class SongView extends Vue {
   toggleLiked ():void {
     this.liked = !this.liked
     this.$store.commit('toggleLike', this.id)
-  }
-
-  handleTextClick (event: MouseEvent):void {
-    if (event.target instanceof HTMLElement && event.target.classList.contains('accord')) {
-      const chord = event.target.innerText
-      this.chord = chord
-    } else {
-      this.chord = null
-    }
   }
 }
 </script>
