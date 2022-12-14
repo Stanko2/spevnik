@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth'
-import { get, getDatabase, ref, set } from 'firebase/database'
+import { getAuth, signInWithPopup, GoogleAuthProvider, User, setPersistence, browserLocalPersistence, Unsubscribe } from 'firebase/auth'
+import { get, getDatabase, ref, set, onValue, remove } from 'firebase/database'
 import store, { Song } from '.'
 
 const firebaseConfig = {
@@ -15,10 +15,16 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig)
 const db = getDatabase(app)
+const auth = getAuth(app)
+auth.onAuthStateChanged(user => {
+  store.commit('setCredentials', user)
+})
+let syncEvent: Unsubscribe | undefined
+
 // export const songs = ref(db, 'songs')
 
 export async function login (): Promise<{user: User, admin: boolean}> {
-  const auth = getAuth(app)
+  await setPersistence(auth, browserLocalPersistence)
   const provider = new GoogleAuthProvider()
   const result = await signInWithPopup(auth, provider)
   const credential = GoogleAuthProvider.credentialFromResult(result)
@@ -84,4 +90,39 @@ export async function updateSong (song: Song):Promise<void> {
 
 export async function createSong (song: Song):Promise<void> {
   await set(ref(db, `songs/${song.id}`), song)
+}
+
+export async function createSession (id: string):Promise<void> {
+  if (store.state.credential === undefined) throw new Error('You need to be logged in to create session')
+  if (store.state.session !== undefined) throw new Error('Already in session, can\'t create new one')
+  await set(ref(db, `sessions/${id}`), {
+    id,
+    song: store.state.currentSong || 1,
+    creator: store.state.credential.uid
+  })
+  store.subscribe((mut) => {
+    if (mut.type === 'setSong') {
+      set(ref(db, `sessions/${id}/song`), mut.payload)
+    }
+  })
+}
+
+export async function joinSession (id: string): Promise<void> {
+  if (store.state.session !== undefined) throw new Error('Can\'t join session, already in one')
+  const session = await get(ref(db, `sessions/${id}`))
+  if (!session.exists()) throw new Error(`Session ${id} does not exist`)
+  syncEvent = onValue(ref(db, `sessions/${id}/song`), (snapshot: any) => {
+    store.commit('setSong', snapshot.val())
+  })
+}
+
+export async function leaveSession (): Promise<void> {
+  if (syncEvent) {
+    syncEvent()
+  } else {
+    const session = await get(ref(db, `sessions/${store.state.session}`))
+    if (session.exists() && session.val().creator === store.state.credential?.uid) {
+      await remove(ref(db, `sessions/${store.state.session}`))
+    }
+  }
 }

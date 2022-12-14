@@ -75,23 +75,25 @@ import Transposer from '@/components/Transpose.vue'
 @Component({ components: { SearchView, SummaryView, Transposer } })
 export default class Navbar extends Vue {
     @Prop() songs!: Song[]
-    songId = parseInt(this.$route.params.id)
+    songId = this.$store.state.currentSong
     showSearchView = false
     showMenu = false
     searchQuery = ''
     selectSong (dir: number): void {
       if (isNaN(this.songId)) this.songId = 0
-      this.$router.push({
-        path: `/song/${Math.max(this.songId + dir, 1)}`
-      })
+      this.$store.commit('setSong', Math.max(this.songId + dir, 1))
+      // this.$router.push({
+      //   path: `/song/${Math.max(this.songId + dir, 1)}`
+      // })
     }
 
     onSearchClose (id: number | undefined):void {
       this.showSearchView = false
       if (id) {
-        this.$router.push({
-          path: `/song/${id}`
-        })
+        this.$store.commit('setSong', id)
+        // this.$router.push({
+        //   path: `/song/${id}`
+        // })
       }
     }
 
@@ -101,9 +103,10 @@ export default class Navbar extends Vue {
       this.searchQuery = q
     }
 
-    @Watch('$route.params.id')
+    @Watch('$store.state.currentSong')
     showSong (): void {
-      this.songId = parseInt(this.$route.params.id)
+      this.songId = this.$store.state.currentSong
+      this.$store.commit('setSong', this.songId)
       if (this.$store.state.isMobile) {
         this.showMenu = false
       }
@@ -112,9 +115,10 @@ export default class Navbar extends Vue {
     random (): void {
       const max = this.$store.state.songs.length
       const id = Math.round(Math.random() * max)
-      this.$router.push({
-        path: `/song/${id}`
-      })
+      this.$store.commit('setSong', id)
+      // this.$router.push({
+      //   path: `/song/${id}`
+      // })
     }
 
     openSettings ():void{
@@ -136,7 +140,7 @@ export default class Navbar extends Vue {
             id: '-1'
           }
         })
-      } else { this.$router.push({ path: `/edit/${this.$route.params.id}` }) }
+      } else { this.$router.push({ path: `/edit/${this.$store.state.currentSong}` }) }
     }
 }
 </script>

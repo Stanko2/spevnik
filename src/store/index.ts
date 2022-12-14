@@ -1,8 +1,9 @@
+import router from '@/router'
 import { BeforeInstallPromptEvent } from '@/shims-tsx'
 import { User } from 'firebase/auth'
 import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
-import { cacheAllSongs, createSong, login } from './firebase'
+import Vuex from 'vuex'
+import { cacheAllSongs, createSession, createSong, joinSession, leaveSession, login, updateSong } from './firebase'
 
 export interface Song{
   text: string
@@ -28,6 +29,8 @@ export interface IState {
   installEvent: BeforeInstallPromptEvent | undefined
   transpose: number
   scale: 'b' | '#'
+  session: string | undefined
+  currentSong: number
 }
 
 function isMobile ():boolean {
@@ -47,7 +50,9 @@ export default new Vuex.Store<IState>({
     liked: new Set<number>(),
     installEvent: undefined,
     scale: '#',
-    transpose: 0
+    transpose: 0,
+    currentSong: 0,
+    session: undefined
   },
   getters: {
   },
@@ -61,6 +66,15 @@ export default new Vuex.Store<IState>({
       state.liked = new Set<number>(prefs.liked as unknown as number[])
       state.isMobile = isMobile()
       state.songs = JSON.parse(localStorage.getItem('songs') || '[]')
+      state.currentSong = parseInt(router.currentRoute.params.id)
+      const session = JSON.parse(localStorage.getItem('session') || '{}')
+      if (session?.name !== undefined) {
+        if (!session?.admin) {
+          joinSession(session.name).then(() => {
+            state.session = session.name
+          })
+        }
+      }
     },
     save (state, saveSongs: boolean) {
       console.log('saving')
@@ -143,6 +157,47 @@ export default new Vuex.Store<IState>({
     transpose (state, payload) {
       state.scale = payload.scale
       state.transpose = payload.transpose
+    },
+    joinSession (state, sessionName) {
+      joinSession(sessionName).then(() => {
+        state.session = sessionName
+        localStorage.setItem('session', JSON.stringify({
+          admin: false,
+          name: sessionName
+        }))
+      })
+    },
+    createSession (state, sessionName) {
+      createSession(sessionName).then(() => {
+        state.session = sessionName
+        localStorage.setItem('session', JSON.stringify({
+          admin: true,
+          name: sessionName
+        }))
+      })
+    },
+    leaveSession (state) {
+      if (state.session === undefined) return
+      leaveSession().then(() => {
+        state.session = undefined
+        localStorage.removeItem('session')
+      })
+    },
+    setSong (state, songId) {
+      if (songId === state.currentSong) return
+      state.currentSong = songId || 1
+      router.push({
+        path: `/song/${songId}`
+      })
+    },
+    setCredentials (state, credential) {
+      state.credential = credential
+      const session = JSON.parse(localStorage.getItem('session') || '{}')
+      if (session?.admin === true) {
+        createSession(session.name).then(() => {
+          state.session = session.name
+        })
+      }
     }
   },
   actions: {

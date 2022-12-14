@@ -55,6 +55,7 @@ export default class Summary extends Vue {
     }
 
     selectSong (id:number): void {
-      this.$router.push({ path: `/song/${id}` })
+      this.$store.commit('setSong', id)
+      // this.$router.push({ path: `/song/${id}` })
     }
 }

@@ -56,7 +56,7 @@
                     </div>
                 </label>
             </div>
-            <div class="dark:text-gray-200 p-4 text-lg" v-if="!$store.state.isMobile && isOnline">
+            <div class="dark:text-gray-200 p-4 text-lg" v-if="isOnline">
                 <div class="flex justify-between items-center w-full">
                     <span class="dark:text-gray-200">Admin Mode</span>
                     <button class="bg-gray-400 dark:bg-gray-600 outline-none rounded-md p-2" @click="login" v-if="!$store.state.credential">Prihlásiť sa</button>
@@ -84,7 +84,8 @@
                     </button>
                 </div>
             </div>
-            <div class="fixed bottom-3">
+            <sessions v-if="isOnline"></sessions>
+            <div class="mt-40 text-sm">
                 <p class="opacity-60 dark:text-gray-200">Tento spevník bol vytvorený ako re-design pre <a class="text-blue-500" href="https://people.ksp.sk/~petor/spevnik/#">Ralbov Spevník</a>. Oproti nemu tu je pridaných celkom dosť ďalších pesničiek.</p>
                 <p class="opacity-60 dark:text-gray-200">Celý spevník je open source, takže ak vieš pridať nejaký feature, alebo niečo opraviť, tak si sprav <a class="text-blue-500" href="https://github.com/Stanko2/spevnik">pull request</a>, prípadne vieš aj submitnúť <a class="text-blue-500" href="https://github.com/Stanko2/spevnik/issues">issue</a> ak niečo nefunguje a ja sa na to pozriem</p>
             </div>
@@ -95,8 +96,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import Sessions from '@/components/Sessions.vue'
 
-@Component
+@Component({ components: { Sessions } })
 export default class Settings extends Vue {
     guitarMode = false
     darkMode = false

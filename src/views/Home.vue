@@ -41,7 +41,7 @@
         </div>
       </transition>
     </div>
-    <Navbar :songs="$store.state.songs"></Navbar>
+    <navbar :songs="$store.state.songs"></navbar>
     </div>
 </template>
 
@@ -53,12 +53,11 @@ import Component from 'vue-class-component'
 import Vue from 'vue'
 import { Watch } from 'vue-property-decorator'
 import TextRenderer from '@/components/Textrenderer'
-import Navbar from '@/components/Nav.vue'
 import { Song } from '@/store'
 import { getSong } from '@/store/firebase'
 import ChordPopup from '@/components/chord/ChordPopup.vue'
 
-@Component({ components: { TextRenderer, Navbar, ChordPopup } })
+@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), ChordPopup } })
 export default class SongView extends Vue {
   id = -1
   song: Song | null = null
@@ -84,13 +83,13 @@ export default class SongView extends Vue {
     }
   }
 
-  @Watch('$route.params.id')
+  @Watch('$store.state.currentSong')
   async showSong (): Promise<void> {
+    this.id = this.$store.state.currentSong
     this.songShown = false
     this.$store.commit('resetTranspose')
     await this.$nextTick()
     const lastId = this.id
-    this.id = parseInt(this.$route.params.id)
     if (isNaN(this.id)) {
       this.song = null
       return
@@ -100,7 +99,7 @@ export default class SongView extends Vue {
     this.liked = this.$store.state.liked.has(this.id)
     if (this.song == null) {
       if (lastId !== this.id && !isNaN(lastId)) {
-        this.$router.push({ path: `/song/${lastId}` })
+        this.$store.commit('setSong', lastId)
       }
     }
   }
@@ -132,9 +131,7 @@ export default class SongView extends Vue {
 
   selectSong (id: number): void {
     this.editingId = false
-    this.$router.push({
-      path: `/song/${id}`
-    })
+    this.$store.commit('setSong', id)
   }
 
   onSwipe (e:PointerEvent):void {
