@@ -83,17 +83,25 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class Barre extends Vue {
-  @Prop({ type: Number, required: true }) barre!: number;
-  @Prop({ type: Array, required: true }) frets!: number[];
-  @Prop({ type: Boolean, required: true }) capo!: boolean;
-  @Prop({ type: Number, required: true }) finger!: number;
-  @Prop({ type: Boolean, required: true }) lite!: boolean;
-  @Prop({ type: String, required: true }) color!: string;
+  @Prop() barre!: number;
+  @Prop() frets!: number[];
+  @Prop() capo!: boolean;
+  @Prop() finger!: number;
+  @Prop() lite!: boolean;
+  @Prop() color!: string;
+  strings = this.frets.length;
 
-  fretXPosition = [0, 10, 20, 30, 40, 50];
+  get fretXPosition () {
+    return this.strings === 6
+      ? [0, 10, 20, 30, 40, 50]
+      : [10, 20, 30, 40, 50]
+  }
 
   fretYPosition = [2.35, 13.9, 26, 38];
-  offset = -1;
+
+  get offset () {
+    return this.strings === 6 ? -1 : 0
+  }
 
   positions = {
     string: [50, 40, 30, 20, 10, 0],
@@ -109,7 +117,6 @@ export default class Barre extends Vue {
       .map((f, index) => ({ position: index, value: f }))
       .filter((f) => f.value === barre);
 
-  strings = this.frets.length;
   barreFrets = this.onlyBarres(this.frets, this.barre);
 
   string1 = this.barreFrets[0].position;

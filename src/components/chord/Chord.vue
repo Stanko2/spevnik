@@ -13,6 +13,7 @@
             :base-fret="layout.baseFret"
             :capo="layout.capo"
             :color="color"
+            :strings="strings"
           />
         </g>
         <g transform="translate(13, 13)">
@@ -33,11 +34,12 @@
           <Dot
             v-for="dot in onlyDots()"
             :key="dot.position"
-            :string="6 - dot.position"
+            :string="strings - dot.position"
             :fret="dot.value"
             :finger="layout.fingers && layout.fingers[dot.position]"
             :lite="lite"
             :color="color"
+            :strings="strings"
           />
         </g>
       </svg>
@@ -62,6 +64,17 @@ import { ChordLayout } from '@/components/chord/chords'
 export default class ChordView extends Vue {
   @Prop() layout!: ChordLayout;
   @Prop() lite!: boolean;
+
+  strings = this.$store.state.chordMode === 'guitar' ? 6 : 4;
+
+  mounted () {
+    this.$store.watch(
+      (state) => state.chordMode,
+      (mode) => {
+        this.strings = mode === 'guitar' ? 6 : 4
+      }
+    )
+  }
 
   color = 'rgba(31, 41, 55, var(--tw-bg-opacity))';
 

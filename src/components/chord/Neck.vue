@@ -13,7 +13,7 @@
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      :d="'M ' + offsets.x + ' 0 H ' + offsets.length"
+      :d="'M ' + offset.x + ' 0 H ' + offset.length"
     />
     <text
       v-else
@@ -36,18 +36,28 @@ export default class ChordView extends Vue {
   @Prop() baseFret!: number;
   @Prop() capo!: boolean;
   @Prop() color!: string;
+  @Prop() strings!: number;
 
-  offsets = {
-    x: 0,
-    y: 0,
-    length: 50
-  };
+  get offset () {
+    if (this.strings === 4) {
+      return {
+        x: 10,
+        y: 10,
+        length: 40
+      }
+    } else {
+      return {
+        x: 0,
+        y: 0,
+        length: 50
+      }
+    }
+  }
 
   getNeckHorizonalLine = (pos: number) =>
-    `M ${this.offsets.x} ${12 * pos} H ${this.offsets.length}`;
+    `M ${this.offset.x} ${12 * pos} H ${this.offset.length}`;
 
-  getNeckVerticalLine = (pos: number) =>
-    `M ${this.offsets.y + pos * 10} 0 V 48`;
+  getNeckVerticalLine = (pos: number) => `M ${this.offset.y + pos * 10} 0 V 48`;
 
   getNeckPath = () =>
     Array(5)
@@ -55,19 +65,15 @@ export default class ChordView extends Vue {
       .map((_, pos) => this.getNeckHorizonalLine(pos))
       .join(' ')
       .concat(
-        Array(6)
+        Array(this.strings)
           .fill(null)
           .map((_, pos) => this.getNeckVerticalLine(pos))
           .join(' ')
       );
 
   getBarreOffset = (frets: number[], baseFret: number, capo: boolean) =>
-    frets[0] === 1 || capo
-      ? baseFret > 9
-        ? -18
-        : -14
-      : baseFret > 9
-        ? -14
-        : -10;
+    this.strings === 6
+      ? frets[0] === 1 || capo ? (baseFret > 9 ? -18 : -14) : (baseFret > 9 ? -14 : -10)
+      : frets[0] === 1 || capo ? (baseFret > 9 ? -8 : -4) : (baseFret > 9 ? -4 : 0)
 }
 </script>

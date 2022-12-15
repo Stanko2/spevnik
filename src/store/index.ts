@@ -32,6 +32,7 @@ export interface IState {
   session: string | undefined
   currentSong: number
   chord: string | undefined
+  chordMode: 'guitar' | 'ukulele'
 }
 
 function isMobile ():boolean {
@@ -54,7 +55,8 @@ export default new Vuex.Store<IState>({
     transpose: 0,
     currentSong: 0,
     session: undefined,
-    chord: undefined
+    chord: undefined,
+    chordMode: 'guitar'
   },
   getters: {
   },
@@ -203,6 +205,9 @@ export default new Vuex.Store<IState>({
     },
     setChord (state, chord) {
       state.chord = chord
+    },
+    setChordMode (state, mode) {
+      state.chordMode = mode
     }
   },
   actions: {

@@ -46,6 +46,7 @@ export default class Dot extends Vue {
   @Prop() finger!: number;
   @Prop() lite!: boolean;
   @Prop() color!: string;
+  @Prop() strings!: number;
 
   positions = {
     string: [50, 40, 30, 20, 10, 0],
@@ -53,7 +54,13 @@ export default class Dot extends Vue {
     finger: [-3, 8, 19.5, 31.5, 43.5]
   };
 
-  offset = -1;
+  get offset () {
+    if (this.strings === 4) {
+      return 0
+    } else {
+      return -1
+    }
+  }
 
   getStringPosition = (string: number) =>
     this.positions.string[this.string + this.offset];
