@@ -97,7 +97,7 @@ export default class ChordPopup extends Vue {
     )
   }
 
-  loadChord () {
+  loadChord (): void {
     this.chordFound = false
     this.chordLayouts = []
     this.chordData = null
@@ -113,7 +113,7 @@ export default class ChordPopup extends Vue {
     }
   }
 
-  click (event: MouseEvent) {
+  click (event: MouseEvent): void {
     event.stopImmediatePropagation()
   }
 }
@@ -125,7 +125,6 @@ export default class ChordPopup extends Vue {
   bottom: 3.5rem;
   right: 50%;
   transform: translateX(50%);
-  z-index: 1000;
   width: 200px;
   height: 170px;
   contain: content;

@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed bottom-0 w-screen bg-gray-500 flex justify-between h-14 z-50 items-center">
+    <div class="fixed bottom-0 w-screen bg-gray-500 flex justify-between h-14 z-40 items-center">
         <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)" v-shortkey="['arrowleft']" @shortkey="selectSong(-1)">&lt;</button>
         <button class="btn" @click="showSearchView = true" v-shortkey="['h']" @shortkey="showSearchView = true">
           <span class="material-symbols-rounded block">
@@ -59,7 +59,6 @@
             <SummaryView :SearchQuery="searchQuery"></SummaryView>
           </div>
         </transition>
-        <Transposer v-if="$store.state.guitarMode" />
     </div>
 </template>
 
@@ -70,9 +69,8 @@ import Component from 'vue-class-component'
 import { Prop, Watch } from 'vue-property-decorator'
 import SearchView from './SearchView.vue'
 import SummaryView from '@/components/SummaryView.vue'
-import Transposer from '@/components/Transpose.vue'
 
-@Component({ components: { SearchView, SummaryView, Transposer } })
+@Component({ components: { SearchView, SummaryView } })
 export default class Navbar extends Vue {
     @Prop() songs!: Song[]
     songId = this.$store.state.currentSong
