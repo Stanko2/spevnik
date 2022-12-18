@@ -1,4 +1,4 @@
-import type { Chord, ChordArray } from './chords'
+import type { Chord, ChordArray } from '../chords'
 
 export const guitarChords: Chord[] = [
   {

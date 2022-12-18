@@ -1,4 +1,4 @@
-import { ChordArray, Chord } from './chords'
+import { ChordArray, Chord } from '../chords'
 
 export const ukuleleChords: Chord[] = [
   {

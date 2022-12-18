@@ -1,5 +1,5 @@
-import guitar from './guitarChords'
-import ukulele from './ukuleleChords'
+import guitar from './data/guitarChords'
+import ukulele from './data/ukuleleChords'
 
 export interface ChordLayout {
   frets: number[];

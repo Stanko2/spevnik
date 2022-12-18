@@ -25,7 +25,6 @@
                 <label for="guitarMode" class="flex justify-between items-center w-full">
                     <span class="dark:text-gray-200">Režim akordov</span>
                     <div class="relative">
-                        <!-- switch between guitar and ukulele chords using dropdown -->
                         <select v-model="chordMode" @change="$store.commit('setChordMode', chordMode)" class="outline-none rounded-lg p-0.5 text-lg bg-gray-500 w-30">
                             <option value="guitar">Gitara</option>
                             <option value="ukulele">Ukulele</option>
