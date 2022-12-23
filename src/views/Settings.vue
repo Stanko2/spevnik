@@ -21,11 +21,11 @@
 
                 </label>
             </div>
-            <div class="dark:text-gray-200 p-4 text-lg">
+            <div class="dark:text-gray-200 p-4 text-lg" v-if="guitarMode">
                 <label for="guitarMode" class="flex justify-between items-center w-full">
                     <span class="dark:text-gray-200">Režim akordov</span>
                     <div class="relative">
-                        <select v-model="chordMode" @change="$store.commit('setChordMode', chordMode)" class="outline-none rounded-lg p-0.5 text-lg bg-gray-500 w-30">
+                        <select v-model="chordMode" @change="$store.commit('setChordMode', chordMode)" class="outline-none rounded-lg p-1 text-lg bg-gray-400 dark:bg-gray-600 w-30">
                             <option value="guitar">Gitara</option>
                             <option value="ukulele">Ukulele</option>
                         </select>
