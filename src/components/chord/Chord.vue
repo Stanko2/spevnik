@@ -1,53 +1,90 @@
 <template>
   <div class="w-full h-full flex flex-col items-center justify-center">
     <div class="w-full h-full flex flex-row items-center justify-center">
-    <svg width="100%" preserveAspectRatio="xMinYMin meet" viewBox="-5 0 80 70" style="--line-color: rgba(31, 41, 55, var(--tw-bg-opacity));">
-      <g transform="translate(13, 13)" v-html="all"></g>
-    </svg>
-  </div></div>
+      <svg
+        width="100%"
+        preserveAspectRatio="xMinYMin meet"
+        viewBox="-5 0 80 70"
+        style="--line-color: rgba(31, 41, 55, var(--tw-bg-opacity))"
+      >
+        <g transform="translate(13, 13)">
+          <Neck
+            :frets="layout.frets"
+            :base-fret="layout.baseFret"
+            :capo="layout.capo"
+            :color="color"
+            :strings="strings"
+          />
+        </g>
+        <g transform="translate(13, 13)">
+          <Barre
+            v-for="barre in layout.barres"
+            :key="barre"
+            :barre="barre"
+            :frets="layout.frets"
+            :capo="layout.capo ?? false"
+            :finger="
+              layout.fingers && layout.fingers[layout.frets.indexOf(barre)]
+            "
+            :lite="lite"
+            :color="color"
+          />
+        </g>
+        <g transform="translate(13, 13)">
+          <Dot
+            v-for="dot in onlyDots()"
+            :key="dot.position"
+            :string="strings - dot.position"
+            :fret="dot.value"
+            :finger="layout.fingers && layout.fingers[dot.position]"
+            :lite="lite"
+            :color="color"
+            :strings="strings"
+          />
+        </g>
+      </svg>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import Neck from '@/components/chord/Neck'
-import Barre from '@/components/chord/Barre'
-import Dot from '@/components/chord/Dot'
+import Neck from '@/components/chord/Neck.vue'
+import Barre from '@/components/chord/Barre.vue'
+import Dot from '@/components/chord/Dot.vue'
 import { ChordLayout } from '@/components/chord/chords'
 
-@Component
+@Component({
+  components: {
+    Barre,
+    Dot,
+    Neck
+  }
+})
 export default class ChordView extends Vue {
-  @Prop() layout!: ChordLayout
-  @Prop() lite!: boolean
+  @Prop() layout!: ChordLayout;
+  @Prop() lite!: boolean;
 
-  getNeck (): string {
-    return Neck(this.layout.frets, this.layout.baseFret, this.layout.capo)
+  strings = this.$store.state.chordMode === 'guitar' ? 6 : 4;
+
+  mounted () {
+    this.$store.watch(
+      (state) => state.chordMode,
+      (mode) => {
+        this.strings = mode === 'guitar' ? 6 : 4
+      }
+    )
   }
 
-  getBarres (): string {
-    let ret = ''
-    if (this.layout.barres) {
-      this.layout.barres.forEach((barre: number) => {
-        const finger = this.layout.fingers && this.layout.fingers[this.layout.frets.indexOf(barre)]
-        ret += Barre(barre, this.layout.frets, this.layout.capo ?? false, finger, this.lite)
-      })
-    }
-    return ret
-  }
+  color = 'rgba(31, 41, 55, var(--tw-bg-opacity))';
 
-  onlyDots (): { value: number, position: number }[] {
-    return this.layout.frets.map((f: number, i: number) => ({ position: i, value: f })).filter((f: { value: number, position: number }) => !this.layout.barres || this.layout.barres.indexOf(f.value) === -1)
-  }
-
-  getDots (): string {
-    let ret = ''
-    this.onlyDots().forEach((dot: { value: number, position: number }) => {
-      ret += Dot(6 - dot.position, dot.value, this.layout.fingers && this.layout.fingers[dot.position], this.lite)
-    })
-    return ret
-  }
-
-  get all (): string {
-    return this.getNeck() + this.getBarres() + this.getDots()
+  onlyDots (): { value: number; position: number }[] {
+    return this.layout.frets
+      .map((f: number, i: number) => ({ position: i, value: f }))
+      .filter(
+        (f: { value: number; position: number }) =>
+          !this.layout.barres || this.layout.barres.indexOf(f.value) === -1
+      )
   }
 }
 </script>

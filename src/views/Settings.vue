@@ -12,11 +12,23 @@
         <div class="container m-auto">
             <div class="dark:text-gray-200 p-4 text-lg">
                 <label for="guitarMode" class="flex justify-between items-center w-full">
-                    <span class="dark:text-gray-200">Gitarový režim</span>
+                    <span class="dark:text-gray-200">Zobrazovať akordy</span>
                     <div class="relative">
                         <input id="guitarMode" type="checkbox" class="sr-only" v-model="guitarMode" @change="$store.commit('setGuitarMode', guitarMode)">
                         <div class="bg-gray-400 dark:bg-gray-600 h-5 w-11 rounded-full shadow-inner"></div>
                         <div class="h-6 w-6 absolute shadow rounded-full bg-gray-50 -left-0.5 -top-0.5 transition-all" :class="{dot: guitarMode}"></div>
+                    </div>
+
+                </label>
+            </div>
+            <div class="dark:text-gray-200 p-4 text-lg" v-if="guitarMode">
+                <label for="guitarMode" class="flex justify-between items-center w-full">
+                    <span class="dark:text-gray-200">Režim akordov</span>
+                    <div class="relative">
+                        <select v-model="chordMode" @change="$store.commit('setChordMode', chordMode)" class="outline-none rounded-lg p-1 text-lg bg-gray-400 dark:bg-gray-600 w-30">
+                            <option value="guitar">Gitara</option>
+                            <option value="ukulele">Ukulele</option>
+                        </select>
                     </div>
 
                 </label>
@@ -101,6 +113,7 @@ import Sessions from '@/components/Sessions.vue'
 @Component({ components: { Sessions } })
 export default class Settings extends Vue {
     guitarMode = false
+    chordMode: 'guitar' | 'ukulele' = 'guitar'
     darkMode = false
     fontSize = 12
     msg = navigator.userAgent
@@ -115,6 +128,7 @@ export default class Settings extends Vue {
 
     mounted ():void {
       this.guitarMode = this.$store.state.guitarMode
+      this.chordMode = this.$store.state.chordMode
       this.darkMode = this.$store.state.darkTheme
       this.fontSize = this.$store.state.fontSize
       this.columns = this.$store.state.columnCount

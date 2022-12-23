@@ -19,7 +19,8 @@
               <span class="material-symbols-rounded text-sm">cast</span>
               {{ $store.state.session }}
             </span>
-            | {{ song.author }}
+            <span v-if="$store.state.session">|</span>
+            {{ song.author }}
           </p>
         </div>
         <div class="flex absolute right-0 bg-gray-300 dark:bg-gray-600">
@@ -48,6 +49,7 @@
       </transition>
     </div>
     <navbar :songs="$store.state.songs"></navbar>
+        <Transposer v-if="$store.state.guitarMode" />
     </div>
 </template>
 
@@ -62,8 +64,9 @@ import TextRenderer from '@/components/Textrenderer'
 import { Song } from '@/store'
 import { getSong } from '@/store/firebase'
 import ChordPopup from '@/components/chord/ChordPopup.vue'
+import Transposer from '@/components/Transpose.vue'
 
-@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), ChordPopup } })
+@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), ChordPopup, Transposer } })
 export default class SongView extends Vue {
   id = -1
   song: Song | null = null
