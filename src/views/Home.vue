@@ -12,7 +12,7 @@
         <div>
           <h1 class="text-xl text-left">
             <span v-if="!editingId" @click="startEditing">{{ id }}</span>
-            <input v-else type="number" v-model="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
+            <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
           </h1>
           <p class="opacity-60 text-left text-sm">
             <span class="text-blue-300" v-if="$store.state.session">
