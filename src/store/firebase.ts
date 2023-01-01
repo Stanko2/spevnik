@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GoogleAuthProvider, User, setPersistence, browserLocalPersistence, Unsubscribe } from 'firebase/auth'
 import { get, getDatabase, ref, set, onValue, remove } from 'firebase/database'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import store, { Song } from '.'
 
 const firebaseConfig = {
@@ -16,12 +17,11 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig)
 const db = getDatabase(app)
 const auth = getAuth(app)
+export const analytics = getAnalytics(app)
 auth.onAuthStateChanged(user => {
   store.commit('setCredentials', user)
 })
 let syncEvent: Unsubscribe | undefined
-
-// export const songs = ref(db, 'songs')
 
 export async function login (): Promise<{user: User, admin: boolean}> {
   await setPersistence(auth, browserLocalPersistence)
@@ -95,6 +95,7 @@ export async function createSong (song: Song):Promise<void> {
 export async function createSession (id: string):Promise<void> {
   if (store.state.credential === undefined) throw new Error('You need to be logged in to create session')
   if (store.state.session !== undefined) throw new Error('Already in session, can\'t create new one')
+  logEvent(analytics, 'session_created')
   await set(ref(db, `sessions/${id}`), {
     id,
     song: store.state.currentSong || 1,

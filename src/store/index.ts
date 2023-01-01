@@ -1,9 +1,10 @@
 import router from '@/router'
 import { BeforeInstallPromptEvent } from '@/shims-tsx'
+import { logEvent } from 'firebase/analytics'
 import { User } from 'firebase/auth'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { cacheAllSongs, createSession, createSong, joinSession, leaveSession, login, updateSong } from './firebase'
+import { analytics, cacheAllSongs, createSession, createSong, joinSession, leaveSession, login, updateSong } from './firebase'
 
 export interface Song{
   text: string
@@ -38,6 +39,8 @@ export interface IState {
 function isMobile ():boolean {
   return navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i) != null
 }
+
+let songTimeout: number | undefined
 
 export default new Vuex.Store<IState>({
   state: {
@@ -116,6 +119,7 @@ export default new Vuex.Store<IState>({
     },
     enableOffline (state) {
       cacheAllSongs().then(songs => {
+        logEvent(analytics, 'content_download')
         state.songs = songs
         if (state.installEvent) {
           state.installEvent.prompt()
@@ -137,8 +141,10 @@ export default new Vuex.Store<IState>({
     toggleLike (state: IState, id: number) {
       if (state.liked.has(id)) {
         state.liked.delete(id)
+        logEvent(analytics, 'song_disliked', { dislikedId: id, dislikedSong: state.songs[id - 1].name })
       } else {
         state.liked.add(id)
+        logEvent(analytics, 'song_liked', { likedId: id, likedSong: state.songs[id - 1].name })
       }
       const data = Object.assign({}, {
         darkTheme: state.darkTheme,
@@ -189,6 +195,12 @@ export default new Vuex.Store<IState>({
     },
     setSong (state, songId) {
       if (songId === state.currentSong) return
+      if (songTimeout !== undefined) {
+        clearTimeout(songTimeout)
+      }
+      songTimeout = setTimeout(() => {
+        logEvent(analytics, 'song_viewed', { songId, songName: state.songs[songId - 1].name })
+      }, 10000)
       state.currentSong = songId || 1
       router.push({
         path: `/song/${songId}`

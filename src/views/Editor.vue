@@ -40,6 +40,11 @@
                 <p class="text-sm italic text-left opacity-50">[D] - akordy, {B} - bold, // capo 1 - gitarové poznámky (na celý riadok)</p>
                 <textarea rows="30" class="bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-full text-sm"  v-model="text" @change="resizeTextArea"></textarea>
             </div>
+            <div class="bg-red-600 rounded-xl p-3 flex justify-between font-semibold text-red-50" v-if="$route.params.id === '-1'">
+              <span class="material-symbols-rounded block">warning</span>
+              Ak pridávaš pesničku daj si pozor, aby si mal všetko aktualizované, aby si niekomu omylom neprepísal jeho pridanú pesničku.
+              <span class="material-symbols-rounded block">warning</span>
+            </div>
             <div>
                 <button class="bg-green-500 rounded-lg w-full p-3 text-xl mt-3 shadow-lg" @click="save">Uložiť</button>
             </div>
