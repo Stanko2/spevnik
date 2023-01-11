@@ -4,7 +4,7 @@ import { logEvent } from 'firebase/analytics'
 import { User } from 'firebase/auth'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { analytics, cacheAllSongs, createSession, createSong, joinSession, leaveSession, login, updateSong } from './firebase'
+import { analytics, cacheAllSongs, createSession, createSong, joinSession, leaveSession, login, logOut, updateSong } from './firebase'
 
 export interface Song{
   text: string
@@ -207,7 +207,8 @@ export default new Vuex.Store<IState>({
       })
     },
     setCredentials (state, credential) {
-      state.credential = credential
+      state.credential = credential.credential
+      state.isAdmin = credential.data.admin
       const session = JSON.parse(localStorage.getItem('session') || '{}')
       if (session?.admin === true) {
         createSession(session.name).then(() => {
@@ -220,6 +221,12 @@ export default new Vuex.Store<IState>({
     },
     setChordMode (state, mode) {
       state.chordMode = mode
+    },
+    signOut (state) {
+      logOut().then(() => {
+        state.credential = undefined
+        state.isAdmin = false
+      })
     }
   },
   actions: {

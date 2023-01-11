@@ -1,12 +1,14 @@
 <template>
     <div class="h-screen w-screen dark:bg-gray-800">
-        <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
+        <div class="p-2 sticky w-screen rounded-b-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close" v-shortkey="['esc']" @shortkey="close">arrow_back</span>
                 Nastavenia
             </h1>
-            <div v-if="$store.state.credential" class="opacity-70">
+            <div v-if="$store.state.credential" class="opacity-70 flex items-center">
                 Prihlásený ako {{ $store.state.credential.displayName }}
+                <img :src="$store.state.credential.photoURL" class="aspect-square rounded-full w-10 h-10 ml-2" />
+                <span class="material-symbols-rounded p-2 rounded-full block hover:bg-gray-400 ml-2 transition-all" @click="$store.commit('signOut')">logout</span>
             </div>
         </div>
         <div class="container m-auto">
@@ -100,6 +102,7 @@
             <div class="mt-40 text-sm">
                 <p class="opacity-60 dark:text-gray-200">Tento spevník bol vytvorený ako re-design pre <a class="text-blue-500" href="https://people.ksp.sk/~petor/spevnik/#">Ralbov Spevník</a>. Oproti nemu tu je pridaných celkom dosť ďalších pesničiek.</p>
                 <p class="opacity-60 dark:text-gray-200">Celý spevník je open source, takže ak vieš pridať nejaký feature, alebo niečo opraviť, tak si sprav <a class="text-blue-500" href="https://github.com/Stanko2/spevnik">pull request</a>, prípadne vieš aj submitnúť <a class="text-blue-500" href="https://github.com/Stanko2/spevnik/issues">issue</a> ak niečo nefunguje a ja sa na to pozriem</p>
+                <p class="opacity-60 dark:text-gray-200">Vytvoril <a class="text-blue-500" href="https://stanko2.github.io">Stanko</a></p>
             </div>
         </div>
     </div>

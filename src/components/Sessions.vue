@@ -3,13 +3,13 @@
       <h2 class="text-2xl dark:text-gray-200 mb-3">Skupiny</h2>
       <p class="dark:text-gray-200">Skupiny vedia synchronizovať aktuálnu pesničku medzi viacerými zariadeniami v reálnom čase.</p>
       <div class="flex justify-center mt-3 mb-3">
-        <input class="outline-none rounded-sm pl-3 p-0.5 text-3xl bg-gray-500 w-60" type="text" v-model="sessionId" :disabled="$store.state.session !== undefined" placeholder="Meno skupiny">
+        <input class="outline-none rounded-l-md pl-3 p-0.5 text-3xl bg-gray-500 w-60" type="text" v-model="sessionId" :disabled="$store.state.session !== undefined" placeholder="Meno skupiny">
         <div v-if="$store.state.session == undefined">
           <button class="bg-blue-400 button" @click="Join" :disabled="sessionId.length == 0">Pripojiť sa</button>
-          <button class="bg-blue-400 button" v-if="loggedIn" @click="Create">Vytvoriť</button>
+          <button class="bg-blue-400 button rounded-r-md" v-if="loggedIn" @click="Create">Vytvoriť</button>
         </div>
         <div v-else>
-          <button class="bg-red-400 button" @click="Leave">Opustiť </button>
+          <button class="bg-red-400 button rounded-r-md" @click="Leave">Opustiť </button>
         </div>
       </div>
       <div v-if="!loggedIn" class="dark:text-gray-200 text-sm">
@@ -56,6 +56,6 @@ export default class Sessions extends Vue {
 
 <style>
 .button {
-  @apply transition-all outline-none rounded-sm hover:opacity-75 p-1 text-2xl
+  @apply transition-all outline-none hover:opacity-75 p-1 text-2xl
 }
 </style>

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth, signInWithPopup, GoogleAuthProvider, User, setPersistence, browserLocalPersistence, Unsubscribe } from 'firebase/auth'
+import { getAuth, signInWithPopup, GoogleAuthProvider, User, setPersistence, browserLocalPersistence, Unsubscribe, signOut } from 'firebase/auth'
 import { get, getDatabase, ref, set, onValue, remove } from 'firebase/database'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import store, { Song } from '.'
@@ -19,7 +19,12 @@ const db = getDatabase(app)
 const auth = getAuth(app)
 export const analytics = getAnalytics(app)
 auth.onAuthStateChanged(user => {
-  store.commit('setCredentials', user)
+  get(ref(db, `users/${user?.uid}`)).then(ref => {
+    store.commit('setCredentials', {
+      credential: user,
+      data: ref.val()
+    })
+  })
 })
 let syncEvent: Unsubscribe | undefined
 
@@ -126,4 +131,8 @@ export async function leaveSession (): Promise<void> {
       await remove(ref(db, `sessions/${store.state.session}`))
     }
   }
+}
+
+export async function logOut ():Promise<void> {
+  await signOut(auth)
 }
