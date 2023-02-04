@@ -10,9 +10,10 @@
     <div v-else @click="$store.commit('setChord', null)">
       <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
         <div>
-          <h1 class="text-xl text-left">
+          <h1 class="text-xl text-left flex items-center">
             <span v-if="!editingId" @click="startEditing">{{ id }}</span>
             <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
+            <span class="bg-red-400 opacity-70 rounded-sm text-sm px-1 ml-1" v-if="song.explicit">E</span>
           </h1>
           <p class="opacity-60 text-left text-sm">
             <span class="text-blue-300" v-if="$store.state.session">

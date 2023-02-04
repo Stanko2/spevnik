@@ -81,9 +81,16 @@ export default class SummaryView extends Vue {
     selectMode (mode: SortMode):void {
       this.selectedMode = mode
       this.showModeDropdown = false
-      const songs: Song[] = this.$store.state.songs
+      let songs: Song[] = this.$store.state.songs
+      if (!this.$store.state.showExplicit) {
+        songs = songs.filter(song => !song.explicit)
+      }
       const songsFiltered: Song[] = Search(this.SearchQuery).map(s => {
-        return songs[s.id - 1]
+        const song = songs.find(song => song.id === s.id)
+        if (song) {
+          return song
+        }
+        throw new Error(`Song with id: ${s.id} not found`)
       })
       this.nodes = this.buildSongTree(songsFiltered)
     }
@@ -98,7 +105,8 @@ export default class SummaryView extends Vue {
           return songs.sort((a:Song, b:Song) => a.name.localeCompare(b.name)).map((song:Song) => ({
             id: song.id,
             name: song.name,
-            type: 'leaf'
+            type: 'leaf',
+            explicit: song.explicit
           })) as SongTreeNode[]
         default:
           throw new Error('Unknown sort mode')
@@ -122,7 +130,8 @@ export default class SummaryView extends Vue {
           children: (songsByAuthor.map((song:Song) => ({
             id: song.id,
             name: song.name,
-            type: 'leaf'
+            type: 'leaf',
+            explicit: song.explicit
           })) as SongTreeNode[]),
           expanded: false
         })
@@ -170,7 +179,8 @@ export default class SummaryView extends Vue {
         id: song.id,
         name: song.name,
         type: 'leaf',
-        children: []
+        children: [],
+        explicit: song.explicit
       })
       return tree
     }

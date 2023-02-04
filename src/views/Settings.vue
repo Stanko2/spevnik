@@ -70,6 +70,7 @@
                     </div>
                 </label>
             </div>
+            <hr class="my-3 opacity-30" />
             <div class="dark:text-gray-200 p-4 text-lg" v-if="isOnline">
                 <div class="flex justify-between items-center w-full">
                     <span class="dark:text-gray-200">Admin Mode</span>
@@ -98,6 +99,19 @@
                     </button>
                 </div>
             </div>
+            <hr class="my-3 opacity-30" />
+            <div class="dark:text-gray-200 p-4 text-lg">
+                <label for="showExplicit" class="flex justify-between items-center w-full">
+                    <span class="dark:text-gray-200">Ukazovať nevhodné (explicitné) pesničky</span>
+                    <div class="relative">
+                        <input id="showExplicit" type="checkbox" class="sr-only" v-model="showExplicit" @change="$store.commit('setExplicit', showExplicit)">
+                        <div class="bg-gray-400 dark:bg-gray-600 h-5 w-11 rounded-full shadow-inner"></div>
+                        <div class="h-6 w-6 absolute shadow rounded-full bg-gray-50 -left-0.5 -top-0.5 transition-all" :class="{dot: showExplicit}"></div>
+                    </div>
+
+                </label>
+            </div>
+            <hr class="my-3 opacity-30" />
             <sessions v-if="isOnline"></sessions>
             <div class="mt-40 text-sm">
                 <p class="opacity-60 dark:text-gray-200">Tento spevník bol vytvorený ako re-design pre <a class="text-blue-500" href="https://people.ksp.sk/~petor/spevnik/#">Ralbov Spevník</a>. Oproti nemu tu je pridaných celkom dosť ďalších pesničiek.</p>
@@ -118,6 +132,7 @@ export default class Settings extends Vue {
     guitarMode = false
     chordMode: 'guitar' | 'ukulele' = 'guitar'
     darkMode = false
+    showExplicit = false
     fontSize = 12
     msg = navigator.userAgent
     columns = 1
@@ -135,6 +150,7 @@ export default class Settings extends Vue {
       this.darkMode = this.$store.state.darkTheme
       this.fontSize = this.$store.state.fontSize
       this.columns = this.$store.state.columnCount
+      this.showExplicit = this.$store.state.showExplicit
     }
 
     setFontSize ():void {

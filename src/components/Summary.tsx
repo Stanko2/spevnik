@@ -10,6 +10,7 @@ export interface SongTreeNode {
     children: SongTreeNode[]
     song?: Song
     expanded?: boolean
+    explicit?: boolean
 }
 
 @Component
@@ -28,6 +29,9 @@ export default class Summary extends Vue {
       if (node.type === 'leaf') {
         return <div class="p-2 hover:bg-gray-400 transition-all bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded-md shadow-md flex items-center" onClick={() => this.selectSong(node.id)}>
           <span class="material-symbols-rounded mr-2">music_note</span>{node.name}
+          { node.explicit &&
+            <span class="bg-red-400 opacity-70 rounded-sm text-sm px-1 ml-1" v-if="song.explicit">E</span>
+          }
         </div>
       }
       return <div>

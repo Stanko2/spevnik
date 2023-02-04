@@ -40,6 +40,16 @@
                 <p class="text-sm italic text-left opacity-50">[D] - akordy, {B} - bold, // capo 1 - gitarové poznámky (na celý riadok)</p>
                 <textarea rows="30" class="bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-full text-sm"  v-model="text" @change="resizeTextArea"></textarea>
             </div>
+            <div class="dark:text-gray-200 p-4 text-lg">
+                <label for="showExplicit" class="flex justify-between items-center w-full">
+                    <span class="dark:text-gray-200">Je táto pesnička NSFW?</span>
+                    <div class="relative">
+                        <input id="showExplicit" type="checkbox" class="sr-only" v-model="isExplicit">
+                        <div class="bg-gray-400 dark:bg-gray-600 h-5 w-11 rounded-full shadow-inner"></div>
+                        <div class="h-6 w-6 absolute shadow rounded-full bg-gray-50 -left-0.5 -top-0.5 transition-all" :class="{dot: isExplicit}"></div>
+                    </div>
+                </label>
+            </div>
             <div class="bg-red-600 rounded-xl p-3 flex justify-between font-semibold text-red-50" v-if="$route.params.id === '-1'">
               <span class="material-symbols-rounded block">warning</span>
               Ak pridávaš pesničku daj si pozor, aby si mal všetko aktualizované, aby si niekomu omylom neprepísal jeho pridanú pesničku.
@@ -53,6 +63,7 @@
 </template>
 
 <script lang="ts">
+import { Song } from '@/store'
 import { createSong, getSong, updateSong } from '@/store/firebase'
 import Vue from 'vue'
 import Component from 'vue-class-component'
@@ -64,6 +75,7 @@ export default class Editor extends Vue {
     path = ''
     youtube = ''
     text = ''
+    isExplicit = false
     mounted (): void {
       const id = parseInt(this.$route.params.id)
       if (id !== -1) {
@@ -74,6 +86,7 @@ export default class Editor extends Vue {
           this.path = song.path
           this.youtube = song.youtube || ''
           this.text = song.text
+          this.isExplicit = song.explicit || false
         })
       }
     }
@@ -89,13 +102,14 @@ export default class Editor extends Vue {
 
     save ():void {
       const id = parseInt(this.$route.params.id)
-      const song = {
+      const song: Song = {
         id: id,
         name: this.songName,
         author: this.author,
         path: this.path,
         text: this.text,
-        youtube: this.youtube
+        youtube: this.youtube,
+        explicit: this.isExplicit
       }
       if (id === -1) {
         song.id = this.$store.state.songs.length + 1
@@ -124,4 +138,8 @@ export default class Editor extends Vue {
     display: none;
 }
 
+.dot {
+  transform: translateX(100%);
+  @apply bg-blue-900;
+}
 </style>

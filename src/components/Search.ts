@@ -46,7 +46,9 @@ function normalizeString (str: string):string {
 
 function findResults (query:string, songs: Song[]): SearchResult[] {
   const res: SearchResult[] = []
+  const showExplicit = store.state.showExplicit
   for (const song of songs) {
+    if (song.explicit && !showExplicit) continue
     if (normalizeString(song.name).includes(query)) {
       res.push({
         name: song.name,

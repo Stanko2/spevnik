@@ -13,6 +13,7 @@ export interface Song{
   author: string
   id: number
   path: string
+  explicit?: boolean
 }
 
 Vue.use(Vuex)
@@ -34,6 +35,7 @@ export interface IState {
   currentSong: number
   chord: string | undefined
   chordMode: 'guitar' | 'ukulele'
+  showExplicit: boolean
 }
 
 function isMobile ():boolean {
@@ -59,7 +61,8 @@ export default new Vuex.Store<IState>({
     currentSong: 0,
     session: undefined,
     chord: undefined,
-    chordMode: 'guitar'
+    chordMode: 'guitar',
+    showExplicit: false
   },
   getters: {
   },
@@ -70,6 +73,7 @@ export default new Vuex.Store<IState>({
       state.darkTheme = prefs.darkTheme || window.matchMedia('(prefers-color-scheme: dark)').matches
       state.columnCount = prefs.columnCount || 1
       state.fontSize = prefs.fontSize || 12
+      state.showExplicit = prefs.showExplicit || false
       state.liked = new Set<number>(prefs.liked as unknown as number[])
       state.isMobile = isMobile()
       state.songs = JSON.parse(localStorage.getItem('songs') || '[]')
@@ -91,6 +95,7 @@ export default new Vuex.Store<IState>({
         guitarMode: state.guitarMode,
         columnCount: state.columnCount,
         fontSize: state.fontSize,
+        showExplicit: state.showExplicit,
         liked: [...state.liked]
       })
       localStorage.setItem('preferences', JSON.stringify(data))
@@ -104,6 +109,9 @@ export default new Vuex.Store<IState>({
     },
     setFontSize (state, fontSize: number) {
       state.fontSize = fontSize
+    },
+    setExplicit (state, showExplicit: boolean) {
+      state.showExplicit = showExplicit
     },
     setColumns (state, columnCount: number) {
       if (!state.isMobile) { state.columnCount = columnCount }
@@ -197,6 +205,10 @@ export default new Vuex.Store<IState>({
       if (songId === state.currentSong) return
       if (songTimeout !== undefined) {
         clearTimeout(songTimeout)
+      }
+      while (!state.showExplicit && state.songs[songId - 1].explicit) {
+        if (songId > state.currentSong) songId++
+        else songId--
       }
       songTimeout = setTimeout(() => {
         logEvent(analytics, 'song_viewed', { songId, songName: state.songs[songId - 1].name })
