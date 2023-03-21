@@ -8,11 +8,11 @@
       Invalid ID
     </div>
     <div v-else @click="$store.commit('setChord', null)">
-      <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
+      <div class="p-2 absolute w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
         <div>
           <h1 class="text-xl text-left flex items-center">
             <span v-if="!editingId" @click="startEditing">{{ id }}</span>
-            <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center">. {{ song.name }}
+            <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center" @blur="stopEditing">. {{ song.name }}
             <span class="bg-red-400 opacity-70 rounded-sm text-sm px-1 ml-1" v-if="song.explicit">E</span>
           </h1>
           <p class="opacity-60 text-left text-sm">
@@ -34,23 +34,50 @@
         </div>
       </div>
       <transition name="slide">
-        <div class="viewport transition-all duration-75" :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }">
-          <text-renderer
-            style="touch-action: pan-y !important;"
-
-            v-if="songShown"
-            :text="song.text"
-            v-hammer:pan.horizontal="e=> onPan(e)"
-            v-hammer:swipe.horizontal="e =>onSwipe(e)"
-            :guitarMode="$store.state.guitarMode"
-            :fontSize="$store.state.fontSize"
-            :columns="$store.state.columnCount"
-          ></text-renderer>
+        <div
+          class="viewport transition-all duration-75 overflow-hidden text-left"
+          :class="{'expanded': playing}"
+        >
+          <text-viewport v-if="$store.state.autoscroll && songShown" class="text-center" @play="(p)=> playing = p">
+            <text-renderer
+              style="touch-action: pan-y !important;"
+              v-hammer:pan.horizontal="e=> onPan(e)"
+              v-hammer:swipe.horizontal="e =>onSwipe(e)"
+              :text="song.text"
+              :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
+              :guitarMode="$store.state.guitarMode"
+              :fontSize="$store.state.fontSize"
+              :columns="1"
+            ></text-renderer>
+          </text-viewport>
+          <div v-else-if="songShown" class="absolute bottom-0 top-0 overflow-y-scroll left-0">
+            <text-renderer
+                style="touch-action: pan-y !important;"
+                v-hammer:pan.horizontal="e=> onPan(e)"
+                v-hammer:swipe.horizontal="e =>onSwipe(e)"
+                :text="song.text"
+                :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
+                :guitarMode="$store.state.guitarMode"
+                :fontSize="$store.state.fontSize"
+                :columns="$store.state.columnCount"
+              ></text-renderer>
+          </div>
         </div>
       </transition>
     </div>
-    <navbar :songs="$store.state.songs"></navbar>
+    <transition
+      enter-active-class="duration-500 transition-all transform-gpu"
+      leave-active-class="duration-500 transition-all transform-gpu"
+      enter-to-class="translate-y-0"
+      enter-class="translate-y-full"
+      leave-to-class="translate-y-full"
+      leave-class="translate-y-0"
+    >
+      <div v-if="!playing">
+        <navbar :songs="$store.state.songs"></navbar>
         <Transposer v-if="$store.state.guitarMode" />
+      </div>
+    </transition>
     </div>
 </template>
 
@@ -66,8 +93,9 @@ import { Song } from '@/store'
 import { getSong } from '@/store/firebase'
 import ChordPopup from '@/components/chord/ChordPopup.vue'
 import Transposer from '@/components/Transpose.vue'
+import TextViewport from '@/components/TextViewport.vue'
 
-@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), ChordPopup, Transposer } })
+@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), ChordPopup, Transposer, TextViewport } })
 export default class SongView extends Vue {
   id = -1
   song: Song | null = null
@@ -77,6 +105,7 @@ export default class SongView extends Vue {
     Idinput: HTMLInputElement
   }
 
+  playing = false
   songShown = true
   editingId = false
   scrollX = 0
@@ -141,6 +170,11 @@ export default class SongView extends Vue {
     })
   }
 
+  stopEditing ():void {
+    this.editingId = false
+    this.id = parseInt(this.$route.params.id)
+  }
+
   selectSong (id: number): void {
     this.editingId = false
     this.$store.commit('setSong', id)
@@ -195,6 +229,10 @@ export default class SongView extends Vue {
   top: 4rem;
   bottom: 2.5rem;
   touch-action: pan-y !important;
+}
+.viewport.expanded {
+  bottom: 0;
+  height: calc(100vh - 4rem);
 }
 .viewport::-webkit-scrollbar {
   width: 0px;

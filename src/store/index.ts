@@ -36,6 +36,7 @@ export interface IState {
   chord: string | undefined
   chordMode: 'guitar' | 'ukulele'
   showExplicit: boolean
+  autoscroll: boolean
 }
 
 function isMobile ():boolean {
@@ -62,7 +63,8 @@ export default new Vuex.Store<IState>({
     session: undefined,
     chord: undefined,
     chordMode: 'guitar',
-    showExplicit: false
+    showExplicit: false,
+    autoscroll: false
   },
   getters: {
   },
@@ -74,6 +76,7 @@ export default new Vuex.Store<IState>({
       state.columnCount = prefs.columnCount || 1
       state.fontSize = prefs.fontSize || 12
       state.showExplicit = prefs.showExplicit || false
+      state.autoscroll = prefs.autoscroll || false
       state.liked = new Set<number>(prefs.liked as unknown as number[])
       state.isMobile = isMobile()
       state.songs = JSON.parse(localStorage.getItem('songs') || '[]')
@@ -112,6 +115,10 @@ export default new Vuex.Store<IState>({
     },
     setExplicit (state, showExplicit: boolean) {
       state.showExplicit = showExplicit
+    },
+    setAutoScroll (state, autoscroll: boolean) {
+      state.autoscroll = autoscroll
+      if (state.autoscroll) state.columnCount = 1
     },
     setColumns (state, columnCount: number) {
       if (!state.isMobile) { state.columnCount = columnCount }

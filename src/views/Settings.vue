@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen w-screen dark:bg-gray-800">
+    <div class="min-h-screen w-screen dark:bg-gray-800">
         <div class="p-2 sticky w-screen rounded-b-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close" v-shortkey="['esc']" @shortkey="close">arrow_back</span>
@@ -60,7 +60,7 @@
                     </div>
                 </label>
             </div>
-            <div class="dark:text-gray-200 p-4 text-lg" v-if="!$store.state.isMobile">
+            <div class="dark:text-gray-200 p-4 text-lg" v-if="!autoscroll">
                 <label for="columns" class="flex justify-between items-center w-full">
                     <span class="dark:text-gray-200">Počet stĺpcov</span>
                     <div class="flex items-center justify-end w-60">
@@ -111,6 +111,16 @@
 
                 </label>
             </div>
+            <div class="dark:text-gray-200 p-4 text-lg">
+                <label for="autoscroll" class="flex justify-between items-center w-full">
+                    <span class="dark:text-gray-200">Automatické scrollovanie</span>
+                    <div class="relative">
+                        <input id="autoscroll" type="checkbox" class="sr-only" v-model="autoscroll" @change="$store.commit('setAutoScroll', autoscroll)">
+                        <div class="bg-gray-400 dark:bg-gray-600 h-5 w-11 rounded-full shadow-inner"></div>
+                        <div class="h-6 w-6 absolute shadow rounded-full bg-gray-50 -left-0.5 -top-0.5 transition-all" :class="{dot: autoscroll}"></div>
+                    </div>
+                </label>
+            </div>
             <hr class="my-3 opacity-30" />
             <sessions v-if="isOnline"></sessions>
             <div class="mt-40 text-sm">
@@ -133,6 +143,7 @@ export default class Settings extends Vue {
     chordMode: 'guitar' | 'ukulele' = 'guitar'
     darkMode = false
     showExplicit = false
+    autoscroll = false
     fontSize = 12
     msg = navigator.userAgent
     columns = 1
@@ -151,6 +162,7 @@ export default class Settings extends Vue {
       this.fontSize = this.$store.state.fontSize
       this.columns = this.$store.state.columnCount
       this.showExplicit = this.$store.state.showExplicit
+      this.autoscroll = this.$store.state.autoscroll
     }
 
     setFontSize ():void {
