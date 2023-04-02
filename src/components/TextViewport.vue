@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute bottom-0 top-0 overflow-y-scroll left-0 right-0" v-shortkey="['space']" @shortkey="play(false)">
+    <div class="absolute bottom-0 top-0 overflow-y-scroll left-0 right-0" v-shortkey="['space']" @shortkey="play(false)" v-hammer:tap="()=>play(true)">
         <div v-shortkey="['+']" @shortkey="scrollSpeed *= 1.5"></div>
         <div v-shortkey="['-']" @shortkey="scrollSpeed /= 1.5"></div>
         <slot class="overflow-auto text-center"></slot>
@@ -63,6 +63,7 @@ export default class TextViewport extends Vue {
     }
 
     play (fromBackground:boolean):void {
+      console.log('play')
       if (fromBackground && !this.playing) return
       this.playing = !this.playing
       this.$emit('play', this.playing)

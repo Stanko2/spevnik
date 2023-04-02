@@ -50,7 +50,7 @@
               :columns="1"
             ></text-renderer>
           </text-viewport>
-          <div v-else-if="songShown" class="absolute bottom-0 top-0 overflow-y-scroll left-0">
+          <div v-else-if="songShown" class="absolute bottom-0 top-0 overflow-y-scroll left-0 right-0">
             <text-renderer
                 style="touch-action: pan-y !important;"
                 v-hammer:pan.horizontal="e=> onPan(e)"
