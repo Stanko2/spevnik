@@ -7,6 +7,10 @@ module.exports = {
     appleMobileWebAppStatusBarStyle: 'black',
     workboxOptions: {
       navigateFallback: 'index.html'
+      // include: [
+      //   'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0',
+      //   /.*\.woff2$/
+      // ]
     }
   }
 }

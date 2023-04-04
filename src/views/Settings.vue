@@ -89,13 +89,15 @@
                     <span class="dark:text-gray-200">Offline režim</span>
                     <button v-if="!availOffline"
                         class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
-                        @click="$store.dispatch('startOfflineMode')">
-                        Zapnúť
+                        @click="$store.dispatch('startOfflineMode')"
+                        :disabled="$store.state.cacheInProgress">
+                        {{ $store.state.cacheInProgress ? 'Sťahujem' : 'Zapnúť' }}
                     </button>
                     <button v-else-if="isOnline"
                         class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
-                        @click="$store.commit('updateOfflineCache')">
-                        Aktualizovať
+                        @click="$store.commit('updateOfflineCache')"
+                        :disabled="$store.state.cacheInProgress">
+                        {{ $store.state.cacheInProgress ? 'Sťahujem' : 'Aktualizovať' }}
                     </button>
                 </div>
             </div>
@@ -156,6 +158,7 @@ export default class Settings extends Vue {
     }
 
     mounted ():void {
+      this.$store.commit('install')
       this.guitarMode = this.$store.state.guitarMode
       this.chordMode = this.$store.state.chordMode
       this.darkMode = this.$store.state.darkTheme

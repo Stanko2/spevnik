@@ -37,6 +37,7 @@ export interface IState {
   chordMode: 'guitar' | 'ukulele'
   showExplicit: boolean
   autoscroll: boolean
+  cacheInProgress: boolean
 }
 
 function isMobile ():boolean {
@@ -64,7 +65,8 @@ export default new Vuex.Store<IState>({
     chord: undefined,
     chordMode: 'guitar',
     showExplicit: false,
-    autoscroll: false
+    autoscroll: false,
+    cacheInProgress: false
   },
   getters: {
   },
@@ -132,21 +134,27 @@ export default new Vuex.Store<IState>({
         state.isAdmin = data.admin
       })
     },
+    install (state) {
+      if (state.installEvent) {
+        state.installEvent.prompt()
+        state.installEvent.userChoice.then((choice) => {
+          console.log(choice)
+        })
+      }
+    },
     enableOffline (state) {
+      state.cacheInProgress = true
       cacheAllSongs().then(songs => {
+        state.cacheInProgress = false
         logEvent(analytics, 'content_download')
         state.songs = songs
-        if (state.installEvent) {
-          state.installEvent.prompt()
-          state.installEvent.userChoice.then((choice) => {
-            console.log(choice)
-          })
-        }
       })
     },
     updateOfflineCache (state) {
+      state.cacheInProgress = true
       cacheAllSongs().then(songs => {
         state.songs = songs
+        state.cacheInProgress = false
       })
     },
     resetTranspose (state) {
@@ -213,9 +221,11 @@ export default new Vuex.Store<IState>({
       if (songTimeout !== undefined) {
         clearTimeout(songTimeout)
       }
-      while (!state.showExplicit && state.songs[songId - 1].explicit) {
-        if (songId > state.currentSong) songId++
-        else songId--
+      if (state.songs.length > 0) {
+        while (!state.showExplicit && state.songs[songId - 1].explicit) {
+          if (songId > state.currentSong) songId++
+          else songId--
+        }
       }
       songTimeout = setTimeout(() => {
         logEvent(analytics, 'song_viewed', { songId, songName: state.songs[songId - 1].name })
@@ -250,7 +260,7 @@ export default new Vuex.Store<IState>({
   },
   actions: {
     startOfflineMode (ctx) {
-      if (ctx.state.songs.length === 0) {
+      if (ctx.state.songs.length === 0 && !ctx.state.cacheInProgress) {
         ctx.commit('enableOffline')
         ctx.commit('save', true)
       }

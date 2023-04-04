@@ -78,8 +78,9 @@ export async function importToDB ():Promise<void> {
 
 export async function cacheAllSongs ():Promise<Song[]> {
   const lastUpdate = parseInt(localStorage.getItem('lastDBUpdate') || '0')
-  console.log(lastUpdate)
-  if (lastUpdate > Date.now() - 1000 * 60 * 10) {
+  console.log(store.state.songs)
+  if (lastUpdate > Date.now() - 1000 * 60 * 10 && store.state.songs.length > 0) {
+    console.log('updated recently, not caching ... ')
     return store.state.songs
   }
   localStorage.setItem('lastDBUpdate', Date.now().toString())
