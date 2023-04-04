@@ -35,6 +35,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import NoSleep from 'nosleep.js'
 
 @Component
 export default class TextViewport extends Vue {
@@ -43,8 +44,10 @@ export default class TextViewport extends Vue {
     lastTime = 0
     playing = false
     scrollAmount = 0
+    sleep!: NoSleep
 
     mounted ():void {
+      this.sleep = new NoSleep()
       this.playerActive = this.$route.query.mode === 'player'
       this.scrollSpeed = this.$store.state.fontSize * 0.6
     }
@@ -67,7 +70,10 @@ export default class TextViewport extends Vue {
       if (fromBackground && !this.playing) return
       this.playing = !this.playing
       this.$emit('play', this.playing)
-      if (!this.playing) return
+      if (!this.playing) {
+        this.sleep.enable()
+        return
+      } else this.sleep.disable()
       this.scrollAmount = this.$el.scrollTop
       this.lastTime = 0
       console.log(this.$el.scrollTop)
