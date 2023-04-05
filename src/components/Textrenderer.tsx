@@ -145,6 +145,10 @@ export default class TextRenderer extends Vue {
           .split(' ')
           .map((s) => this.transpose(s))
           .join(' ')
+        segment.text = segment.text
+          .split('/')
+          .map((s) => this.transpose(s))
+          .join('/')
       }
     }
     return segments
