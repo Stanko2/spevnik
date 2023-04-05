@@ -104,7 +104,10 @@ export default new Vuex.Store<IState>({
         liked: [...state.liked]
       })
       localStorage.setItem('preferences', JSON.stringify(data))
-      if (saveSongs) { localStorage.setItem('songs', JSON.stringify(state.songs)) }
+      if (saveSongs) {
+        console.log('saving ' + state.songs.length + ' songs')
+        localStorage.setItem('songs', JSON.stringify(state.songs))
+      }
     },
     setDarkTheme (state, darkTheme: boolean) {
       state.darkTheme = darkTheme
@@ -142,19 +145,21 @@ export default new Vuex.Store<IState>({
         })
       }
     },
-    enableOffline (state) {
+    enableOffline (state, callback: () => void) {
       state.cacheInProgress = true
       cacheAllSongs().then(songs => {
         state.cacheInProgress = false
         logEvent(analytics, 'content_download')
         state.songs = songs
+        callback()
       })
     },
-    updateOfflineCache (state) {
+    updateOfflineCache (state, callback: () => void) {
       state.cacheInProgress = true
       cacheAllSongs().then(songs => {
         state.songs = songs
         state.cacheInProgress = false
+        callback()
       })
     },
     resetTranspose (state) {
@@ -261,8 +266,9 @@ export default new Vuex.Store<IState>({
   actions: {
     startOfflineMode (ctx) {
       if (ctx.state.songs.length === 0 && !ctx.state.cacheInProgress) {
-        ctx.commit('enableOffline')
-        ctx.commit('save', true)
+        ctx.commit('enableOffline', () => {
+          ctx.commit('save', true)
+        })
       }
     }
   }
