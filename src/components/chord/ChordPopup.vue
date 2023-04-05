@@ -8,7 +8,7 @@
     enter-to-class="transform-gpu translate-y-0 translate-x-1/2 opacity-1"
   >
     <div
-      class="chord flex flex-row rounded-tr-lg rounded-tl-lg overflow-hidden bg-gray-500 shadow-2xl z-30"
+      class="chord-menu flex flex-row rounded-tr-lg rounded-tl-lg overflow-hidden bg-gray-500 shadow-2xl z-30"
       v-if="chordFound"
       @click="click"
     >
@@ -120,7 +120,7 @@ export default class ChordPopup extends Vue {
 </script>
 
 <style>
-.chord {
+.chord-menu {
   position: fixed;
   bottom: 3.5rem;
   right: 50%;
@@ -136,7 +136,7 @@ export default class ChordPopup extends Vue {
 }
 
 @media (min-width: 768px) {
-  .chord {
+  .chord-menu {
     width: 300px;
     height: 250px;
   }
