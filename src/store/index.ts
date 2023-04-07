@@ -123,7 +123,7 @@ export default new Vuex.Store<IState>({
       if (state.autoscroll) state.columnCount = 1
     },
     setColumns (state, columnCount: number) {
-      if (!state.isMobile) { state.columnCount = columnCount }
+      state.columnCount = columnCount
     },
     setInstallEvent (state, installEvent: BeforeInstallPromptEvent) {
       state.installEvent = installEvent
