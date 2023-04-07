@@ -16686,6 +16686,7 @@ export const ukuleleChords: Chord[] = [
     ]
   }
 ]
+
 const ukulele: ChordArray = {
   main: { strings: 4, fretsOnChord: 4, name: 'ukulele', numberOfChords: 2114 },
   tunings: { standard: ['G4', 'C4', 'E4', 'A4'] },
@@ -16702,8 +16703,8 @@ const ukulele: ChordArray = {
     minor: ['m', 'min', 'mi'],
     dim: ['dim', 'o'],
     dim7: ['dim7', 'o7'],
-    sus2: ['sus2', '2'],
-    sus4: ['sus4', '4'],
+    sus2: ['sus2', '2', '2sus'],
+    sus4: ['sus4', '4', '4sus'],
     '7sus4': ['7sus4', '7sus', '7s4'],
     alt: ['alt', '7alt'],
     aug: ['aug', '+'],
