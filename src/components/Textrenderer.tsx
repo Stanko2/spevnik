@@ -95,17 +95,28 @@ export default class TextRenderer extends Vue {
   }
 
   transpose (chord: string): string {
-    const initialScale =
-      this.scale[chord.length >= 1 && chord[1] === '#' ? '#' : 'b']
-    const scale = this.scale[(this.$store.state as IState).scale]
-    const t = this.$store.state.transpose
-    let a = chord[0]
-    if (chord[1] === '#' || chord[1] === 'b') {
-      a += chord[1]
+    if (['', ' ', 'N.C.', 'N.C', '/'].includes(chord)) return chord // no chord, don't transpose
+
+    let split = chord.indexOf('/')
+    if (split === -1) split = chord.indexOf(' ')
+    else if (chord.indexOf(' ') !== -1) split = Math.min(split, chord.indexOf(' '))
+
+    // if chord contains a slash or a space, split it and transpose each part
+    if (split === -1) {
+      const initialScale =
+        this.scale[chord.length >= 1 && chord[1] === '#' ? '#' : 'b']
+      const scale = this.scale[(this.$store.state as IState).scale]
+      const t = this.$store.state.transpose
+      let a = chord[0]
+      if (chord[1] === '#' || chord[1] === 'b') {
+        a += chord[1]
+      }
+      const index = initialScale.findIndex((e) => e === a)
+      const scaledChord = scale[this.mod(index + t, scale.length)]
+      return scaledChord + chord.substring(a.length, chord.length)
+    } else {
+      return this.transpose(chord.substring(0, split)) + chord[split] + this.transpose(chord.substring(split + 1))
     }
-    const index = initialScale.findIndex((e) => e === a)
-    const scaledChord = scale[this.mod(index + t, scale.length)]
-    return scaledChord + chord.substring(a.length, chord.length)
   }
 
   mod (a: number, b: number): number {
@@ -141,14 +152,7 @@ export default class TextRenderer extends Vue {
     }
     for (const segment of segments) {
       if (segment.type === 'chord') {
-        segment.text = segment.text
-          .split(' ')
-          .map((s) => this.transpose(s))
-          .join(' ')
-        segment.text = segment.text
-          .split('/')
-          .map((s) => this.transpose(s))
-          .join('/')
+        segment.text = this.transpose(segment.text)
       }
     }
     return segments
