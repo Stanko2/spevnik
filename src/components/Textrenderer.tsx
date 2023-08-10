@@ -15,6 +15,7 @@ export default class TextRenderer extends Vue {
   @Prop({ required: false, default: true }) guitarMode!: boolean;
   touchAction = 'none';
 
+  letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'H'];
   scale = {
     '#': ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B', 'H'],
     b: ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'B', 'H']
@@ -108,6 +109,8 @@ export default class TextRenderer extends Vue {
       const scale = this.scale[(this.$store.state as IState).scale]
       const t = this.$store.state.transpose
       let a = chord[0]
+      if (!this.letters.includes(a)) return chord[0] + this.transpose(chord.substring(1))
+
       if (chord[1] === '#' || chord[1] === 'b') {
         a += chord[1]
       }
