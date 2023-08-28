@@ -203,7 +203,7 @@ export default class SongView extends Vue {
 </script>
 
 <style>
-.accord {
+.chord {
   font-weight: bold;
   vertical-align: super;
   margin: 0 2px 0 2px;

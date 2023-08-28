@@ -95,7 +95,7 @@
                     </button>
                     <button v-else-if="isOnline"
                         class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
-                        @click="$store.commit('updateOfflineCache')"
+                        @click="$store.commit('updateOfflineCache', () => $store.commit('save', true))"
                         :disabled="$store.state.cacheInProgress">
                         {{ $store.state.cacheInProgress ? 'Sťahujem' : 'Aktualizovať' }}
                     </button>
