@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-gray-800 h-screen w-screen">
+  <div class="dark:bg-gray-800 h-screen w-screen grid" style="grid-template-rows: min-content 1fr min-content;" @click="$store.commit('setChord', null)">
     <ChordPopup
       :chord="chord"
       :lite="false"
@@ -7,78 +7,73 @@
     <div v-if="song === null">
       Invalid ID
     </div>
-    <div v-else @click="$store.commit('setChord', null)">
-      <div class="p-2 absolute w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
-        <div>
-          <h1 class="text-xl text-left flex items-center">
-            <span v-if="!editingId" @click="startEditing">{{ id }}</span>
-            <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center" @blur="stopEditing">. {{ song.name }}
-            <span class="bg-red-400 opacity-70 rounded-sm text-sm px-1 ml-1" v-if="song.explicit">E</span>
-          </h1>
-          <p class="opacity-60 text-left text-sm">
-            <span class="text-blue-300" v-if="$store.state.session">
-              <span class="material-symbols-rounded text-sm">cast</span>
-              {{ $store.state.session }}
-            </span>
-            <span v-if="$store.state.session">|</span>
-            {{ song.author }}
-          </p>
-        </div>
-        <div class="flex absolute right-0 bg-gray-300 dark:bg-gray-600">
-          <div class="p-2 text-3xl cursor-pointer m-1 transition-all text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
-            <span class="material-symbols-rounded block">favorite</span>
-          </div>
-          <a class="p-2 rounded-xl cursor-pointer m-1 h-12 w-12" :href="'https://youtu.be/'+(song.youtube || 'dQw4w9WgXcQ')" target="_blank">
-            <img src="@/assets/youtube.svg" alt="youtube" class="w-full h-full block">
-          </a>
-        </div>
+    <div v-else class="p-2 w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
+      <div>
+        <h1 class="text-xl text-left flex items-center">
+          <span v-if="!editingId" @click="startEditing">{{ id }}</span>
+          <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center" @blur="stopEditing">. {{ song.name }}
+          <span class="bg-red-400 opacity-70 rounded-sm text-sm px-1 ml-1" v-if="song.explicit">E</span>
+        </h1>
+        <p class="opacity-60 text-left text-sm">
+          <span class="text-blue-300" v-if="$store.state.session">
+            <span class="material-symbols-rounded text-sm">cast</span>
+            {{ $store.state.session }}
+          </span>
+          <span v-if="$store.state.session">|</span>
+          {{ song.author }}
+        </p>
       </div>
-      <transition name="slide">
-        <div
-          class="viewport transition-all duration-75 overflow-hidden text-left"
-          :class="{'expanded': playing}"
-        >
-          <text-viewport v-if="$store.state.autoscroll && songShown" class="text-center" @play="(p)=> playing = p">
-            <text-renderer
-              style="touch-action: pan-y !important;"
-              v-hammer:pan.horizontal="e=> onPan(e)"
-              v-hammer:swipe.horizontal="e =>onSwipe(e)"
-              :text="song.text"
-              :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
-              :guitarMode="$store.state.guitarMode"
-              :fontSize="$store.state.fontSize"
-              :columns="1"
-            ></text-renderer>
-          </text-viewport>
-          <div v-else-if="songShown" class="absolute bottom-0 top-0 overflow-y-scroll left-0 right-0">
-            <text-renderer
-                style="touch-action: pan-y !important;"
-                v-hammer:pan.horizontal="e=> onPan(e)"
-                v-hammer:swipe.horizontal="e =>onSwipe(e)"
-                :text="song.text"
-                :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
-                :guitarMode="$store.state.guitarMode"
-                :fontSize="$store.state.fontSize"
-                :columns="$store.state.columnCount"
-              ></text-renderer>
-          </div>
+      <div class="flex right-0 bg-gray-300 dark:bg-gray-600">
+        <div class="p-2 text-3xl cursor-pointer m-1 transition-all text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
+          <span class="material-symbols-rounded block">favorite</span>
         </div>
-      </transition>
+        <a class="p-2 rounded-xl cursor-pointer m-1 h-12 w-12" :href="'https://youtu.be/'+(song.youtube || 'dQw4w9WgXcQ')" target="_blank">
+          <img src="@/assets/youtube.svg" alt="youtube" class="w-full h-full block">
+        </a>
+      </div>
     </div>
-    <transition
-      enter-active-class="duration-500 transition-all transform-gpu"
-      leave-active-class="duration-500 transition-all transform-gpu"
-      enter-to-class="translate-y-0"
-      enter-class="translate-y-full"
-      leave-to-class="translate-y-full"
-      leave-class="translate-y-0"
-    >
-      <div v-if="!playing">
-        <navbar :songs="$store.state.songs"></navbar>
-        <Transposer v-if="$store.state.guitarMode" />
+    <transition name="slide">
+      <div
+        class="viewport transition-all duration-75 text-left"
+        :class="{'expanded': playing}"
+      >
+        <text-viewport v-if="$store.state.autoscroll && songShown" class="text-center" @play="(p)=> playing = p">
+          <text-renderer
+            style="touch-action: pan-y !important;"
+            v-hammer:pan.horizontal="e=> onPan(e)"
+            v-hammer:swipe.horizontal="e =>onSwipe(e)"
+            :text="song?.text || ''"
+            :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
+            :guitarMode="$store.state.guitarMode"
+            :fontSize="$store.state.fontSize"
+            :columns="1"
+          ></text-renderer>
+        </text-viewport>
+        <text-renderer
+            v-else-if="songShown"
+            style="touch-action: pan-y !important;"
+            v-hammer:pan.horizontal="e=> onPan(e)"
+            v-hammer:swipe.horizontal="e =>onSwipe(e)"
+            :text="song?.text || ''"
+            :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
+            :guitarMode="$store.state.guitarMode"
+            :fontSize="$store.state.fontSize"
+            :columns="$store.state.columnCount"
+          ></text-renderer>
       </div>
     </transition>
-    </div>
+  <transition
+    enter-active-class="duration-500 transition-all transform-gpu"
+    leave-active-class="duration-500 transition-all transform-gpu"
+    enter-to-class="translate-y-0"
+    enter-class="translate-y-full"
+    leave-to-class="translate-y-full"
+    leave-class="translate-y-0"
+  >
+    <navbar :songs="$store.state.songs"></navbar>
+  </transition>
+  <Transposer v-if="$store.state.guitarMode" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -221,22 +216,23 @@ export default class SongView extends Vue {
   @apply font-mono font-light
 }
 .viewport{
-  height: calc(100vh - 7.5rem);
   overflow-y: scroll;
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 4rem;
-  bottom: 2.5rem;
   touch-action: pan-y !important;
 }
 .viewport.expanded {
   bottom: 0;
   height: calc(100vh - 4rem);
 }
+
 .viewport::-webkit-scrollbar {
-  width: 0px;
+  background: transparent;
+  width: 1rem;
 }
+
+.viewport::-webkit-scrollbar-thumb {
+  @apply dark:bg-gray-500 bg-gray-300 rounded-lg w-7
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

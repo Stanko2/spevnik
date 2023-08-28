@@ -11,11 +11,16 @@ const routes: Array<RouteConfig> = [
     name: 'Home',
     component: Home
   },
-  // {
-  //   path: '/',
-  //   name: 'Landing',
-  //   component: Landing
-  // },
+  {
+    path: '/home',
+    name: 'Landing',
+    component: Landing
+  },
+  {
+    path: '/requests',
+    name: 'ChangeRequests',
+    component: () => import('../views/ChangeRequests.vue')
+  },
   {
     path: '/',
     redirect: '/song/1'

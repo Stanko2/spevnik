@@ -30,8 +30,8 @@ export default class TextRenderer extends Vue {
         this.touchAction = 'pan-y !important'
       }, 20)
       return (
-        <div class="pb-3 leading-relaxed min-w-full max-w-full select-text" style={{ 'touch-action': this.touchAction }}>
-          <div class="m-3" style={{ 'column-count': columnsToRender, 'touch-action': 'pan-y !important' }}>
+        <div class="leading-relaxed min-w-full max-w-full select-text" style={{ 'touch-action': this.touchAction }}>
+          <div class="mx-3" style={{ 'column-count': columnsToRender, 'touch-action': 'pan-y !important' }}>
             {lines.map((line, index) => {
               const segments = this.getsegments(line)
               if (segments.length === 1 && segments[0].text === '') return <br />

@@ -1,41 +1,56 @@
 <template>
-    <div class="overflow-y-scroll min-h-full z-50">
-        <h1 class="text-2xl mt-5">Obsah</h1>
-        <div class="flex justify-items-stretch h-10 z-30 m-3 mb-0">
-            <input type="search" class="dark:bg-gray-500 bg-gray-300 p-2 rounded-l-md outline-none flex-grow" v-model="SearchQuery">
-            <button class="btn m-0 rounded-none flex-shrink h-10 w-10" @click="selectMode(selectedMode)">
-                <span class="material-symbols-rounded block">
-                    search
-                </span>
-            </button>
-            <button class="btn m-0 rounded-l-none flex-shrink h-10 w-10" @click="showModeDropdown = !showModeDropdown">
-                <span class="material-symbols-rounded block">
-                    {{ selectedMode?.icon || 'sort' }}
-                </span>
-
-            </button>
+    <div class="h-full z-50 grid shadow-2xl" style="grid-template-rows: min-content 1fr min-content;">
+        <div>
+          <h1 class="text-2xl mt-5">Obsah</h1>
+          <div class="flex justify-items-stretch h-10 z-30 m-3">
+              <input type="search" class="dark:bg-gray-500 bg-gray-300 p-2 rounded-l-md outline-none flex-grow" v-model="SearchQuery">
+              <button class="btn m-0 rounded-none flex-shrink h-10 w-10" @click="selectMode(selectedMode)">
+                  <span class="material-symbols-rounded block">
+                      search
+                  </span>
+              </button>
+              <button class="btn m-0 rounded-l-none flex-shrink h-10 w-10" @click="showModeDropdown = !showModeDropdown">
+                  <span class="material-symbols-rounded block">
+                      {{ selectedMode?.icon || 'sort' }}
+                  </span>
+              </button>
+          </div>
+          <transition
+              enter-active-class="duration-300 transition-all ease-in-out transform-gpu"
+              leave-active-class="duration-300 transition-all ease-in-out transform-gpu"
+              enter-class="-translate-y-5 opacity-0 z-10"
+              leave-class="translate-y-0 opacity-100"
+              enter-to-class="translate-y-0 opacity-100"
+              leave-to-class="-translate-y-5 opacity-0 z-10"
+          >
+              <div v-if="showModeDropdown" class="absolute w-60 text-left right-2 bg-gray-300 dark:bg-gray-600 shadow-xl rounded-md z-50">
+                  <div v-for="(mode,i) in songTreeModes" @click="selectMode(mode)" :key="i" class="transition-all hover:bg-gray-400 dark:hover:bg-gray-500 p-2 rounded-md flex items-center"><span class="material-symbols-rounded mr-1">{{ mode.icon }}</span>{{mode.text}}</div>
+              </div>
+          </transition>
         </div>
-        <transition
-            enter-active-class="duration-300 transition-all ease-in-out transform-gpu"
-            leave-active-class="duration-300 transition-all ease-in-out transform-gpu"
-            enter-class="-translate-y-5 opacity-0 z-10"
-            leave-class="translate-y-0 opacity-100"
-            enter-to-class="translate-y-0 opacity-100"
-            leave-to-class="-translate-y-5 opacity-0 z-10"
-        >
-            <div v-if="showModeDropdown" class="absolute w-60 text-left right-2 bg-gray-300 dark:bg-gray-600 shadow-xl rounded-md z-50">
-                <div v-for="(mode,i) in songTreeModes" @click="selectMode(mode)" :key="i" class="transition-all hover:bg-gray-400 dark:hover:bg-gray-500 p-2 rounded-md flex items-center"><span class="material-symbols-rounded mr-1">{{ mode.icon }}</span>{{mode.text}}</div>
-            </div>
-        </transition>
-        <div class="fixed bottom-6 top-32 overflow-y-auto right-6 xl:left-2/3 left-6 content">
-            <Summary class="left-3 right-3" :nodes="nodes" v-if="$store.state.songs.length > 0"></Summary>
-            <div v-else class="text-red-400">Pre zobrazenie obsahu zapni offline režim v nastaveniach</div>
+        <div class="overflow-y-auto xl:left-2/3 content mx-3">
+          <Summary class="left-3 right-3" :nodes="nodes" v-if="$store.state.songs.length > 0"></Summary>
+          <div v-else class="text-red-400">Pre zobrazenie obsahu zapni offline režim v nastaveniach</div>
+        </div>
+        <div class="z-20 w-full bg-gray-600 rounded-b-md flex" v-if="$store.state.credential">
+          <button class="btn w-1/2 flex items-center justify-between px-2" @click="openEditor(false)" v-shortkey="['e']" @shortkey="openEditor(false)">
+            {{ $store.state.isAdmin ? 'Zmeniť aktuálnu pesničku' : 'Navrhnúť zmenu' }}
+            <span class="material-symbols-rounded">
+              edit
+            </span>
+          </button>
+          <button class="btn w-1/2 flex items-center justify-between px-2" @click="openEditor(true)" v-shortkey="['q']" @shortkey="openEditor(true)" v-if="$store.state.songs.length > 0">
+            {{ $store.state.isAdmin ? 'Pridať novú pesničku' : 'Navrhnúť novú pesničku' }}
+            <span class="material-symbols-rounded">
+              add
+            </span>
+          </button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Song } from '@/store'
+import store, { Song } from '@/store'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import { Prop } from 'vue-property-decorator'
@@ -76,6 +91,17 @@ export default class SummaryView extends Vue {
 
     created ():void {
       this.selectMode(this.songTreeModes[0])
+    }
+
+    openEditor (newSong:boolean):void {
+      if (newSong) {
+        this.$router.push({
+          name: 'Editor',
+          params: {
+            id: '-1'
+          }
+        })
+      } else { this.$router.push({ path: `/edit/${this.$store.state.currentSong}` }) }
     }
 
     selectMode (mode: SortMode):void {
@@ -187,7 +213,15 @@ export default class SummaryView extends Vue {
 
     sortTree (tree: SongTreeNode):void {
       if (tree.type === 'leaf') return
-      tree.children.sort((a: SongTreeNode, b:SongTreeNode) => a.name > b.name ? 1 : -1)
+      tree.children.sort((a: SongTreeNode, b:SongTreeNode) => {
+        const aNum = parseInt(a.name.split('.')[0])
+        const bNum = parseInt(b.name.split('.')[0])
+        if (aNum !== bNum && !isNaN(aNum) && !isNaN(bNum)) {
+          return aNum > bNum ? 1 : -1
+        } else {
+          return a.name.localeCompare(b.name)
+        }
+      })
       for (const child of tree.children) {
         this.sortTree(child)
       }

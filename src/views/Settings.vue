@@ -122,6 +122,14 @@
                         <div class="h-6 w-6 absolute shadow rounded-full bg-gray-50 -left-0.5 -top-0.5 transition-all" :class="{dot: autoscroll}"></div>
                     </div>
                 </label>
+                <div v-if="$store.state.isAdmin" class="flex justify-between mt-8">
+                    <span>Navrhované zmeny</span>
+                    <button
+                        @click="$router.push({name: 'ChangeRequests'})"
+                        class="p-2 rounded-md text-gray-700 bg-gray-300 dark:bg-gray-600 dark:text-gray-200"
+                    >Zmeny
+                    </button>
+                </div>
             </div>
             <hr class="my-3 opacity-30" />
             <sessions v-if="isOnline"></sessions>
@@ -138,6 +146,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Sessions from '@/components/Sessions.vue'
+import { listAllSuggestions } from '@/store/firebase'
 
 @Component({ components: { Sessions } })
 export default class Settings extends Vue {
@@ -166,6 +175,9 @@ export default class Settings extends Vue {
       this.columns = this.$store.state.columnCount
       this.showExplicit = this.$store.state.showExplicit
       this.autoscroll = this.$store.state.autoscroll
+      setTimeout(() => {
+        listAllSuggestions()
+      }, 500)
     }
 
     setFontSize ():void {

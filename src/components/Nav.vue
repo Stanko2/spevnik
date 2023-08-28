@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed bottom-0 w-screen bg-gray-500 flex justify-between h-14 z-40 items-center">
+    <div class="w-screen bg-gray-500 flex justify-between h-14 z-40 items-center">
         <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)" v-shortkey="['arrowleft']" @shortkey="selectSong(-1)">&lt;</button>
         <button class="btn" @click="showSearchView = true" v-shortkey="['h']" @shortkey="showSearchView = true">
           <span class="material-symbols-rounded block">
@@ -14,16 +14,6 @@
         <button class="btn" @click="random" v-shortkey="['r']" @shortkey="random">
           <span class="material-symbols-rounded block transform-gpu translate-y-px">
             cycle
-          </span>
-        </button>
-        <button class="btn" @click="openEditor(false)" v-shortkey="['e']" @shortkey="openEditor(false)" v-if="$store.state.isAdmin">
-          <span class="material-symbols-rounded block">
-            edit
-          </span>
-        </button>
-        <button class="btn" @click="openEditor(true)" v-shortkey="['q']" @shortkey="openEditor(true)" v-if="$store.state.isAdmin && $store.state.songs.length > 0">
-          <span class="material-symbols-rounded block">
-            add
           </span>
         </button>
         <button class="btn" @click="openMenu" v-shortkey="['m']" @shortkey="openMenu">
@@ -128,17 +118,6 @@ export default class Navbar extends Vue {
     openMenu ():void{
       this.showMenu = true
       this.searchQuery = ''
-    }
-
-    openEditor (newSong:boolean):void {
-      if (newSong) {
-        this.$router.push({
-          name: 'Editor',
-          params: {
-            id: '-1'
-          }
-        })
-      } else { this.$router.push({ path: `/edit/${this.$store.state.currentSong}` }) }
     }
 }
 </script>

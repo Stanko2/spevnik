@@ -1,10 +1,9 @@
 import router from '@/router'
 import { BeforeInstallPromptEvent } from '@/shims-tsx'
-import { logEvent } from 'firebase/analytics'
 import { User } from 'firebase/auth'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { analytics, cacheAllSongs, createSession, createSong, joinSession, leaveSession, login, logOut, updateSong } from './firebase'
+import { cacheAllSongs, createSession, joinSession, leaveSession, login, logOut, logEvent } from './firebase'
 
 export interface Song{
   text: string
@@ -14,6 +13,12 @@ export interface Song{
   id: number
   path: string
   explicit?: boolean
+}
+
+export interface Suggestion {
+  userName: string
+  song: Song
+  id: string
 }
 
 Vue.use(Vuex)
@@ -146,7 +151,7 @@ export default new Vuex.Store<IState>({
       state.cacheInProgress = true
       cacheAllSongs().then(songs => {
         state.cacheInProgress = false
-        logEvent(analytics, 'content_download')
+        logEvent('content_download')
         state.songs = songs
       })
     },
@@ -164,10 +169,10 @@ export default new Vuex.Store<IState>({
     toggleLike (state: IState, id: number) {
       if (state.liked.has(id)) {
         state.liked.delete(id)
-        logEvent(analytics, 'song_disliked', { dislikedId: id, dislikedSong: state.songs[id - 1].name })
+        logEvent('song_disliked', { dislikedId: id, dislikedSong: state.songs[id - 1].name })
       } else {
         state.liked.add(id)
-        logEvent(analytics, 'song_liked', { likedId: id, likedSong: state.songs[id - 1].name })
+        logEvent('song_liked', { likedId: id, likedSong: state.songs[id - 1].name })
       }
       const data = Object.assign({}, {
         darkTheme: state.darkTheme,
@@ -228,7 +233,7 @@ export default new Vuex.Store<IState>({
         }
       }
       songTimeout = setTimeout(() => {
-        logEvent(analytics, 'song_viewed', { songId, songName: state.songs[songId - 1].name })
+        logEvent('song_viewed', { songId, songName: state.songs[songId - 1].name })
       }, 10000)
       state.currentSong = songId || 1
       router.push({

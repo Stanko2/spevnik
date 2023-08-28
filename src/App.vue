@@ -67,7 +67,6 @@ export default class App extends Vue {
 }
 
 ::-webkit-scrollbar{
-  width: 0;
 }
 
 input[type=number] {

@@ -1,8 +1,9 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GoogleAuthProvider, User, setPersistence, browserLocalPersistence, Unsubscribe, signOut } from 'firebase/auth'
 import { get, getDatabase, ref, set, onValue, remove } from 'firebase/database'
-import { getAnalytics, logEvent } from 'firebase/analytics'
-import store, { Song } from '.'
+import { getAnalytics, logEvent as logAnalyticsEvent } from 'firebase/analytics'
+import store, { Song, Suggestion } from '.'
+import Vue from 'vue'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDY690VtfSWU1EURhyW8wcEYskqe-oBGSQ',
@@ -12,6 +13,10 @@ const firebaseConfig = {
   messagingSenderId: '679304186220',
   appId: '1:679304186220:web:6ecdacfe8dbfa890558b49',
   databaseURL: 'https://masivny-spevnik-default-rtdb.europe-west1.firebasedatabase.app'
+}
+
+function RandStr (prefix: string) {
+  return Math.random().toString(36).replace('0.', prefix || '')
 }
 
 export const app = initializeApp(firebaseConfig)
@@ -91,17 +96,54 @@ export async function cacheAllSongs ():Promise<Song[]> {
 }
 
 export async function updateSong (song: Song):Promise<void> {
-  await set(ref(db, `songs/${song.id}`), song)
+  if (store.state.isAdmin) {
+    await set(ref(db, `songs/${song.id}`), song)
+  } else {
+    const id = RandStr('suggestion_')
+    await set(ref(db, `suggestions/${id}`), {
+      userName: store.state.credential?.displayName,
+      song,
+      id
+    })
+  }
+}
+
+export async function resolveSuggestion (suggestion: Suggestion, accept: boolean): Promise<void> {
+  if (!store.state.isAdmin) return
+  await remove(ref(db, `suggestions/${suggestion.id}`))
+  if (accept) {
+    await updateSong(suggestion.song)
+    store.commit('updateSong', suggestion.song)
+  }
 }
 
 export async function createSong (song: Song):Promise<void> {
-  await set(ref(db, `songs/${song.id}`), song)
+  if (store.state.isAdmin) {
+    await set(ref(db, `songs/${song.id}`), song)
+  } else {
+    const id = RandStr('suggestion_')
+    await set(ref(db, `suggestions/${id}`), {
+      userName: store.state.credential?.displayName,
+      song,
+      id
+    })
+  }
+}
+
+export async function listAllSuggestions (): Promise<Suggestion[]> {
+  const snapshot = await get(ref(db, 'suggestions/'))
+  return snapshot.val() as Suggestion[]
+}
+
+export function logEvent (name: string, params: any = {}): void {
+  if (Vue.config.devtools) return
+  logAnalyticsEvent(analytics, name, params)
 }
 
 export async function createSession (id: string):Promise<void> {
   if (store.state.credential === undefined) throw new Error('You need to be logged in to create session')
   if (store.state.session !== undefined) throw new Error('Already in session, can\'t create new one')
-  logEvent(analytics, 'session_created')
+  logAnalyticsEvent(analytics, 'session_created')
   await set(ref(db, `sessions/${id}`), {
     id,
     song: store.state.currentSong || 1,
