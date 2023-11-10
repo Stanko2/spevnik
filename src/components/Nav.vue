@@ -25,17 +25,17 @@
             menu
           </span>
         </button>
-        <button class="btn mr-2"   @click="playing = !playing">
+        <button class="btn mr-2"   @click="playing = !playing" v-if="autoScroll">
           <span class="material-symbols-rounded block">
             {{ playing ? 'pause' : 'play_arrow' }}
           </span>
         </button>
         <button class="btn mr-2">
-            <span class="material-symbols-rounded block" @click="setSpeed(1)">
+            <span class="material-symbols-rounded block" @click="setSpeed(1)" v-if="autoScroll">
                 add
             </span>
         </button>
-        <button class="btn mr-2" @click="setSpeed(2)" >
+        <button class="btn mr-2" @click="setSpeed(2)" v-if="autoScroll">
             <span class="material-symbols-rounded block">
                 remove
             </span>
@@ -140,8 +140,8 @@ export default class Navbar extends Vue {
       this.$store.commit('setPlaying', val)
     }
 
-    get smallMenu (): boolean {
-      return this.$store.state.isMobile && this.$store.state.autoscroll
+    get autoScroll (): boolean {
+      return this.$store.state.autoscroll
     }
 
     random (): void {
