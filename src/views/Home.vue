@@ -34,10 +34,9 @@
     </div>
     <transition name="slide">
       <div
-        class="viewport transition-all duration-75 text-left"
-        :class="{'expanded': playing}"
+        class="viewport transition-all duration-75 text-left outline-none"
       >
-        <text-viewport v-if="$store.state.autoscroll && songShown" class="text-center" @play="(p)=> playing = p">
+        <text-viewport v-if="$store.state.autoscroll && songShown" class="text-center">
           <text-renderer
             style="touch-action: pan-y !important;"
             v-hammer:pan.horizontal="e=> onPan(e)"
@@ -65,14 +64,15 @@
   <transition
     enter-active-class="duration-500 transition-all transform-gpu"
     leave-active-class="duration-500 transition-all transform-gpu"
-    enter-to-class="translate-y-0"
-    enter-class="translate-y-full"
-    leave-to-class="translate-y-full"
-    leave-class="translate-y-0"
+    enter-to-class="translate-x-0"
+    enter-class="translate-x-full"
+    leave-to-class="translate-x-full"
+    leave-class="translate-x-0"
   >
-    <navbar :songs="$store.state.songs"></navbar>
+    <Transposer v-if="$store.state.guitarMode && !$store.state.playerStatus.playing" />
   </transition>
-  <Transposer v-if="$store.state.guitarMode" />
+  <navbar :songs="$store.state.songs" v-if="!isMobile"></navbar>
+  <navbar-mobile :songs="$store.state.songs" v-else></navbar-mobile>
   </div>
 </template>
 
@@ -90,7 +90,7 @@ import ChordPopup from '@/components/chord/ChordPopup.vue'
 import Transposer from '@/components/Transpose.vue'
 import TextViewport from '@/components/TextViewport.vue'
 
-@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), ChordPopup, Transposer, TextViewport } })
+@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), navbarMobile: () => import('@/components/NavMobile.vue'), ChordPopup, Transposer, TextViewport } })
 export default class SongView extends Vue {
   id = -1
   song: Song | null = null
@@ -100,7 +100,6 @@ export default class SongView extends Vue {
     Idinput: HTMLInputElement
   }
 
-  playing = false
   songShown = true
   editingId = false
   scrollX = 0
@@ -108,6 +107,12 @@ export default class SongView extends Vue {
 
   get opacity (): number {
     return 1 - Math.abs(this.scrollX) / screen.availWidth
+  }
+
+  get isMobile (): boolean {
+    console.log('mobile', this.$store.state.isMobile)
+
+    return this.$store.state.isMobile
   }
 
   mounted ():void {
@@ -220,8 +225,8 @@ export default class SongView extends Vue {
   touch-action: pan-y !important;
 }
 .viewport.expanded {
-  bottom: 0;
-  height: calc(100vh - 4rem);
+  /* bottom: 0; */
+  /* height: calc(100vh - 4rem); */
 }
 
 .viewport::-webkit-scrollbar {
@@ -237,5 +242,9 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.btn {
+  @apply p-2 m-2 rounded-md bg-gray-800 text-white shadow-md hover:opacity-70 hover:shadow-lg transition-all;
 }
 </style>

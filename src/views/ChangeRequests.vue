@@ -13,7 +13,7 @@
             <div v-for="Suggestion in suggestions" :key="Suggestion.id" class="my-1">
 
                 <div class="bg-gray-400 dark:bg-gray-500 flex justify-between rounded-md p-2">
-                    <p>{{ $store.state.songs[Suggestion.song.id - 1].name }}</p>
+                    <p>{{ $store.state.songs[Suggestion.song.id - 1]?.name }}</p>
                     <div>
                         <button @click="resolve(Suggestion, true)"><span class="material-symbols-rounded text-green-500">done</span></button>
                         <button @click="resolve(Suggestion, false)"><span class="material-symbols-rounded text-red-500">close</span></button>

@@ -1,33 +1,19 @@
 <template>
-    <div class="absolute bottom-0 top-0 overflow-y-scroll left-0 right-0" v-shortkey="['space']" @shortkey="play(false)" v-hammer:tap="()=>play(true)">
-        <div v-shortkey="['+']" @shortkey="scrollSpeed *= 1.5"></div>
-        <div v-shortkey="['-']" @shortkey="scrollSpeed /= 1.5"></div>
+    <div class="max-w-full">
+        <div v-shortkey="['+']" @shortkey="$store.commit('setSpeed', 1.5)"></div>
+        <div v-shortkey="['-']" @shortkey="$store.commit('setSpeed', 1 / 1.5)"></div>
         <slot class="overflow-auto text-center"></slot>
         <transition
-            enter-active-class="duration-500 transition-all"
-            leave-active-class="duration-500 delay-1000 transition-all"
-            enter-to-class="translate-x-0"
-            enter-class="translate-x-full"
-            leave-to-class="translate-x-full"
-            leave-class="translate-x-0"
+          enter-active-class="duration-100 ease-in transition-all"
+          leave-active-class="duration-1000 ease-out transition-all"
+          enter-to-class="opacity-80"
+          enter-class="opacity-0"
+          leave-to-class="opacity-0"
+          leave-class="opacity-80"
         >
-            <div v-if="!playing" class="fixed right-0 top-1/2 w-16 dark:bg-gray-600 bg-gray-400 dark:text-gray-100 rounded-l-md transform-gpu">
-                <button class="btn mr-2"   @click="play(false)" >
-                    <span class="material-symbols-rounded block">
-                       {{ playing ? 'pause' : 'play_arrow' }}
-                    </span>
-                </button>
-                <button class="btn mr-2" >
-                    <span class="material-symbols-rounded block" @click="scrollSpeed *= 1.5">
-                        add
-                    </span>
-                </button>
-                <button class="btn mr-2" @click="scrollSpeed /= 1.5">
-                    <span class="material-symbols-rounded block">
-                        remove
-                    </span>
-                </button>
-            </div>
+          <div v-if="speedChanged" class="fixed top-20 right-4 text-white text-5xl font-mono font-extrabold bg-gray-900 rounded-lg p-4">
+            {{ scrollSpeed / 10 }}x
+          </div>
         </transition>
     </div>
 </template>
@@ -44,11 +30,27 @@ export default class TextViewport extends Vue {
     lastTime = 0
     playing = false
     scrollAmount = 0
+    speedChanged = false
     sleep!: NoSleep
 
     mounted ():void {
       this.sleep = new NoSleep()
-      this.playerActive = this.$route.query.mode === 'player'
+      this.$store.subscribe((mut, state) => {
+        if (mut.type === 'setSpeed') {
+          this.scrollSpeed = 10 * state.playerStatus.speed
+          if (!this.speedChanged) {
+            this.speedChanged = true
+            setTimeout(() => {
+              this.speedChanged = false
+            }, 600)
+          }
+        }
+        if (mut.type === 'setPlaying') {
+          this.playing = state.playerStatus.playing
+          this.play()
+        }
+      })
+      this.playerActive = true
       this.scrollSpeed = this.$store.state.fontSize * 0.6
     }
 
@@ -56,27 +58,26 @@ export default class TextViewport extends Vue {
       if (this.lastTime > 0) {
         const elapsed = (time - this.lastTime) / 1000
         this.scrollAmount += this.scrollSpeed * elapsed
-        this.$el.scroll({ top: this.scrollAmount })
+        if (this.$el.parentElement) {
+          this.$el.parentElement.scroll({ top: this.scrollAmount })
+        }
       }
 
       this.lastTime = time
+
       if (this.playing) {
         requestAnimationFrame(this.scroll)
       }
     }
 
-    play (fromBackground:boolean):void {
-      console.log('play')
-      if (fromBackground && !this.playing) return
-      this.playing = !this.playing
+    play ():void {
       this.$emit('play', this.playing)
       if (!this.playing) {
-        this.sleep.enable()
+        this.sleep.disable()
         return
-      } else this.sleep.disable()
-      this.scrollAmount = this.$el.scrollTop
+      } else this.sleep.enable()
+      this.scrollAmount = this.$el.parentElement?.scrollTop || 0
       this.lastTime = 0
-      console.log(this.$el.scrollTop)
       requestAnimationFrame(this.scroll)
     }
 }

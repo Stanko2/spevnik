@@ -1,12 +1,12 @@
 <template>
-    <div class="min-h-screen w-screen dark:bg-gray-800">
+    <div class="min-h-screen w-screen dark:bg-gray-800 settings">
         <div class="p-2 sticky w-screen rounded-b-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close" v-shortkey="['esc']" @shortkey="close">arrow_back</span>
                 Nastavenia
             </h1>
             <div v-if="$store.state.credential" class="opacity-70 flex items-center">
-                Prihlásený ako {{ $store.state.credential.displayName }}
+                {{ $store.state.credential.displayName }}
                 <img :src="$store.state.credential.photoURL" class="aspect-square rounded-full w-10 h-10 ml-2" />
                 <span class="material-symbols-rounded p-2 rounded-full block hover:bg-gray-400 ml-2 transition-all" @click="$store.commit('signOut')">logout</span>
             </div>
@@ -23,18 +23,25 @@
 
                 </label>
             </div>
-            <div class="dark:text-gray-200 p-4 text-lg" v-if="guitarMode">
-                <label for="guitarMode" class="flex justify-between items-center w-full">
-                    <span class="dark:text-gray-200">Režim akordov</span>
-                    <div class="relative">
-                        <select v-model="chordMode" @change="$store.commit('setChordMode', chordMode)" class="outline-none rounded-lg p-1 text-lg bg-gray-400 dark:bg-gray-600 w-30">
-                            <option value="guitar">Gitara</option>
-                            <option value="ukulele">Ukulele</option>
-                        </select>
-                    </div>
+            <transition
+                enter-active-class="duration-300 transition-all ease-in-out transform-gpu overflow-hidden"
+                leave-active-class="duration-300 transition-all ease-in-out transform-gpu overflow-hidden"
+                enter-class="h-0"
+                leave-to-class="h-0"
+            >
+                <div class="dark:text-gray-200 p-4 text-lg" v-if="guitarMode">
+                    <label for="guitarMode" class="flex justify-between items-center w-full">
+                        <span class="dark:text-gray-200">Režim akordov</span>
+                        <div class="relative">
+                            <select v-model="chordMode" @change="$store.commit('setChordMode', chordMode)" class="outline-none rounded-lg p-1 text-lg bg-gray-400 dark:bg-gray-600 w-30">
+                                <option value="guitar">Gitara</option>
+                                <option value="ukulele">Ukulele</option>
+                            </select>
+                        </div>
 
-                </label>
-            </div>
+                    </label>
+                </div>
+            </transition>
             <div class="dark:text-gray-200 p-4 text-lg">
                 <label for="darkMode" class="flex justify-between items-center w-full">
                     <span class="dark:text-gray-200">Téma</span>
@@ -211,7 +218,7 @@ export default class Settings extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .dot {
   transform: translateX(100%);
   @apply bg-blue-900;

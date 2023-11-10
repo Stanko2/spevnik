@@ -1,12 +1,16 @@
 <template>
-  <div id="app" class="select-none" :class="{'dark': dark}">
+  <div id="app" class="select-none bg-gray-900" :class="{'dark': dark}">
     <transition
-      enter-active-class="duration-0 transition-all ease-in-out transform-gpu"
-      leave-active-class="duration-300 transition-all ease-in-out transform-gpu"
-      enter-class="translate-x-full opacity-0"
-      enter-to-class="translate-x-0 opacity-100"
-      >
-      <router-view/>
+      mode="out-in"
+      enter-active-class="duration-500 transition-all transform-gpu"
+      leave-active-class="duration-500 transition-all transform-gpu"
+      enter-to-class="translate-y-0 opacity-100"
+      enter-class="translate-y-32 opacity-20"
+      leave-to-class="translate-y-32 opacity-20"
+      leave-class="translate-y-0 opacity-100"
+    >
+      <router-view>
+      </router-view>
     </transition>
   </div>
 </template>
@@ -67,6 +71,7 @@ export default class App extends Vue {
 }
 
 ::-webkit-scrollbar{
+  display: none;
 }
 
 input[type=number] {

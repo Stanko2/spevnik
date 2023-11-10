@@ -1,14 +1,18 @@
 <template>
     <div class="w-screen bg-gray-500 flex justify-between h-14 z-40 items-center">
-        <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)" v-shortkey="['arrowleft']" @shortkey="selectSong(-1)">&lt;</button>
+        <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)" v-shortkey="['arrowleft']" @shortkey="selectSong(-1)">
+          <span class="material-symbols-rounded block">
+            chevron_left
+          </span>
+        </button>
+        <router-link to="/settings" class="btn" v-shortkey="['n']" @shortkey="openSettings">
+          <span class="material-symbols-rounded block">
+            settings
+          </span>
+        </router-link>
         <button class="btn" @click="showSearchView = true" v-shortkey="['h']" @shortkey="showSearchView = true">
           <span class="material-symbols-rounded block">
             search
-          </span>
-        </button>
-        <button class="btn" @click="openSettings" v-shortkey="['n']" @shortkey="openSettings">
-          <span class="material-symbols-rounded block">
-            settings
           </span>
         </button>
         <button class="btn" @click="random" v-shortkey="['r']" @shortkey="random">
@@ -21,7 +25,27 @@
             menu
           </span>
         </button>
-        <button class="btn" @click="selectSong(1)" v-shortkey="['arrowright']" @shortkey="selectSong(1)">&gt;</button>
+        <button class="btn mr-2"   @click="playing = !playing">
+          <span class="material-symbols-rounded block">
+            {{ playing ? 'pause' : 'play_arrow' }}
+          </span>
+        </button>
+        <button class="btn mr-2">
+            <span class="material-symbols-rounded block" @click="setSpeed(1)">
+                add
+            </span>
+        </button>
+        <button class="btn mr-2" @click="setSpeed(2)" >
+            <span class="material-symbols-rounded block">
+                remove
+            </span>
+        </button>
+
+        <button class="btn" @click="selectSong(1)" v-shortkey="['arrowright']" @shortkey="selectSong(1)">
+          <span class="material-symbols-rounded block">
+            chevron_right
+          </span>
+        </button>
         <transition name="search"
           enter-active-class="duration-300 transition-all ease-in-out"
           leave-active-class="duration-300 transition-all ease-in-out"
@@ -100,6 +124,26 @@ export default class Navbar extends Vue {
       }
     }
 
+    setSpeed (dir: number):void {
+      if (dir === 1) {
+        this.$store.commit('setSpeed', 1.5)
+      } else {
+        this.$store.commit('setSpeed', 1 / 1.5)
+      }
+    }
+
+    get playing (): boolean {
+      return this.$store.state.autoscroll && this.$store.state.playerStatus.playing
+    }
+
+    set playing (val: boolean) {
+      this.$store.commit('setPlaying', val)
+    }
+
+    get smallMenu (): boolean {
+      return this.$store.state.isMobile && this.$store.state.autoscroll
+    }
+
     random (): void {
       const max = this.$store.state.songs.length
       const id = Math.round(Math.random() * max)
@@ -122,9 +166,9 @@ export default class Navbar extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .btn{
-  @apply p-1 m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md hover:opacity-70 hover:shadow-lg transition-all;
+  @apply w-12 h-12;
 }
 
 /* .search-enter-active .background, .search-leave-active .background{

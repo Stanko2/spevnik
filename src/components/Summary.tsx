@@ -41,14 +41,14 @@ export default class Summary extends Vue {
         <div class="ml-4 rounded-md">
           <transition
             name="accordion"
-            enter-active-class="transition-all ease-in-out duration-300"
-            leave-active-class="transition-all ease-in-out duration-300"
-            enter-to-class="h-0"
-            leave-to-class="h-auto"
-            enter-class="h-auto"
-            leave-class="h-0"
+            enter-active-class="transition-all ease-in-out duration-300 overflow-hidden"
+            leave-active-class="transition-all ease-in-out duration-300 overflow-hidden"
+            enter-to-class="h-auto"
+            leave-to-class="h-0"
+            enter-class="h-0"
+            leave-class="h-auto"
           >
-            <div>{node.expanded ? node.children.map((child) => this.renderNode(child)) : null}</div>
+            {node.expanded ? <div>{node.children.map((child) => this.renderNode(child))}</div> : null}
           </transition>
         </div>
       </div>

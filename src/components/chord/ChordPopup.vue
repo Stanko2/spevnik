@@ -122,7 +122,7 @@ export default class ChordPopup extends Vue {
 <style>
 .chord-menu {
   position: fixed;
-  bottom: 3.5rem;
+  bottom: 0;
   right: 50%;
   transform: translateX(50%);
   width: 200px;

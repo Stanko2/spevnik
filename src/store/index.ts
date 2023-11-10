@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 import router from '@/router'
 import { BeforeInstallPromptEvent } from '@/shims-tsx'
 import { User } from 'firebase/auth'
@@ -5,7 +6,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { cacheAllSongs, createSession, joinSession, leaveSession, login, logOut, logEvent } from './firebase'
 
-export interface Song{
+export interface Song {
   text: string
   name: string
   youtube?: string
@@ -19,6 +20,11 @@ export interface Suggestion {
   userName: string
   song: Song
   id: string
+}
+
+export interface PlayerStatus {
+  playing: boolean
+  speed: number
 }
 
 Vue.use(Vuex)
@@ -43,9 +49,12 @@ export interface IState {
   showExplicit: boolean
   autoscroll: boolean
   cacheInProgress: boolean
+  playerStatus: PlayerStatus
 }
 
-function isMobile ():boolean {
+function isMobile(): boolean {
+  const mql = window.matchMedia('(max-width: 600px)')
+  if (mql.matches) return true
   return navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i) != null
 }
 
@@ -71,12 +80,16 @@ export default new Vuex.Store<IState>({
     chordMode: 'guitar',
     showExplicit: false,
     autoscroll: false,
-    cacheInProgress: false
+    cacheInProgress: false,
+    playerStatus: {
+      playing: false,
+      speed: 1
+    }
   },
   getters: {
   },
   mutations: {
-    initialize (state) {
+    initialize(state) {
       const prefs: IState = JSON.parse(localStorage.getItem('preferences') || '{}')
       state.guitarMode = prefs.guitarMode || true
       state.darkTheme = prefs.darkTheme || window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -97,7 +110,7 @@ export default new Vuex.Store<IState>({
         }
       }
     },
-    save (state, saveSongs: boolean) {
+    save(state, saveSongs: boolean) {
       console.log('saving')
 
       const data = Object.assign({}, {
@@ -106,6 +119,7 @@ export default new Vuex.Store<IState>({
         columnCount: state.columnCount,
         fontSize: state.fontSize,
         showExplicit: state.showExplicit,
+        autoscroll: state.autoscroll,
         liked: [...state.liked]
       })
       localStorage.setItem('preferences', JSON.stringify(data))
@@ -114,35 +128,41 @@ export default new Vuex.Store<IState>({
         localStorage.setItem('songs', JSON.stringify(state.songs))
       }
     },
-    setDarkTheme (state, darkTheme: boolean) {
+    setDarkTheme(state, darkTheme: boolean) {
       state.darkTheme = darkTheme
     },
-    setGuitarMode (state, guitarMode: boolean) {
+    setGuitarMode(state, guitarMode: boolean) {
       state.guitarMode = guitarMode
     },
-    setFontSize (state, fontSize: number) {
+    setFontSize(state, fontSize: number) {
       state.fontSize = fontSize
     },
-    setExplicit (state, showExplicit: boolean) {
+    setExplicit(state, showExplicit: boolean) {
       state.showExplicit = showExplicit
     },
-    setAutoScroll (state, autoscroll: boolean) {
+    setAutoScroll(state, autoscroll: boolean) {
       state.autoscroll = autoscroll
       if (state.autoscroll) state.columnCount = 1
     },
-    setColumns (state, columnCount: number) {
+    setSpeed(state, mul: number) {
+      state.playerStatus.speed *= mul
+    },
+    setPlaying(state, playing: boolean) {
+      state.playerStatus.playing = playing
+    },
+    setColumns(state, columnCount: number) {
       state.columnCount = columnCount
     },
-    setInstallEvent (state, installEvent: BeforeInstallPromptEvent) {
+    setInstallEvent(state, installEvent: BeforeInstallPromptEvent) {
       state.installEvent = installEvent
     },
-    login (state) {
+    login(state) {
       login().then((data) => {
         state.credential = data.user
         state.isAdmin = data.admin
       })
     },
-    install (state) {
+    install(state) {
       if (state.installEvent) {
         state.installEvent.prompt()
         state.installEvent.userChoice.then((choice) => {
@@ -150,7 +170,7 @@ export default new Vuex.Store<IState>({
         })
       }
     },
-    enableOffline (state, callback: () => void) {
+    enableOffline(state, callback: () => void) {
       state.cacheInProgress = true
       cacheAllSongs().then(songs => {
         state.cacheInProgress = false
@@ -159,7 +179,7 @@ export default new Vuex.Store<IState>({
         callback()
       })
     },
-    updateOfflineCache (state, callback: () => void) {
+    updateOfflineCache(state, callback: () => void) {
       state.cacheInProgress = true
       cacheAllSongs().then(songs => {
         state.songs = songs
@@ -167,11 +187,11 @@ export default new Vuex.Store<IState>({
         callback()
       })
     },
-    resetTranspose (state) {
+    resetTranspose(state) {
       state.transpose = 0
       state.scale = '#'
     },
-    toggleLike (state: IState, id: number) {
+    toggleLike(state: IState, id: number) {
       if (state.liked.has(id)) {
         state.liked.delete(id)
         logEvent('song_disliked', { dislikedId: id, dislikedSong: state.songs[id - 1].name })
@@ -188,20 +208,20 @@ export default new Vuex.Store<IState>({
       })
       localStorage.setItem('preferences', JSON.stringify(data))
     },
-    updateSong (state: IState, song: Song) {
+    updateSong(state: IState, song: Song) {
       const index = state.songs.findIndex(s => s.id === song.id)
       if (index > -1) {
         state.songs[index] = song
       }
     },
-    createSong (state: IState, song: Song) {
+    createSong(state: IState, song: Song) {
       state.songs.push(song)
     },
-    transpose (state, payload) {
+    transpose(state, payload) {
       state.scale = payload.scale
       state.transpose = payload.transpose
     },
-    joinSession (state, sessionName) {
+    joinSession(state, sessionName) {
       joinSession(sessionName).then(() => {
         state.session = sessionName
         localStorage.setItem('session', JSON.stringify({
@@ -210,7 +230,7 @@ export default new Vuex.Store<IState>({
         }))
       })
     },
-    createSession (state, sessionName) {
+    createSession(state, sessionName) {
       createSession(sessionName).then(() => {
         state.session = sessionName
         localStorage.setItem('session', JSON.stringify({
@@ -219,14 +239,14 @@ export default new Vuex.Store<IState>({
         }))
       })
     },
-    leaveSession (state) {
+    leaveSession(state) {
       if (state.session === undefined) return
       leaveSession().then(() => {
         state.session = undefined
         localStorage.removeItem('session')
       })
     },
-    setSong (state, songId) {
+    setSong(state, songId) {
       if (songId === state.currentSong) return
       if (songTimeout !== undefined) {
         clearTimeout(songTimeout)
@@ -245,7 +265,7 @@ export default new Vuex.Store<IState>({
         path: `/song/${songId}`
       })
     },
-    setCredentials (state, credential) {
+    setCredentials(state, credential) {
       state.credential = credential.credential
       state.isAdmin = credential.data.admin
       const session = JSON.parse(localStorage.getItem('session') || '{}')
@@ -255,13 +275,13 @@ export default new Vuex.Store<IState>({
         })
       }
     },
-    setChord (state, chord) {
+    setChord(state, chord) {
       state.chord = chord
     },
-    setChordMode (state, mode) {
+    setChordMode(state, mode) {
       state.chordMode = mode
     },
-    signOut (state) {
+    signOut(state) {
       logOut().then(() => {
         state.credential = undefined
         state.isAdmin = false
@@ -269,7 +289,7 @@ export default new Vuex.Store<IState>({
     }
   },
   actions: {
-    startOfflineMode (ctx) {
+    startOfflineMode(ctx) {
       if (ctx.state.songs.length === 0 && !ctx.state.cacheInProgress) {
         ctx.commit('enableOffline', () => {
           ctx.commit('save', true)
