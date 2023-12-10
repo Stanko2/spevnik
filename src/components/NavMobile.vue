@@ -8,10 +8,12 @@
           {{ expanded ? 'expand_more' : 'expand_less' }}
         </span>
       </div>
-    <div class="grid-cols-5 grid-rows-1 grid bg-gray-500 h-full justify-center items-center gap-x-6" :class="{
-      'grid-rows-2': expanded
+    <div class="grid-rows-1 grid bg-gray-500 h-full" :class="{
+      'grid-rows-2': expanded,
+      'grid-cols-5': autoScroll,
+      'grid-cols-6': !autoScroll,
     }">
-      <button class="btn" @click="selectSong(1)">
+      <button class="btn" @click="selectSong(-1)">
         <span class="material-symbols-rounded block">
           chevron_left
         </span>
@@ -52,7 +54,9 @@
           menu
         </span>
       </button>
-      <button class="btn" @click="selectSong(1)" style="grid-row: 1; grid-column: 5;">
+      <button class="btn" @click="selectSong(1)" style="grid-row: 1;" :style="{
+        'grid-column': autoScroll ? 5 : 6
+      }">
         <span class="material-symbols-rounded block">
           chevron_right
         </span>

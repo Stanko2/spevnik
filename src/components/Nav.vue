@@ -1,11 +1,11 @@
 <template>
-    <div class="w-screen bg-gray-500 flex justify-between h-14 z-40 items-center">
+    <div class="w-screen bg-gray-500 flex justify-between h-14 z-20 items-center">
         <button class="m-2 rounded-md w-12 h-12 bg-gray-800 text-white shadow-md" @click="selectSong(-1)" v-shortkey="['arrowleft']" @shortkey="selectSong(-1)">
           <span class="material-symbols-rounded block">
             chevron_left
           </span>
         </button>
-        <router-link to="/settings" class="btn" v-shortkey="['n']" @shortkey="openSettings">
+        <router-link to="/settings" class="btn flex items-center justify-center" v-shortkey="['n']" @shortkey="openSettings">
           <span class="material-symbols-rounded block">
             settings
           </span>
@@ -30,8 +30,8 @@
             {{ playing ? 'pause' : 'play_arrow' }}
           </span>
         </button>
-        <button class="btn mr-2">
-            <span class="material-symbols-rounded block" @click="setSpeed(1)" v-if="autoScroll">
+        <button class="btn mr-2" v-if="autoScroll">
+            <span class="material-symbols-rounded block" @click="setSpeed(1)">
                 add
             </span>
         </button>
