@@ -5,6 +5,7 @@ import { User } from 'firebase/auth'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { cacheAllSongs, createSession, joinSession, leaveSession, login, logOut, logEvent } from './firebase'
+import { toast } from '@/toaster'
 
 export interface Song {
   text: string
@@ -185,6 +186,7 @@ export default new Vuex.Store<IState>({
         state.songs = songs
         state.cacheInProgress = false
         callback()
+        toast('Úspešne si aktualizoval offline verziu', 5000, 'success')
       })
     },
     resetTranspose(state) {
@@ -224,19 +226,25 @@ export default new Vuex.Store<IState>({
     joinSession(state, sessionName) {
       joinSession(sessionName).then(() => {
         state.session = sessionName
+        toast('Úspešne si sa pripojil do skupiny ' + sessionName, 5000, 'error')
         localStorage.setItem('session', JSON.stringify({
           admin: false,
           name: sessionName
         }))
+      }).catch((err) => {
+        toast(err.message, 5000, 'error')
       })
     },
     createSession(state, sessionName) {
       createSession(sessionName).then(() => {
         state.session = sessionName
+        toast('Úspešne si vytvoril skupinu ' + sessionName, 5000, 'error')
         localStorage.setItem('session', JSON.stringify({
           admin: true,
           name: sessionName
         }))
+      }).catch((err) => {
+        toast(err.message, 5000, 'error')
       })
     },
     leaveSession(state) {
@@ -244,6 +252,8 @@ export default new Vuex.Store<IState>({
       leaveSession().then(() => {
         state.session = undefined
         localStorage.removeItem('session')
+      }).catch((err) => {
+        toast(err.message, 5000, 'error')
       })
     },
     setSong(state, songId) {
@@ -272,6 +282,9 @@ export default new Vuex.Store<IState>({
       if (session?.admin === true) {
         createSession(session.name).then(() => {
           state.session = session.name
+          toast('Úspešne si vytvoril skupinu ' + session.name, 5000, 'error')
+        }).catch((err) => {
+          toast(err.message, 5000, 'error')
         })
       }
     },

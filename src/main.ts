@@ -5,6 +5,7 @@ import { VueHammer } from 'vue2-hammer'
 import './assets/tailwind.css'
 import store from './store'
 import './registerServiceWorker'
+import './toaster'
 
 Vue.config.productionTip = false
 Vue.use(VueHammer)

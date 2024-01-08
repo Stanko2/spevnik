@@ -1,5 +1,6 @@
 <template>
-  <div id="app" class="select-none bg-gray-900" :class="{'dark': dark}">
+  <div id="app" class="select-none" :class="{'dark': dark, 'bg-gray-900': dark, 'bg-gray-200': !dark}">
+    <div id="toasts" class="fixed w-full p-1 top-0 z-50"></div>
     <transition
       mode="out-in"
       enter-active-class="duration-500 transition-all transform-gpu"

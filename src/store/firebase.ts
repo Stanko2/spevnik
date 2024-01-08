@@ -160,6 +160,8 @@ export async function joinSession (id: string): Promise<void> {
   if (store.state.session !== undefined) throw new Error('Can\'t join session, already in one')
   const session = await get(ref(db, `sessions/${id}`))
   if (!session.exists()) throw new Error(`Session ${id} does not exist`)
+  console.log('joined session', id)
+
   syncEvent = onValue(ref(db, `sessions/${id}/song`), (snapshot: any) => {
     store.commit('setSong', snapshot.val())
   })

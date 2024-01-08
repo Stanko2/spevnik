@@ -1,5 +1,5 @@
 <template>
-  <div class="dark:bg-gray-800 h-screen w-screen grid" style="grid-template-rows: min-content 1fr min-content;" @click="$store.commit('setChord', null)">
+  <div class="h-screen w-screen grid" style="grid-template-rows: min-content 1fr min-content;" @click="$store.commit('setChord', null)">
     <ChordPopup
       :chord="chord"
       :lite="false"
