@@ -137,6 +137,10 @@
                     >Zmeny
                     </button>
                 </div>
+                <div v-if="$store.state.isAdmin">
+                    <label for="analytics-import" class="btn bg-gray-500">Importovať "zhliadnutia"</label>
+                    <input type="file" class="sr-only" id="analytics-import" @input="importViews" />
+                </div>
             </div>
             <hr class="my-3 opacity-30" />
             <sessions v-if="isOnline"></sessions>
@@ -153,7 +157,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Sessions from '@/components/Sessions.vue'
-import { listAllSuggestions } from '@/store/firebase'
+import { importSongViews, listAllSuggestions } from '@/store/firebase'
 
 @Component({ components: { Sessions } })
 export default class Settings extends Vue {
@@ -214,6 +218,34 @@ export default class Settings extends Vue {
 
     login ():void {
       this.$store.commit('login')
+    }
+
+    importViews (e: Event): void {
+      const file = e.target?.files[0]
+      if (!file) return
+      const reader = new FileReader()
+      reader.readAsText(file, 'UTF-8')
+      reader.onload = (e) => {
+        const result = e.target?.result
+        if (!result) return
+        const lines = (result as string).split('\n')
+        while (!lines[0].startsWith('# Songs Played by ID')) {
+          lines.shift()
+        }
+        lines.shift()
+        lines.shift()
+        lines.shift()
+        lines.shift()
+        console.log(lines[0])
+        const views: Record<number, number> = {}
+        while (true) {
+          if (lines[0].startsWith('#') || lines[0] === '') break
+          const [songId, songViews] = lines.shift()?.split(',')?.map((x) => parseInt(x)) || []
+          if (!isNaN(songId) && !isNaN(songViews)) { views[songId] = songViews }
+        }
+
+        importSongViews(views)
+      }
     }
 }
 </script>

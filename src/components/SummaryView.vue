@@ -75,6 +75,11 @@ export default class SummaryView extends Vue {
         icon: 'book'
       },
       {
+        name: 'popular',
+        text: 'Najpopulárnejšie',
+        icon: 'sort'
+      },
+      {
         name: 'author',
         text: 'Podľa interpretov',
         icon: 'person'
@@ -129,6 +134,13 @@ export default class SummaryView extends Vue {
           return this.buildSongTreeByAuthor(songs)
         case 'alphabetical':
           return songs.sort((a:Song, b:Song) => a.name.localeCompare(b.name)).map((song:Song) => ({
+            id: song.id,
+            name: song.name,
+            type: 'leaf',
+            explicit: song.explicit
+          })) as SongTreeNode[]
+        case 'popular':
+          return songs.sort((a:Song, b:Song) => (b.views ?? 0) - (a.views ?? 0)).map((song:Song) => ({
             id: song.id,
             name: song.name,
             type: 'leaf',

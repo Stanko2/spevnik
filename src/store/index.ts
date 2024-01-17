@@ -15,6 +15,7 @@ export interface Song {
   id: number
   path: string
   explicit?: boolean
+  views?: number
 }
 
 export interface Suggestion {
@@ -88,6 +89,9 @@ export default new Vuex.Store<IState>({
     }
   },
   getters: {
+    maxViews(state) {
+      return Math.max(...state.songs.map(s => s.views || 0))
+    }
   },
   mutations: {
     initialize(state) {

@@ -108,6 +108,17 @@ export async function updateSong (song: Song):Promise<void> {
   }
 }
 
+export async function importSongViews (songViews: Record<number, number>): Promise<void> {
+  const ops: Promise<void>[] = []
+  for (const song of Object.keys(songViews)) {
+    console.log('updating song', parseInt(song), songViews[parseInt(song)])
+    ops.push(set(ref(db, `songs/${song}/views`), songViews[parseInt(song)]))
+    store.state.songs[parseInt(song) - 1].views = songViews[parseInt(song)]
+  }
+  await Promise.all(ops)
+  console.log('done')
+}
+
 export async function resolveSuggestion (suggestion: Suggestion, accept: boolean): Promise<void> {
   if (!store.state.isAdmin) return
   await remove(ref(db, `suggestions/${suggestion.id}`))
