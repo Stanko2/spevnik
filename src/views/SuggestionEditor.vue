@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { Song } from '@/store'
-import { createSong, getSong, updateSong } from '@/store/firebase'
+import { createOrUpdateSong, getSong } from '@/store/firebase'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
@@ -106,16 +106,9 @@ export default class Editor extends Vue {
         youtube: this.youtube,
         explicit: this.isExplicit
       }
-      if (id === -1) {
-        song.id = this.$store.state.songs.length + 1
-        createSong(song).then(() => {
-          this.$router.back()
-        })
-      } else {
-        updateSong(song).then(() => {
-          this.$router.back()
-        })
-      }
+      createOrUpdateSong(song).then(() => {
+        this.$router.back()
+      })
     }
 }
 </script>
