@@ -72,6 +72,8 @@ export default class Editor extends Vue {
     text = ''
     isExplicit = false
     mounted (): void {
+      if (!this.$store.state.isAdmin) this.$router.back()
+
       const id = parseInt(this.$route.params.id)
       if (id !== -1) {
         getSong(id).then(song => {

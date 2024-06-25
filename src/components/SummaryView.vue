@@ -99,14 +99,22 @@ export default class SummaryView extends Vue {
     }
 
     openEditor (newSong:boolean):void {
+      const name = this.$store.state.isAdmin ? 'Editor' : 'SuggestionEditor'
       if (newSong) {
         this.$router.push({
-          name: 'Editor',
+          name,
           params: {
             id: '-1'
           }
         })
-      } else { this.$router.push({ path: `/edit/${this.$store.state.currentSong}` }) }
+      } else {
+        this.$router.push({
+          name,
+          params: {
+            id: this.$store.state.currentSong
+          }
+        })
+      }
     }
 
     selectMode (mode: SortMode):void {

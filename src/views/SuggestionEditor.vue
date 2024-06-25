@@ -3,8 +3,8 @@
         <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close">arrow_back</span>
-                <p v-if="$route.params.id !== '-1'">Navrhuješ zmeny pre pesničku {{ $route.params.id }}</p>
-                <p v-else>Návrh pre novú pesnička</p>
+                <p v-if="$route.params.id !== '-1'">Navrhuješ zmenu pesničky {{ $route.params.id }}</p>
+                <p v-else>Navrhuješ novú pesničku</p>
             </h1>
             <div v-if="$store.state.credential" class="opacity-70">
                 Prihlásený ako {{ $store.state.credential.displayName }}
@@ -72,6 +72,8 @@ export default class Editor extends Vue {
     text = ''
     isExplicit = false
     mounted (): void {
+      if (!this.$store.state.loggedIn) this.$router.back()
+
       const id = parseInt(this.$route.params.id)
       if (id !== -1) {
         getSong(id).then(song => {
