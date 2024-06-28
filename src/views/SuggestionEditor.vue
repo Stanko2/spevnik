@@ -3,8 +3,8 @@
         <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close">arrow_back</span>
-                <p v-if="$route.params.id !== '-1'">Navrhuješ zmeny pre pesničku {{ $route.params.id }}</p>
-                <p v-else>Návrh pre novú pesnička</p>
+                <p v-if="$route.params.id !== '-1'">Navrhuješ zmenu pesničky {{ $route.params.id }}</p>
+                <p v-else>Navrhuješ novú pesničku</p>
             </h1>
             <div v-if="$store.state.credential" class="opacity-70">
                 Prihlásený ako {{ $store.state.credential.displayName }}
@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { Song } from '@/store'
-import { createSong, getSong, updateSong } from '@/store/firebase'
+import { createOrUpdateSong, getSong } from '@/store/firebase'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
@@ -72,6 +72,8 @@ export default class Editor extends Vue {
     text = ''
     isExplicit = false
     mounted (): void {
+      if (!this.$store.state.loggedIn) this.$router.back()
+
       const id = parseInt(this.$route.params.id)
       if (id !== -1) {
         getSong(id).then(song => {
@@ -106,16 +108,9 @@ export default class Editor extends Vue {
         youtube: this.youtube,
         explicit: this.isExplicit
       }
-      if (id === -1) {
-        song.id = this.$store.state.songs.length + 1
-        createSong(song).then(() => {
-          this.$router.back()
-        })
-      } else {
-        updateSong(song).then(() => {
-          this.$router.back()
-        })
-      }
+      createOrUpdateSong(song).then(() => {
+        this.$router.back()
+      })
     }
 }
 </script>

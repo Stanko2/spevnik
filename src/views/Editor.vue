@@ -50,11 +50,6 @@
                     </div>
                 </label>
             </div>
-            <div class="bg-red-600 rounded-xl p-3 flex justify-between font-semibold text-red-50" v-if="$route.params.id === '-1'">
-              <span class="material-symbols-rounded block">warning</span>
-              Ak pridávaš pesničku daj si pozor, aby si mal všetko aktualizované, aby si niekomu omylom neprepísal jeho pridanú pesničku.
-              <span class="material-symbols-rounded block">warning</span>
-            </div>
             <div>
                 <button class="bg-green-500 rounded-lg w-full p-3 text-xl mt-3 shadow-lg" @click="save">Uložiť</button>
             </div>
@@ -64,7 +59,7 @@
 
 <script lang="ts">
 import { Song } from '@/store'
-import { createSong, getSong, updateSong } from '@/store/firebase'
+import { createOrUpdateSong, getSong } from '@/store/firebase'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
@@ -77,6 +72,8 @@ export default class Editor extends Vue {
     text = ''
     isExplicit = false
     mounted (): void {
+      if (!this.$store.state.isAdmin) this.$router.back()
+
       const id = parseInt(this.$route.params.id)
       if (id !== -1) {
         getSong(id).then(song => {
@@ -111,18 +108,10 @@ export default class Editor extends Vue {
         youtube: this.youtube,
         explicit: this.isExplicit
       }
-      if (id === -1) {
-        song.id = this.$store.state.songs.length + 1
-        createSong(song).then(() => {
-          this.$router.back()
-          this.$store.commit('createSong', song)
-        })
-      } else {
-        updateSong(song).then(() => {
-          this.$router.back()
-          this.$store.commit('updateSong', song)
-        })
-      }
+      createOrUpdateSong(song).then(() => {
+        this.$router.back()
+        this.$store.commit('createSong', song)
+      })
     }
 }
 </script>

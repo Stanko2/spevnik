@@ -34,6 +34,11 @@ const routes: Array<RouteConfig> = [
     path: '/edit/:id',
     name: 'Editor',
     component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
+  },
+  {
+    path: '/suggest/:id',
+    name: 'SuggestionEditor',
+    component: () => import(/* webpackChunkName: "editor" */ '../views/SuggestionEditor.vue')
   }
 ]
 

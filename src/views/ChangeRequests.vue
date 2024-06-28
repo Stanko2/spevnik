@@ -13,7 +13,8 @@
             <div v-for="Suggestion in suggestions" :key="Suggestion.id" class="my-1">
 
                 <div class="bg-gray-400 dark:bg-gray-500 flex justify-between rounded-md p-2">
-                    <p>{{ $store.state.songs[Suggestion.song.id - 1]?.name }}</p>
+                    <p v-if="Suggestion.song.id !== -1">{{ $store.state.songs[Suggestion.song.id - 1]?.name }}</p>
+                    <p v-else>{{ Suggestion.song.name }}</p>
                     <div>
                         <button @click="resolve(Suggestion, true)"><span class="material-symbols-rounded text-green-500">done</span></button>
                         <button @click="resolve(Suggestion, false)"><span class="material-symbols-rounded text-red-500">close</span></button>
@@ -88,11 +89,19 @@ export default class ChangeRequests extends Vue {
 
   createDiffs (idx: number):void {
     const sug = this.suggestions[idx]
-    this.createDiff(this.songs[sug.song.id - 1].name, sug.song.name, 'char', 'namediff', sug.id.substring(10))
-    this.createDiff(this.songs[sug.song.id - 1].author, sug.song.author, 'char', 'authordiff', sug.id.substring(10))
-    this.createDiff(this.songs[sug.song.id - 1].path, sug.song.path, 'char', 'pathdiff', sug.id.substring(10))
-    this.createDiff(this.songs[sug.song.id - 1].youtube || '', sug.song.youtube || '', 'char', 'youtubediff', sug.id.substring(10))
-    this.createDiff(this.songs[sug.song.id - 1].text, sug.song.text, 'word', 'textdiff', sug.id.substring(10))
+    if (sug.song.id !== -1) {
+      this.createDiff(this.songs[sug.song.id - 1].name, sug.song.name, 'char', 'namediff', sug.id.substring(10))
+      this.createDiff(this.songs[sug.song.id - 1].author, sug.song.author, 'char', 'authordiff', sug.id.substring(10))
+      this.createDiff(this.songs[sug.song.id - 1].path, sug.song.path, 'char', 'pathdiff', sug.id.substring(10))
+      this.createDiff(this.songs[sug.song.id - 1].youtube || '', sug.song.youtube || '', 'char', 'youtubediff', sug.id.substring(10))
+      this.createDiff(this.songs[sug.song.id - 1].text, sug.song.text, 'word', 'textdiff', sug.id.substring(10))
+    } else {
+      this.createDiff('', sug.song.name, 'char', 'namediff', sug.id.substring(10))
+      this.createDiff('', sug.song.author, 'char', 'authordiff', sug.id.substring(10))
+      this.createDiff('', sug.song.path, 'char', 'pathdiff', sug.id.substring(10))
+      this.createDiff('', sug.song.youtube || '', 'char', 'youtubediff', sug.id.substring(10))
+      this.createDiff('', sug.song.text, 'word', 'textdiff', sug.id.substring(10))
+    }
   }
 
   createDiff (oldStr: string, newStr: string, diffType: 'char' | 'word', ref: string, id: string): void {
