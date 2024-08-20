@@ -3,7 +3,8 @@
         <div>
           <h1 class="text-2xl mt-5">Obsah</h1>
           <div class="flex justify-items-stretch h-10 z-30 m-3">
-              <input type="search" class="dark:bg-gray-500 bg-gray-300 p-2 rounded-l-md outline-none flex-grow" v-model="SearchQuery">
+              <input type="search" class="dark:bg-gray-500 bg-gray-300 p-2 rounded-l-md outline-none
+              flex-grow" v-model="SearchQuery" @change="selectMode(selectedMode)">
               <button class="btn m-0 rounded-none flex-shrink h-10 w-10" @click="selectMode(selectedMode)">
                   <span class="material-symbols-rounded block">
                       search
