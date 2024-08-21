@@ -72,7 +72,8 @@ export default class Editor extends Vue {
     text = ''
     isExplicit = false
     mounted (): void {
-      if (!this.$store.state.loggedIn) this.$router.back()
+      const loggedIn = this.$store.state.credential !== null
+      if (!loggedIn) this.$router.back()
 
       const id = parseInt(this.$route.params.id)
       if (id !== -1) {
