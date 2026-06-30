@@ -36,38 +36,38 @@
   </g>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 
-@Component
-export default class Dot extends Vue {
-  @Prop() string!: number;
-  @Prop() fret!: number;
-  @Prop() finger!: number;
-  @Prop() lite!: boolean;
-  @Prop() color!: string;
-  @Prop() strings!: number;
+const props = defineProps<{
+  string: number,
+  fret: number,
+  finger: number,
+  lite: boolean,
+  color: string,
+  strings: number
+}>()
 
-  positions = {
-    string: [50, 40, 30, 20, 10, 0],
-    fret: [-4, 6.5, 18, 30, 42, 54],
-    finger: [-3, 8, 19.5, 31.5, 43.5]
-  };
+const positions = ref({
+  string: [50, 40, 30, 20, 10, 0],
+  fret: [-4, 6.5, 18, 30, 42, 54],
+  finger: [-3, 8, 19.5, 31.5, 43.5]
+})
 
-  get offset () {
-    if (this.strings === 4) {
-      return 0
-    } else {
-      return -1
-    }
+const offset = computed(() => {
+  if (props.strings === 4) {
+    return 0
+  } else {
+    return -1
   }
+})
 
-  getStringPosition = (string: number) =>
-    this.positions.string[this.string + this.offset];
+const getStringPosition = (string: number) =>
+  positions.value.string[string + offset.value]
 
-  radius = {
-    open: 2,
-    fret: 4
-  };
-}
+const radius = ref({
+  open: 2,
+  fret: 4
+})
+
 </script>

@@ -1,40 +1,44 @@
 <template>
   <div id="app" class="select-none" :class="{'dark': dark, 'bg-gray-900': dark, 'bg-gray-200': !dark}">
     <div id="toasts" class="fixed w-full p-1 top-0 z-50"></div>
-    <transition
-      mode="out-in"
-      enter-active-class="duration-500 transition-all transform-gpu"
-      leave-active-class="duration-500 transition-all transform-gpu"
-      enter-to-class="translate-y-0 opacity-100"
-      enter-class="translate-y-32 opacity-20"
-      leave-to-class="translate-y-32 opacity-20"
-      leave-class="translate-y-0 opacity-100"
-    >
-      <router-view>
-      </router-view>
-    </transition>
+    <router-view v-slot="{ Component }">
+      <transition
+        mode="out-in"
+        enter-active-class="duration-500 transition-all transform-gpu"
+        leave-active-class="duration-500 transition-all transform-gpu"
+        enter-to-class="translate-y-0 opacity-100"
+        enter-from-class="translate-y-32 opacity-20"
+        leave-to-class="translate-y-32 opacity-20"
+        leave-class="translate-y-0 opacity-100"
+      >
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
-<script lang="ts">
-import Component from 'vue-class-component'
-import Vue from 'vue'
-import Navbar from './components/Nav.vue'
+<script lang="ts" setup>
+import { useStore } from 'vuex'
+import { IState } from './store'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-@Component({ components: { Navbar } })
-export default class App extends Vue {
-  dark = false
+const store = useStore<IState>()
+const dark = ref<boolean>(false)
 
-  mounted ():void {
-    this.$store.commit('initialize')
-    this.dark = this.$store.state.darkTheme
-    this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'setDarkTheme') {
-        this.dark = state.darkTheme
-      }
-    })
-  }
-}
+const route = useRoute()
+const router = useRouter()
+
+onMounted(async () => {
+  await router.isReady()
+  const currentSong = parseInt(route.params.id as string)
+  store.commit('initialize', currentSong || 1)
+  dark.value = store.state.darkTheme
+  store.subscribe((_, state) => {
+    dark.value = state.darkTheme
+  })
+})
+
 </script>
 
 <style>
@@ -77,5 +81,6 @@ export default class App extends Vue {
 
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 </style>

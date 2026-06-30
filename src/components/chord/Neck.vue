@@ -27,53 +27,52 @@
   </g>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 
-@Component
-export default class ChordView extends Vue {
-  @Prop() frets!: number[];
-  @Prop() baseFret!: number;
-  @Prop() capo!: boolean;
-  @Prop() color!: string;
-  @Prop() strings!: number;
+const props = defineProps<{
+  frets: number[];
+  baseFret: number;
+  capo: boolean;
+  color: string;
+  strings: number;
+}>()
 
-  get offset () {
-    if (this.strings === 4) {
-      return {
-        x: 10,
-        y: 10,
-        length: 40
-      }
-    } else {
-      return {
-        x: 0,
-        y: 0,
-        length: 50
-      }
+const offset = computed(() => {
+  if (props.strings === 4) {
+    return {
+      x: 10,
+      y: 10,
+      length: 40
+    }
+  } else {
+    return {
+      x: 0,
+      y: 0,
+      length: 50
     }
   }
+})
 
-  getNeckHorizonalLine = (pos: number) =>
-    `M ${this.offset.x} ${12 * pos} H ${this.offset.length}`;
+const getBarreOffset = (frets: number[], baseFret: number, capo: boolean) =>
+  props.strings === 6
+    ? frets[0] === 1 || capo ? (baseFret > 9 ? -18 : -14) : (baseFret > 9 ? -14 : -10)
+    : frets[0] === 1 || capo ? (baseFret > 9 ? -8 : -4) : (baseFret > 9 ? -4 : 0)
 
-  getNeckVerticalLine = (pos: number) => `M ${this.offset.y + pos * 10} 0 V 48`;
+const getNeckHorizonalLine = (pos: number) =>
+  `M ${offset.value.x} ${12 * pos} H ${offset.value.length}`
 
-  getNeckPath = () =>
-    Array(5)
-      .fill(null)
-      .map((_, pos) => this.getNeckHorizonalLine(pos))
-      .join(' ')
-      .concat(
-        Array(this.strings)
-          .fill(null)
-          .map((_, pos) => this.getNeckVerticalLine(pos))
-          .join(' ')
-      );
+const getNeckVerticalLine = (pos: number) => `M ${offset.value.y + pos * 10} 0 V 48`
 
-  getBarreOffset = (frets: number[], baseFret: number, capo: boolean) =>
-    this.strings === 6
-      ? frets[0] === 1 || capo ? (baseFret > 9 ? -18 : -14) : (baseFret > 9 ? -14 : -10)
-      : frets[0] === 1 || capo ? (baseFret > 9 ? -8 : -4) : (baseFret > 9 ? -4 : 0)
-}
+const getNeckPath = () =>
+  Array(5)
+    .fill(null)
+    .map((_, pos) => getNeckHorizonalLine(pos))
+    .join(' ')
+    .concat(
+      Array(props.strings)
+        .fill(null)
+        .map((_, pos) => getNeckVerticalLine(pos))
+        .join(' ')
+    )
 </script>

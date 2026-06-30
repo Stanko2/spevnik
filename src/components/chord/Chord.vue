@@ -11,7 +11,7 @@
           <Neck
             :frets="layout.frets"
             :base-fret="layout.baseFret"
-            :capo="layout.capo"
+            :capo="layout.capo ?? false"
             :color="color"
             :strings="strings"
           />
@@ -47,44 +47,46 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+<script lang="ts" setup>
 import Neck from '@/components/chord/Neck.vue'
 import Barre from '@/components/chord/Barre.vue'
 import Dot from '@/components/chord/Dot.vue'
 import { ChordLayout } from '@/components/chord/chords'
+import { onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
 
-@Component({
-  components: {
-    Barre,
-    Dot,
-    Neck
+const props = defineProps({
+  layout: {
+    type: Object as () => ChordLayout,
+    required: true
+  },
+  lite: {
+    type: Boolean,
+    default: false
   }
 })
-export default class ChordView extends Vue {
-  @Prop() layout!: ChordLayout;
-  @Prop() lite!: boolean;
+const store = useStore()
 
-  strings = this.$store.state.chordMode === 'guitar' ? 6 : 4;
+const strings = ref(store.state.chordMode === 'guitar' ? 6 : 4)
 
-  mounted () {
-    this.$store.watch(
-      (state) => state.chordMode,
-      (mode) => {
-        this.strings = mode === 'guitar' ? 6 : 4
-      }
+const color = ref('rgba(31, 41, 55, var(--tw-bg-opacity))')
+
+onMounted(() => {
+  store.watch(
+    (state) => state.chordMode,
+    (mode) => {
+      strings.value = mode === 'guitar' ? 6 : 4
+    }
+  )
+})
+
+function onlyDots (): { value: number; position: number }[] {
+  return props.layout.frets
+    .map((f: number, i: number) => ({ position: i, value: f }))
+    .filter(
+      (f: { value: number; position: number }) =>
+        !props.layout.barres || props.layout.barres.indexOf(f.value) === -1
     )
-  }
-
-  color = 'rgba(31, 41, 55, var(--tw-bg-opacity))';
-
-  onlyDots (): { value: number; position: number }[] {
-    return this.layout.frets
-      .map((f: number, i: number) => ({ position: i, value: f }))
-      .filter(
-        (f: { value: number; position: number }) =>
-          !this.layout.barres || this.layout.barres.indexOf(f.value) === -1
-      )
-  }
 }
+
 </script>

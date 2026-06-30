@@ -2,7 +2,7 @@
   <Transition
     enter-active-class="duration-200"
     leave-active-class="duration-200"
-    enter-class="transform-gpu translate-y-full translate-x-1/2 opacity-0"
+    enter-from-class="transform-gpu translate-y-full translate-x-1/2 opacity-0"
     leave-to-class="transform-gpu translate-y-full translate-x-1/2 opacity-0"
     leave-class="transform-gpu translate-y-0 translate-x-1/2 opacity-1"
     enter-to-class="transform-gpu translate-y-0 translate-x-1/2 opacity-1"
@@ -65,61 +65,61 @@
   </Transition>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+<script lang="ts" setup>
 import getChord, { ChordLayout, ChordObject } from './chords'
 import ChordView from './Chord.vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
 
-@Component({ components: { ChordView } })
-export default class ChordPopup extends Vue {
-  @Prop() chord!: string | null;
-  @Prop() lite = false;
+const props = defineProps({
+  chord: String,
+  lite: Boolean
+})
+const store = useStore()
 
-  chordFound = false;
-  chordLayouts: ChordLayout[] = [];
-  openLayout = 0;
-  layoutCount = 0;
-  chordData: ChordObject | null = null;
+watch(() => props.chord, () => loadChord())
 
-  mode = this.$store.state.chordMode;
+const chordFound = ref(false)
+const chordLayouts = ref<ChordLayout[]>([])
+const openLayout = ref(0)
+const layoutCount = ref(0)
+const chordData = ref<ChordObject | null>(null)
 
-  mounted (): void {
-    this.$watch('chord', () => {
-      this.loadChord()
-    })
+const mode = computed(() => store.state.chordMode)
 
-    this.$store.watch(
-      (state) => state.chordMode,
-      (mode) => {
-        this.mode = mode
-        this.loadChord()
-      }
-    )
-  }
+onMounted(() => {
+  store.watch(
+    (state) => state.chordMode,
+    (mode) => {
+      loadChord()
+    }
+  )
+})
 
-  loadChord (): void {
-    this.chordFound = false
-    this.chordLayouts = []
-    this.chordData = null
-    this.openLayout = 0
-    this.layoutCount = 0
-    if (this.chord) {
-      this.chordData = getChord(this.chord, this.mode)
-      this.chordFound = this.chordData.found !== null
-      if (this.chordData.found !== null) {
-        this.chordLayouts = this.chordData.found.layouts
-        this.layoutCount = this.chordLayouts.length
-      }
+function loadChord (): void {
+  chordFound.value = false
+  chordLayouts.value = []
+  chordData.value = null
+  openLayout.value = 0
+  layoutCount.value = 0
+  if (props.chord) {
+    chordData.value = getChord(props.chord, mode.value)
+    chordFound.value = chordData.value.found !== null
+    if (chordData.value.found !== null) {
+      chordLayouts.value = chordData.value.found.layouts
+      layoutCount.value = chordLayouts.value.length
     }
   }
+}
 
-  click (event: MouseEvent): void {
-    event.stopImmediatePropagation()
-  }
+function click (event: MouseEvent): void {
+  event.stopImmediatePropagation()
 }
 </script>
 
 <style>
+@reference 'tailwindcss';
+
 .chord-menu {
   position: fixed;
   bottom: 0;

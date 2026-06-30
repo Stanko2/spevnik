@@ -3,7 +3,6 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, User, setPersistence, bro
 import { get, getDatabase, ref, set, onValue, remove } from 'firebase/database'
 import { getAnalytics, logEvent as logAnalyticsEvent } from 'firebase/analytics'
 import store, { Song, Suggestion } from '.'
-import Vue from 'vue'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDY690VtfSWU1EURhyW8wcEYskqe-oBGSQ',
@@ -24,6 +23,7 @@ const db = getDatabase(app)
 const auth = getAuth(app)
 export const analytics = getAnalytics(app)
 auth.onAuthStateChanged(user => {
+  if (!user) return
   get(ref(db, `users/${user?.uid}`)).then(ref => {
     store.commit('setCredentials', {
       credential: user,
@@ -147,7 +147,7 @@ export async function listAllSuggestions (): Promise<Suggestion[]> {
 }
 
 export function logEvent (name: string, params: any = {}): void {
-  if (Vue.config.devtools) return
+  if (import.meta.env.DEV) return
   logAnalyticsEvent(analytics, name, params)
 }
 

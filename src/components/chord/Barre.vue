@@ -78,50 +78,47 @@
   </g>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 
-@Component
-export default class Barre extends Vue {
-  @Prop() barre!: number;
-  @Prop() frets!: number[];
-  @Prop() capo!: boolean;
-  @Prop() finger!: number;
-  @Prop() lite!: boolean;
-  @Prop() color!: string;
-  strings = this.frets.length;
+const props = defineProps<{
+  barre: number,
+  frets: Array<number>,
+  capo: boolean,
+  finger: number,
+  lite: boolean,
+  color: string
+}>()
 
-  get fretXPosition () {
-    return this.strings === 6
-      ? [0, 10, 20, 30, 40, 50]
-      : [10, 20, 30, 40, 50]
-  }
+const strings = computed(() => props.frets.length)
 
-  fretYPosition = [2.35, 13.9, 26, 38];
+const fretXPosition = computed(() => {
+  return strings.value === 6
+    ? [0, 10, 20, 30, 40, 50]
+    : [10, 20, 30, 40, 50]
+})
 
-  get offset () {
-    return this.strings === 6 ? -1 : 0
-  }
+const offset = computed(() => strings.value === 6 ? -1 : 0)
 
-  positions = {
-    string: [50, 40, 30, 20, 10, 0],
-    fret: [-4, 6.5, 18, 30, 42, 54],
-    finger: [-3, 8, 19.5, 31.5, 43.5]
-  };
+const positions = ref({
+  string: [50, 40, 30, 20, 10, 0],
+  fret: [-4, 6.5, 18, 30, 42, 54],
+  finger: [-3, 8, 19.5, 31.5, 43.5]
+})
+const fretYPosition = ref([2.35, 13.9, 26, 38])
 
-  getStringPosition = (string: number) =>
-    this.positions.string[string + this.offset];
 
-  onlyBarres = (frets: number[], barre: number) =>
-    frets
-      .map((f, index) => ({ position: index, value: f }))
-      .filter((f) => f.value === barre);
+const getStringPosition = (string: number) =>
+  positions.value.string[string + offset.value]
 
-  barreFrets = this.onlyBarres(this.frets, this.barre);
+const onlyBarres = (frets: number[], barre: number) =>
+  frets
+    .map((f, index) => ({ position: index, value: f }))
+    .filter((f) => f.value === barre)
 
-  string1 = this.barreFrets[0].position;
-  string2 = this.barreFrets[this.barreFrets.length - 1].position;
-  width = (this.string2 - this.string1) * 10;
-  y = this.fretYPosition[this.barre - 1];
-}
+const barreFrets = onlyBarres(props.frets, props.barre)
+const string1 = barreFrets[0].position
+const string2 = barreFrets[barreFrets.length - 1].position
+const width = (string2 - string1) * 10
+const y = fretYPosition.value[props.barre - 1]
 </script>

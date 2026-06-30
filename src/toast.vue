@@ -1,50 +1,61 @@
 <template>
-  <div class="p-3 rounded-lg m-3 shadow-2xl" :class="{
-    'bg-green-200': type === 'success',
-    'bg-red-200': type === 'error',
-    'bg-blue-200': type === 'info',
-    'bg-yellow-200': type === 'warning',
-    }">
-    <p :class="{
-    'text-green-500': type === 'success',
-    'text-red-500': type === 'error',
-    'text-blue-500': type === 'info',
-    'text-yellow-500': type === 'warning',
-    }" class=""
-    >{{ msg }}</p>
+  <div
+    ref="rootElement"
+    class="p-3 rounded-lg m-3 shadow-2xl transition-opacity duration-200"
+    :data-type="type"
+  >
+    <p class="font-medium">{{ msg }}</p>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
-import { Song } from '@/store'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 
-@Component
-export default class Toast extends Vue {
-    @Prop() msg!: string
-    @Prop({ default: 3000 }) timeout!: number
-    @Prop({ default: 'info' }) type!: string
+const props = withDefaults(
+  defineProps<{
+    msg: string
+    timeout?: number
+    type?: 'success' | 'error' | 'info' | 'warning'
+  }>(),
+  {
+    timeout: 3000,
+    type: 'info'
+  }
+)
 
-    mounted (): void {
-      console.log('mounted')
-      this.start()
-    }
+const emit = defineEmits(['close'])
 
-    async start (): Promise<void> {
-      this.$el.classList.add('opacity-0')
-      await new Promise(resolve => setTimeout(resolve, 200))
-      this.$el.classList.remove('opacity-0')
-      this.$el.classList.add('opacity-100')
-      await new Promise(resolve => setTimeout(resolve, this.timeout - 400))
-      this.$el.classList.remove('opacity-100')
-      this.$el.classList.add('opacity-0')
-      await new Promise(resolve => setTimeout(resolve, 200))
-      this.$destroy()
-      // eslint-disable-next-line no-unused-expressions
-      this.$el.parentElement?.removeChild(this.$el)
-    }
+const rootElement = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  console.log('mounted')
+  startAnimation()
+})
+
+const startAnimation = async () => {
+  if (!rootElement.value) return
+
+  rootElement.value.classList.add('opacity-0')
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  rootElement.value.classList.remove('opacity-0')
+  rootElement.value.classList.add('opacity-100')
+
+  await new Promise((resolve) => setTimeout(resolve, props.timeout - 250))
+
+  rootElement.value.classList.remove('opacity-100')
+  rootElement.value.classList.add('opacity-0')
+
+  await new Promise((resolve) => setTimeout(resolve, 200))
+
+  emit('close')
 }
-
 </script>
+
+<style scoped>
+@reference "tailwindcss";
+
+div[data-type="success"] { @apply bg-green-200 text-green-700; }
+div[data-type="error"] { @apply bg-red-200 text-red-700; }
+div[data-type="info"] { @apply bg-blue-200 text-blue-700; }
+div[data-type="warning"] { @apply bg-yellow-200 text-yellow-700; }
+</style>

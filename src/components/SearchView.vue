@@ -1,18 +1,19 @@
 <template>
+  <!-- TODO: esc to call close()  -->
   <div class="fixed h-screen w-screen flex justify-center align-middle top-0 z-50">
-    <div class="fixed h-screen w-screen bg-gray-900 opacity-70 top-0 left-0 z-10" @click="close()"></div>
+    <div class="fixed h-screen w-screen bg-gray-900 opacity-70 top-0 left-0 z-10 flex items-center justify-center" @click="close()"></div>
     <div class="m-3 opacity-100 max-w-full w-11/12 lg:w-4/6 absolute z-50">
       <transition
           enter-active-class="duration-300 transition-all ease-in-out transform-gpu"
           leave-active-class="duration-300 transition-all ease-in-out transform-gpu"
-          enter-class="translate-y-full"
-          leave-class="translate-y-0"
+          enter-from-class="translate-y-full"
+          leave-from-class="translate-y-0"
           enter-to-class="translate-y-0"
           leave-to-class="translate-y-full"
       >
         <div class="w-full h-10" v-if="showBar">
-          <input type="search" class="outline-none rounded-md w-full p-2 text-lg dark:bg-gray-500 dark:text-gray-100" ref="search" v-model="searchQuery" @keyup.esc="$event.target.blur()" placeholder="Vyhľadávanie">
-          <button class="absolute top-0 right-0 h-10 w-10 m-0.5 transform-gpu hover:rotate-12 hover:bg-gray-400 transition-all rounded-full" @click="close()" v-shortkey="['esc']" @shortkey="close()">
+          <input type="search" class="outline-none rounded-md w-full p-2 text-lg dark:bg-gray-500 dark:text-gray-100" ref="search" v-model="searchQuery" placeholder="Vyhľadávanie">
+          <button class="absolute top-0 right-0 h-10 w-10 m-0.5 transform-gpu hover:rotate-12 hover:bg-gray-400 transition-all rounded-full flex items-center justify-center" @click="close()">
               <span class="material-symbols-rounded block">
               close
               </span>
@@ -26,7 +27,7 @@
                   <span class="flex items-center">{{result.name}} ({{ result.author }})</span>
                 </p>
             </div>
-            <div @click="$emit('more', searchQuery)">
+            <div @click="emit('more', searchQuery)">
               <p class="p-2 text-lg dark:bg-gray-700 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-600 transition-all flex font-bold">
                     <span class="material-symbols-rounded block m-1 mr-4 opacity-70">
                       arrow_forward
@@ -47,47 +48,49 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { Song } from '@/store'
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { Prop, Watch } from 'vue-property-decorator'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { SearchResult, Search } from './Search'
 
-@Component
-export default class SearchView extends Vue {
-    @Prop({ required: true }) songs!: Song[]
-    showBar = false
-    searchQuery = ''
-    results: SearchResult[] = []
-    $refs!:{
-        search: HTMLInputElement
-    }
+const props = defineProps({
+  songs: {
+    type: Array as () => Song[],
+    required: true
+  }
+})
+const emit = defineEmits<{
+  'close': [id: number | undefined],
+  'more': [searchQuery: string]
+}>()
 
-    matchTypeMapping ={
-      name: 'title',
-      author: 'person',
-      text: 'description',
-      liked: 'favorite'
-    }
+const showBar = ref(false)
+const searchQuery = ref('')
+const results = ref<SearchResult[]>([])
+const search = ref<HTMLInputElement>()
 
-    mounted ():void {
-      this.showBar = true
-      this.$nextTick().then(() => {
-        this.$refs.search.focus()
-      })
-    }
-
-    close (id: number | undefined = undefined):void{
-      this.showBar = false
-      this.$emit('close', id)
-    }
-
-    @Watch('searchQuery')
-    search ():void {
-      this.results = Search(this.searchQuery).splice(0, 10)
-    }
+const matchTypeMapping = {
+  name: 'title',
+  author: 'person',
+  text: 'description',
+  liked: 'favorite'
 }
+
+onMounted(() => {
+  showBar.value = true
+  nextTick().then(() => {
+    search.value?.focus()
+  })
+})
+
+function close (id: number | undefined = undefined):void{
+  showBar.value = false
+  emit('close', id)
+}
+
+watch(() => searchQuery.value, (newQuery) => {
+  results.value = Search(newQuery).splice(0, 10)
+})
 </script>
 
 <style scoped>

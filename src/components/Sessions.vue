@@ -3,8 +3,8 @@
       <h2 class="text-2xl dark:text-gray-200 mb-3">Skupiny</h2>
       <p class="dark:text-gray-200">Skupiny vedia synchronizovať aktuálnu pesničku medzi viacerými zariadeniami v reálnom čase.</p>
       <div class="flex justify-center mt-3 mb-3">
-        <input class="outline-none rounded-l-md pl-3 p-0.5 text-2xl bg-gray-500 w-60" type="text" v-model="sessionId" :disabled="$store.state.session !== undefined" placeholder="Meno skupiny">
-        <div v-if="$store.state.session == undefined" class="h-full">
+        <input class="outline-none rounded-l-md pl-3 p-0.5 text-2xl bg-gray-500 w-60" type="text" v-model="sessionId" :disabled="store.state.session !== undefined" placeholder="Meno skupiny">
+        <div v-if="store.state.session == undefined" class="h-full">
           <button class="bg-blue-400 button" @click="Join" :disabled="sessionId.length == 0">
             <span class="m-1 block material-symbols-rounded">login</span>
             <div class="tooltip">Pripojiť sa do skupiny</div>
@@ -27,52 +27,55 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import { Component, Watch } from 'vue-property-decorator'
+<script lang="ts" setup>
+import { onMounted, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 
-@Component
-export default class Sessions extends Vue {
-  sessionId = ''
-  loggedIn = false
+const store = useStore()
 
-  mounted ():void {
-    this.loggedIn = this.$store.state.credential !== null
-    this.sessionId = this.$store.state.session || ''
-  }
+const sessionId = ref('')
+const loggedIn = ref(false)
 
-  @Watch('$store.state.credentials')
-  credentialsUpdate ():void {
-    console.log('update')
-    this.loggedIn = this.$store.state.credential !== null
-  }
+onMounted(() => {
+  loggedIn.value = store.state.credential !== null
+  sessionId.value = store.state.session || ''
+})
 
-  Join ():void {
-    if (this.sessionId.length === 0) return
-    this.$store.commit('joinSession', this.sessionId)
-  }
-
-  Create ():void {
-    if (this.sessionId.length === 0) return
-    this.$store.commit('createSession', this.sessionId)
-  }
-
-  Leave ():void {
-    this.$store.commit('leaveSession')
-  }
+function Join ():void {
+  if (sessionId.value.length === 0) return
+  store.commit('joinSession', sessionId.value)
 }
+
+function Create ():void {
+  if (sessionId.value.length === 0) return
+  store.commit('createSession', sessionId.value)
+}
+
+function Leave ():void {
+  store.commit('leaveSession')
+}
+
+watch(() => store.state.credentials, (newVal) => {
+  loggedIn.value = newVal !== null
+})
 </script>
 
-<style lang="scss">
+<style lang="css">
+@reference "tailwindcss";
+
 .button {
   @apply transition-all outline-none p-1 text-2xl;
+
   &:disabled {
     @apply opacity-30;
   }
-  .tooltip{
+
+  .tooltip {
     @apply absolute opacity-0 hidden transition-all translate-y-2 text-white -translate-x-1/2 transform-gpu text-sm bg-gray-900 p-1 px-3 rounded-full;
   }
+
   &:hover .tooltip {
+    /* Changed from 'block' to 'block opacity-100' so @apply handles both */
     @apply opacity-100 block;
   }
 }

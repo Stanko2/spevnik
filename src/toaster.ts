@@ -1,27 +1,33 @@
-import Vue from 'vue'
+import { h, render, App } from 'vue'
 import Toast from './toast.vue'
 
-Vue.mixin({
-  methods: {
-    toast (msg: string, timeout = 3000, type = 'info'): void {
-      const toast = new Vue({
-        render: h => h(Toast, { props: { msg, timeout, type } })
-      }).$mount()
-      document.body.appendChild(toast.$el)
+export function toast (msg: string, timeout = 3000, type: 'info' | 'success' | 'warning' | 'error' = 'info'): void {
+  const vnode = h(Toast, {
+    msg,
+    timeout,
+    type,
+    onClose: () => {
+      render(null, container)
+      container.remove()
     }
-  }
-})
+  })
 
-export function toast (msg: string, timeout = 3000, type = 'info'): void {
-  const toast = new Vue({
-    render: h => h(Toast, { props: { msg, timeout, type } })
-  }).$mount()
-  const el = document.getElementById('toasts')
-  if (el) el.appendChild(toast.$el)
+  const container = document.createElement('div')
+
+  const parentEl = document.getElementById('toasts') || document.body
+  parentEl.appendChild(container)
+
+  render(vnode, container)
 }
 
-declare module 'vue' {
-    interface Vue {
-        toast: (msg: string, timeout?: number, type?: string) => void
-    }
+export const ToastPlugin = {
+  install (app: App) {
+    app.config.globalProperties.$toast = toast
+  }
+}
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $toast: (msg: string, timeout?: number, type?: 'info' | 'success' | 'warning' | 'error') => void
+  }
 }

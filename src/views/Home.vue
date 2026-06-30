@@ -1,213 +1,174 @@
 <template>
-  <div class="h-screen w-screen grid" style="grid-template-rows: min-content 1fr min-content;" @click="$store.commit('setChord', null)">
+  <div class="h-dvh w-dvw max-h-dvh grid overflow-hidden" style="grid-template-rows: min-content 1fr min-content;" @click="store.commit('setChord', null)">
     <ChordPopup
       :chord="chord"
       :lite="false"
       />
-    <div v-if="song === null">
+    <div v-if="song === null || song === undefined">
       Invalid ID
     </div>
-    <div v-else class="p-2 w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 overflow-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
+    <div v-else class="p-2 w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white h-16 text-ellipsis whitespace-nowrap flex justify-between items-center max-w-full">
       <div>
         <h1 class="text-xl text-left flex items-center">
-          <span v-if="!editingId" @click="startEditing">{{ id }}</span>
-          <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-800 w-12 rounded-md p-0.5 text-center" @blur="stopEditing">. {{ song.name }}
+          <span v-if="!editingId" @click="startEditing" class="cursor-pointer">{{ id }}</span>
+          <input v-else type="number" v-model.number="id" ref="Idinput" @change="()=>selectSong(id)" class="bg-gray-400 dark:bg-gray-800 w-12 h-8 rounded-md p-0.5 text-center outline-none border-2 border-blue-500" @blur="stopEditing">. {{ song.name }}
           <span class="bg-red-400 opacity-70 rounded-sm text-sm px-1 ml-1" v-if="song.explicit">E</span>
         </h1>
-        <p class="opacity-60 text-left text-sm">
-          <span class="text-blue-300" v-if="$store.state.session">
-            <span class="material-symbols-rounded text-sm">cast</span>
-            {{ $store.state.session }}
+        <p class="opacity-60 text-left text-sm flex items-center">
+          <span class="dark:text-blue-300 text-blue-500 flex items-center" v-if="store.state.session">
+            <span class="material-symbols-rounded text-sm pr-1">cast</span>
+            <span>{{ store.state.session }}</span>
           </span>
-          <span v-if="$store.state.session">|</span>
+          <span v-if="store.state.session" class="px-1">|</span>
           {{ song.author }}
         </p>
       </div>
       <div class="flex right-0 bg-gray-300 dark:bg-gray-600">
-        <div class="p-2 text-3xl cursor-pointer m-1 transition-all text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
+        <div class="p-2 text-3xl cursor-pointer transition-all text-gray-600 dark:text-gray-200 transform-gpu h-12 w-12 flex justify-center items-center origin-center" :class="{'text-red-500': liked, 'scale-125': liked}" @click="toggleLiked">
           <span class="material-symbols-rounded block">favorite</span>
         </div>
-        <a class="p-2 rounded-xl cursor-pointer m-1 h-12 w-12" :href="'https://youtu.be/'+(song.youtube || 'dQw4w9WgXcQ')" target="_blank">
-          <img src="@/assets/youtube.svg" alt="youtube" class="w-full h-full block">
-        </a>
+        <div class="p-2 text-3xl cursor-pointer text-gray-600 dark:text-gray-200 h-12 w-12 flex justify-center items-center" @click="externalDialog?.show()">
+          <span class="material-symbols-rounded block">open_in_new</span>
+        </div>
+        <OpenExternal :song="song" ref="externalDialog" />
       </div>
     </div>
     <transition name="slide">
       <div
-        class="viewport transition-all duration-75 text-left outline-none"
+        class="viewport transition-all duration-75 text-left outline-none h-full"
       >
-        <text-viewport v-if="$store.state.autoscroll && songShown" class="text-center">
-          <text-renderer
-            style="touch-action: pan-y !important;"
-            v-hammer:pan.horizontal="e=> onPan(e)"
-            v-hammer:swipe.horizontal="e =>onSwipe(e)"
-            :text="song?.text || ''"
-            :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
-            :guitarMode="$store.state.guitarMode"
-            :fontSize="$store.state.fontSize"
-            :columns="1"
-          ></text-renderer>
-        </text-viewport>
-        <text-renderer
-            v-else-if="songShown"
-            style="touch-action: pan-y !important;"
-            v-hammer:pan.horizontal="e=> onPan(e)"
-            v-hammer:swipe.horizontal="e =>onSwipe(e)"
-            :text="song?.text || ''"
-            :style="{'transform': `translateX(${scrollX}px)`, 'opacity': opacity }"
-            :guitarMode="$store.state.guitarMode"
-            :fontSize="$store.state.fontSize"
-            :columns="$store.state.columnCount"
-          ></text-renderer>
+         <text-viewport
+          v-if="songShown && song != null"
+          :song="song"
+          @selectSong="selectSong"
+          :nextSong="store.state.songs?.[id] ?? undefined"
+          :prevSong="store.state.songs?.[id - 2] ?? undefined"
+        />
       </div>
     </transition>
   <transition
     enter-active-class="duration-500 transition-all transform-gpu"
     leave-active-class="duration-500 transition-all transform-gpu"
     enter-to-class="translate-x-0"
-    enter-class="translate-x-full"
+    enter-from-class="translate-x-full"
     leave-to-class="translate-x-full"
-    leave-class="translate-x-0"
+    leave-from-class="translate-x-0"
   >
-    <Transposer v-if="$store.state.guitarMode && !$store.state.playerStatus.playing" />
+    <Transposer v-if="store.state.guitarMode && !store.state.playerStatus.playing" />
   </transition>
-  <navbar :songs="$store.state.songs" v-if="!isMobile"></navbar>
-  <navbar-mobile :songs="$store.state.songs" v-else></navbar-mobile>
+  <navbar :songs="store.state.songs" v-if="!isMobile"></navbar>
+  <navbar-mobile :songs="store.state.songs" v-else></navbar-mobile>
   </div>
 </template>
 
-<script lang="ts">
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
+<script lang="ts" setup>
+import { computed, nextTick, onBeforeMount, onMounted, ref, watch } from 'vue'
 
-import Component from 'vue-class-component'
-import Vue from 'vue'
-import { Watch } from 'vue-property-decorator'
-import TextRenderer from '@/components/Textrenderer'
-import { Song } from '@/store'
+import { IState, Song } from '@/store'
 import { getSong } from '@/store/firebase'
+import Navbar from '@/components/Nav.vue'
+import NavbarMobile from '@/components/NavMobile.vue'
 import ChordPopup from '@/components/chord/ChordPopup.vue'
 import Transposer from '@/components/Transpose.vue'
 import TextViewport from '@/components/TextViewport.vue'
+import OpenExternal from '@/components/OpenExternal.vue'
 
-@Component({ components: { TextRenderer, navbar: () => import('@/components/Nav.vue'), navbarMobile: () => import('@/components/NavMobile.vue'), ChordPopup, Transposer, TextViewport } })
-export default class SongView extends Vue {
-  id = -1
-  song: Song | null = null
-  chord: string | null = null
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
-  $refs!: {
-    Idinput: HTMLInputElement
-  }
+const store = useStore<IState>()
+const route = useRoute()
 
-  songShown = true
-  editingId = false
-  scrollX = 0
-  liked = false
+const id = ref(-1)
+const song = ref<Song | null>(null)
+const chord = ref<string | undefined>(undefined)
+const Idinput = ref<HTMLInputElement>()
+const externalDialog = ref<InstanceType<typeof OpenExternal> | null>(null)
 
-  get opacity (): number {
-    return 1 - Math.abs(this.scrollX) / screen.availWidth
-  }
+const songShown = ref(true)
+const editingId = ref(false)
+const liked = ref(false)
 
-  get isMobile (): boolean {
-    console.log('mobile', this.$store.state.isMobile)
+const isMobile = computed(() => store.state.isMobile)
 
-    return this.$store.state.isMobile
-  }
-
-  mounted ():void {
-    this.showSong()
-    this.$store.subscribe((mut) => {
-      if (mut.type === 'setChord') {
-        this.chord = mut.payload
-      }
-    })
-  }
-
-  @Watch('$store.state.currentSong')
-  async showSong (): Promise<void> {
-    this.id = this.$store.state.currentSong
-    this.songShown = false
-    this.$store.commit('resetTranspose')
-    await this.$nextTick()
-    const lastId = this.id
-    if (isNaN(this.id)) {
-      this.song = null
-      return
+onMounted(() => {
+  showSong()
+  store.subscribe((mut) => {
+    if (mut.type === 'setChord') {
+      chord.value = mut.payload
     }
-    this.song = await this.loadSong(this.id)
-    this.songShown = true
-    this.liked = this.$store.state.liked.has(this.id)
-    if (this.song == null) {
-      if (lastId !== this.id && !isNaN(lastId)) {
-        this.$store.commit('setSong', lastId)
-      }
+  })
+})
+
+async function showSong () {
+  id.value = store.state.currentSong
+  songShown.value = false
+  store.commit('resetTranspose')
+  await nextTick()
+  const lastId = id.value
+  if (isNaN(id.value)) {
+    song.value = null
+    return
+  }
+  song.value = await loadSong(id.value)
+  songShown.value = true
+  liked.value = store.state.liked.has(id.value)
+  if (song.value == null) {
+    if (lastId !== id.value && !isNaN(lastId) && lastId < store.state.songs.length && lastId >= 1) {
+      console.log(lastId)
+      store.commit('setSong', lastId)
     }
   }
+}
 
-  beforeMount ():void {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault()
-      this.$store.commit('setInstallEvent', e)
-    })
-  }
+watch(() => store.state.currentSong, showSong)
 
-  async loadSong (id: number): Promise<Song | null> {
-    if (this.$store.state.songs.length > 0 && id <= this.$store.state.songs.length) {
-      return this.$store.state.songs[id - 1]
-    } else if (navigator.onLine) {
-      return await getSong(id)
-    } else {
-      throw new Error('No songs loaded')
-    }
-  }
+onBeforeMount(() => {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    store.commit('setInstallEvent', e)
+  })
+})
 
-  startEditing (): void {
-    this.editingId = true
-    this.id = NaN
-    this.$nextTick().then(() => {
-      this.$refs.Idinput.focus()
-    })
-  }
 
-  stopEditing ():void {
-    this.editingId = false
-    this.id = parseInt(this.$route.params.id)
+async function loadSong (id: number): Promise<Song | null> {
+  if (store.state.songs.length > 0 && id <= store.state.songs.length) {
+    return store.state.songs[id - 1]
+  } else if (navigator.onLine) {
+    return await getSong(id)
+  } else {
+    throw new Error('No songs loaded')
   }
+}
 
-  selectSong (id: number): void {
-    this.editingId = false
-    this.$store.commit('setSong', id)
-  }
+function startEditing (): void {
+  editingId.value = true
+  id.value = NaN
+  nextTick().then(() => {
+    Idinput.value?.focus()
+  })
+}
 
-  onSwipe (e:PointerEvent):void {
-    this.scrollX = 0
-    clearTimeout(this.scrollTimeout)
-    if (e.type === 'swipeleft') {
-      this.selectSong(this.id + 1)
-    } else if (e.type === 'swiperight') {
-      this.selectSong(this.id - 1)
-    }
-  }
+function stopEditing ():void {
+  editingId.value = false
+  id.value = parseInt(route.params.id as string)
+}
 
-  scrollTimeout: number | undefined
-  onPan (e:any):void {
-    if (!this.$store.state.isMobile) return
-    this.scrollX = e.deltaX
-    clearTimeout(this.scrollTimeout)
-    this.scrollTimeout = setTimeout(() => {
-      this.scrollX = 0
-    }, 50)
-  }
+function selectSong (id: number): void {
+  editingId.value = false
+  store.commit('setSong', id)
+}
 
-  toggleLiked ():void {
-    this.liked = !this.liked
-    this.$store.commit('toggleLike', this.id)
-  }
+
+function toggleLiked ():void {
+  liked.value = !liked.value
+  store.commit('toggleLike', id.value)
 }
 </script>
 
 <style>
+@reference "tailwindcss";
+
 .chord {
   font-weight: bold;
   vertical-align: super;
@@ -223,10 +184,6 @@ export default class SongView extends Vue {
 .viewport{
   overflow-y: scroll;
   touch-action: pan-y !important;
-}
-.viewport.expanded {
-  /* bottom: 0; */
-  /* height: calc(100vh - 4rem); */
 }
 
 .viewport::-webkit-scrollbar {

@@ -1,13 +1,13 @@
 <template>
     <div class="h-screen w-screen dark:bg-gray-800">
-        <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white overflow-ellipsis whitespace-nowrap flex justify-between items-center">
+        <div class="p-2 sticky w-screen rounded-md shadow-md bg-gray-300 dark:bg-gray-600 dark:text-white text-ellipsis whitespace-nowrap flex justify-between items-center">
                 <h1 class="text-3xl text-left flex items-center">
                     <span class="material-symbols-rounded m-2 mr-4 font-bold cursor-pointer" @click="close">arrow_back</span>
                 <p v-if="$route.params.id !== '-1'">Upravuješ pesničku {{ $route.params.id }}</p>
                 <p v-else>Nová pesnička</p>
             </h1>
-            <div v-if="$store.state.credential" class="opacity-70">
-                Prihlásený ako {{ $store.state.credential.displayName }}
+            <div v-if="store.state.credential" class="opacity-70">
+                Prihlásený ako {{ store.state.credential.displayName }}
             </div>
         </div>
         <div class="container m-auto overflow-auto h-5/6 content">
@@ -38,7 +38,7 @@
             <div class="dark:text-gray-300 text-2xl">
                 <h2>Text</h2>
                 <p class="text-sm italic text-left opacity-50">[D] - akordy, {B} - bold, // capo 1 - gitarové poznámky (na celý riadok)</p>
-                <textarea rows="30" class="bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-full text-sm"  v-model="text" @change="resizeTextArea"></textarea>
+                <textarea rows="30" class="bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-full text-sm" spellcheck="true" v-model="text" @change="resizeTextArea"></textarea>
             </div>
             <div class="dark:text-gray-200 p-4 text-lg">
                 <label for="showExplicit" class="flex justify-between items-center w-full">
@@ -62,74 +62,82 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Song } from '@/store'
+<script lang="ts" setup>
+import { IState, Song } from '@/store'
 import { createSong, getSong, updateSong } from '@/store/firebase'
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
-@Component
-export default class Editor extends Vue {
-    songName = ''
-    author = ''
-    path = ''
-    youtube = ''
-    text = ''
-    isExplicit = false
-    mounted (): void {
-      const id = parseInt(this.$route.params.id)
-      if (id !== -1) {
-        getSong(id).then(song => {
-          if (!song) return
-          this.songName = song.name
-          this.author = song.author
-          this.path = song.path
-          this.youtube = song.youtube || ''
-          this.text = song.text
-          this.isExplicit = song.explicit || false
-        })
-      }
-    }
 
-    close ():void {
-      this.$router.back()
-    }
+const songName = ref('')
+const author = ref('')
+const path = ref('')
+const youtube = ref('')
+const text = ref('')
+const isExplicit = ref(false)
 
-    resizeTextArea (event: any):void {
-      event.target.style.height = 'auto'
-      event.target.style.height = `${event.target.scrollHeight}px`
-    }
+const router = useRouter()
+const route = useRoute()
+const store = useStore<IState>()
 
-    save ():void {
-      const id = parseInt(this.$route.params.id)
-      const song: Song = {
-        id: id,
-        name: this.songName,
-        author: this.author,
-        path: this.path,
-        text: this.text,
-        youtube: this.youtube,
-        explicit: this.isExplicit
-      }
-      if (id === -1) {
-        song.id = this.$store.state.songs.length + 1
-        createSong(song).then(() => {
-          this.$router.back()
-          this.$store.commit('createSong', song)
-        })
-      } else {
-        updateSong(song).then(() => {
-          this.$router.back()
-          this.$store.commit('updateSong', song)
-        })
-      }
-    }
+onMounted(async () => {
+  await router.isReady()
+  const id = parseInt(route.params.id as string)
+  if (id !== -1) {
+    getSong(id).then(song => {
+      if (!song) return
+      songName.value = song.name
+      author.value = song.author
+      path.value = song.path
+      youtube.value = song.youtube ?? ''
+      text.value = song.text
+      isExplicit.value = song.explicit ?? false
+    })
+  }
+})
+
+function close ():void {
+  router.back()
 }
+
+function resizeTextArea (event: any):void {
+  event.target.style.height = 'auto'
+  event.target.style.height = `${event.target.scrollHeight}px`
+}
+
+function save ():void {
+  const id = parseInt(route.params.id as string)
+  const song: Song = {
+    id: id,
+    name: songName.value,
+    author: author.value,
+    path: path.value,
+    text: text.value,
+    youtube: youtube.value,
+    explicit: isExplicit.value
+  }
+  if (id === -1) {
+    song.id = store.state.songs.length + 1
+    createSong(song).then(() => {
+      router.back()
+      store.commit('createSong', song)
+    })
+  } else {
+    updateSong(song).then(() => {
+      router.back()
+      store.commit('updateSong', song)
+    })
+  }
+}
+
 </script>
 
-<style scoped>
+<style>
+@reference 'tailwindcss';
+
 .input {
-    @apply bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-1/2;
+  @apply bg-gray-300 dark:bg-gray-600 outline-none rounded-md p-1 w-1/2;
 }
 .content{
     height: calc(100vh - 4rem);
