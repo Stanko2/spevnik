@@ -83,19 +83,21 @@ export async function importToDB ():Promise<void> {
 
 export async function cacheAllSongs ():Promise<Song[]> {
   const lastUpdate = parseInt(localStorage.getItem('lastDBUpdate') || '0')
-  console.log(store.state.songs)
   if (lastUpdate > Date.now() - 1000 * 60 * 10 && store.state.songs.length > 0) {
     console.log('updated recently, not caching ... ')
     return store.state.songs
   }
   localStorage.setItem('lastDBUpdate', Date.now().toString())
   const songs = await get(ref(db, 'songs/'))
-  const data = songs.val()
-  data.splice(0, 1)
+  let data = songs.val()
+  if (typeof data === 'object') data = Object.values(data)
+  data = data.filter((song: any) => song.id > 0)
   return data as Song[]
 }
 
 export async function updateSong (song: Song):Promise<void> {
+  if (song.id === -1) throw new Error('Song does not have an id, use createSong instead')
+
   if (store.state.isAdmin) {
     await set(ref(db, `songs/${song.id}`), song)
   } else {
@@ -123,14 +125,21 @@ export async function resolveSuggestion (suggestion: Suggestion, accept: boolean
   if (!store.state.isAdmin) return
   await remove(ref(db, `suggestions/${suggestion.id}`))
   if (accept) {
-    await updateSong(suggestion.song)
-    store.commit('updateSong', suggestion.song)
+    await createOrUpdateSong(suggestion.song)
   }
 }
 
 export async function createSong (song: Song):Promise<void> {
-  if (store.state.isAdmin) {
+  if (song.id !== -1) throw new Error('Song already has an id, use updateSong instead')
+
+  if (store.state.isAdmin && confirm('Create (OK) or suggest (Cancel)')) {
+    const songs = await get(ref(db, 'songs/'))
+    const data = songs.val()
+    const ids = typeof data === 'object' ? Object.keys(data).map(Number) : data.map((song: any) => song.id)
+    song.id = Math.max(...ids) + 1
+
     await set(ref(db, `songs/${song.id}`), song)
+    store.commit('updateSong', song)
   } else {
     const id = RandStr('suggestion_')
     await set(ref(db, `suggestions/${id}`), {
@@ -141,8 +150,15 @@ export async function createSong (song: Song):Promise<void> {
   }
 }
 
+export async function createOrUpdateSong (song: Song):Promise<void> {
+  if (song.id === -1) {
+    return createSong(song)
+  }
+  return updateSong(song)
+}
+
 export async function listAllSuggestions (): Promise<Suggestion[]> {
-  const snapshot = await get(ref(db, 'suggestions/'))
+  const snapshot = await get(ref(db, 'suggestions'))
   return snapshot.val() as Suggestion[]
 }
 
